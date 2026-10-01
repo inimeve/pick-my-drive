@@ -1,5 +1,5 @@
 import "./estilos.css";
-import { FECHA_DATOS, MUNICIPIOS, TERRITORIOS, plantillaCoche, ofertasPorDefecto } from "./data";
+import { FECHA_DATOS, MUNICIPIOS, TERRITORIOS, cocheActualConOferta, plantillaCoche, ofertasPorDefecto } from "./data";
 import { MODALIDADES, nombreModalidad } from "./engine/modalidades";
 import { simular, type Resultado } from "./engine/simulacion";
 import type { CocheCandidato, Escenario, ModalidadId, Motorizacion, PerfilUso } from "./engine/tipos";
@@ -7,7 +7,10 @@ import { clasificar, veredicto } from "./engine/veredicto";
 import {
   borrarGuardada,
   cargar,
+  PLANTILLAS,
+  comparativaDePlantilla,
   comparativaPorDefecto,
+  type PlantillaId,
   contexto,
   enlaceCompartir,
   guardadas,
@@ -609,7 +612,8 @@ function pintarGuardadas() {
   const nombres = Object.keys(guardadas());
   sel.replaceChildren(
     el("option", { value: "" }, nombres.length ? "Mis comparativas…" : "Sin comparativas guardadas"),
-    ...nombres.map((n) => el("option", { value: n }, n)),
+    el("optgroup", { label: "Plantillas" }, ...PLANTILLAS.map((p) => el("option", { value: `plantilla:${p.id}` }, p.nombre))),
+    ...(nombres.length ? [el("optgroup", { label: "Guardadas" }, ...nombres.map((n) => el("option", { value: n }, n)))] : []),
   );
   if (nombres.length) sel.append(el("option", { value: "__borrar" }, "Borrar la última abierta"));
 }
@@ -644,6 +648,11 @@ $<HTMLSelectElement>("sel-guardadas").addEventListener("change", (ev) => {
       avisar(`«${ultimaAbierta}» borrada`);
       ultimaAbierta = undefined;
     }
+  } else if (sel.value.startsWith("plantilla:")) {
+    comp = comparativaDePlantilla(sel.value.slice("plantilla:".length) as PlantillaId);
+    ultimaAbierta = undefined;
+    history.replaceState(null, "", location.pathname);
+    todo();
   } else if (sel.value) {
     const c = guardadas()[sel.value];
     if (c) {
@@ -660,6 +669,17 @@ $("btn-restablecer").addEventListener("click", () => {
   comp = comparativaPorDefecto();
   history.replaceState(null, "", location.pathname);
   todo();
+});
+
+$("btn-coche-actual").addEventListener("click", () => {
+  if (comp.coches.some((c) => c.id === "focus-actual")) {
+    avisar("Tu coche actual ya está en la comparativa");
+    return;
+  }
+  const { coche, escenarios } = cocheActualConOferta();
+  comp.coches.push(coche);
+  comp.escenarios.push(...escenarios);
+  cambio(true);
 });
 
 $("btn-anadir-coche").addEventListener("click", () => {

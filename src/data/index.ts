@@ -1,5 +1,6 @@
 import type { CocheCandidato, Escenario, PerfilUso } from "../engine/tipos";
 import { COCHES, OFERTAS } from "./coches";
+import { COCHES_BMW, COCHE_ACTUAL } from "./bmw";
 import { ofertasGenericas, type ParametrosMercado } from "./ofertas";
 
 export { MUNICIPIOS, TERRITORIOS } from "./territorios";
@@ -86,3 +87,28 @@ export function plantillaCoche(): CocheCandidato {
     ayudas: 0,
   };
 }
+
+/** Mi coche actual como un candidato más: solo tiene sentido seguir con él, es decir, "contado" */
+export function cocheActualConOferta(): { coche: CocheCandidato; escenarios: Escenario[] } {
+  return {
+    coche: structuredClone(COCHE_ACTUAL),
+    escenarios: [
+      {
+        id: `${COCHE_ACTUAL.id}:contado`,
+        cocheId: COCHE_ACTUAL.id,
+        visible: true,
+        condiciones: { modalidad: "contado", descuento: 0 },
+        fuente: "Seguir con el coche: lo que ya pagaste no cuenta, sí lo que sacarías vendiéndolo hoy",
+      },
+    ],
+  };
+}
+
+/** Coches de segunda mano: solo contado o préstamo, que es lo que se ofrece en el mercado */
+export function ofertasUsado(coche: CocheCandidato): Escenario[] {
+  return ofertasPorDefecto(coche).filter((e) =>
+    ["contado", "prestamo"].includes(e.condiciones.modalidad),
+  );
+}
+
+export { COCHES_BMW };

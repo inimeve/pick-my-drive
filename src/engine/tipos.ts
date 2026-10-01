@@ -49,6 +49,8 @@ export interface CocheCandidato {
   depreciacionPrimerAnio: number;
   depreciacionAnual: number;
   mantenimientoAnual: number;
+  /** Mantenimiento ya pagado: no cuesta nada hasta que el coche cumple estos meses de edad */
+  mantenimientoIncluidoMeses?: number;
   /** Coste anual esperado de averías el primer año sin garantía */
   averiasAnual: number;
   seguroTodoRiesgoAnual: number;

@@ -89,7 +89,7 @@ export function costesUsoMes(
     apunta("seguro", (anual / 12) * inflacion);
   }
 
-  if (!incluye.mantenimiento) {
+  if (!incluye.mantenimiento && edadMeses > (coche.mantenimientoIncluidoMeses ?? 0)) {
     // el mantenimiento crece con la edad: más piezas de desgaste
     const crecimiento = 1 + 0.06 * Math.floor(edadAnios);
     apunta("mantenimiento", (coche.mantenimientoAnual / 12) * crecimiento * inflacion);

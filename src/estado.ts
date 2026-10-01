@@ -1,7 +1,10 @@
 import {
+  COCHES_BMW,
   COCHES_POR_DEFECTO,
   ESCENARIOS_POR_DEFECTO,
   MUNICIPIOS,
+  cocheActualConOferta,
+  ofertasUsado,
   PERFIL_POR_DEFECTO,
   TERRITORIOS,
 } from "./data";
@@ -29,6 +32,27 @@ export function comparativaPorDefecto(): Comparativa {
     escenarios: ESCENARIOS_POR_DEFECTO,
     vista: { tipo: "mejores" },
   });
+}
+
+export type PlantillaId = "actual" | "vacia" | "bmw";
+
+export const PLANTILLAS: { id: PlantillaId; nombre: string }[] = [
+  { id: "actual", nombre: "Actual (coches por defecto)" },
+  { id: "vacia", nombre: "Vacía" },
+  { id: "bmw", nombre: "BMW de segunda mano y mi Focus" },
+];
+
+export function comparativaDePlantilla(id: PlantillaId): Comparativa {
+  const base = comparativaPorDefecto();
+  if (id === "actual") return base;
+  if (id === "vacia") return { ...base, coches: [], escenarios: [] };
+  const mio = cocheActualConOferta();
+  const coches = [...structuredClone(COCHES_BMW), mio.coche];
+  return {
+    ...base,
+    coches,
+    escenarios: [...coches.slice(0, -1).flatMap(ofertasUsado), ...mio.escenarios],
+  };
 }
 
 export function contexto(c: Comparativa): Contexto {
