@@ -138,17 +138,20 @@ export const COCHES_BMW: CocheCandidato[] = [
 export const COCHE_ACTUAL: CocheCandidato = {
   id: "focus-actual",
   nombre: "Ford Focus ST Sportbreak (el que ya tengo)",
-  version: "374 CV (B58 microhíbrido), 2021, unos 90.000 km. El 340i del G21 se llama M340i",
+  version: "280 CV (2.3 EcoBoost), matriculado en enero de 2025, unos 17.000 km",
   estado: "usado",
   motorizacion: "gasolina",
   // Lo ya pagado no cuenta: el precio es lo que se sacaría vendiéndolo hoy (coste de oportunidad)
   pvp: 28000,
-  co2: 185,
-  cvFiscales: 16.2,
+  // WLTP de la ficha de km77 (2022-2026); CV fiscales con la fórmula del Reglamento de
+  // Vehículos: 4 cilindros de 87,55 × 94 mm (2.261 cm³)
+  co2: 183,
+  cvFiscales: 14.34,
   edadInicialMeses: 20,
   kmIniciales: 17000,
   vendedorParticular: false,
-  consumo: { litros100: 8.9 },
+  // WLTP 8,0; en Spritmonitor los Focus ST Sportbreak rondan 8,2-8,4 y auto motor und sport midió 9,0
+  consumo: { litros100: 8.5 },
   garantiaMeses: 24,
   garantiaKm: 999999,
   depreciacionPrimerAnio: 0.17,
