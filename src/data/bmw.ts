@@ -8,7 +8,6 @@ const USADO_BMW = {
   estado: "usado",
   motorizacion: "gasolina",
   vendedorParticular: false,
-  garantiaMeses: 12,
   garantiaKm: 999999,
   depreciacionPrimerAnio: 0.2,
   seguroTercerosAnual: 250,
@@ -18,7 +17,7 @@ const USADO_BMW = {
 
 const FUENTE = "docs/research/bmw-usados.md: mediana de anuncios (oct-2026); costes de uso estimados";
 
-export const COCHES_BMW: CocheCandidato[] = [
+const BMW: Omit<CocheCandidato, "garantiaMeses">[] = [
   {
     ...USADO_BMW,
     id: "bmw-330i-f31",
@@ -134,21 +133,28 @@ export const COCHES_BMW: CocheCandidato[] = [
   },
 ];
 
+// garantiaMeses es la edad del coche a la que acaba: los 12 meses del vendedor cuentan desde la compra
+export const COCHES_BMW: CocheCandidato[] = BMW.map((c) => ({ ...c, garantiaMeses: c.edadInicialMeses + 12 }));
+
 /** El coche que ya tiene el usuario: se compara por lo que valdría vendiéndolo hoy */
 export const COCHE_ACTUAL: CocheCandidato = {
   id: "focus-actual",
   nombre: "Ford Focus ST Sportbreak (el que ya tengo)",
-  version: "374 CV (B58 microhíbrido), 2021, unos 90.000 km. El 340i del G21 se llama M340i",
+  version: "280 CV (2.3 EcoBoost), matriculado en enero de 2025, unos 17.000 km",
   estado: "usado",
   motorizacion: "gasolina",
   // Lo ya pagado no cuenta: el precio es lo que se sacaría vendiéndolo hoy (coste de oportunidad)
   pvp: 28000,
-  co2: 185,
-  cvFiscales: 16.2,
+  // WLTP de la ficha de km77 (2022-2026); CV fiscales con la fórmula del Reglamento de
+  // Vehículos: 4 cilindros de 87,55 × 94 mm (2.261 cm³)
+  co2: 183,
+  cvFiscales: 14.34,
   edadInicialMeses: 20,
   kmIniciales: 17000,
   vendedorParticular: false,
-  consumo: { litros100: 8.9 },
+  // WLTP 8,0; en Spritmonitor los Focus ST Sportbreak rondan 8,2-8,4 y auto motor und sport midió 9,0
+  consumo: { litros100: 8.5 },
+  // Garantía legal de 2 años desde la matriculación: le quedan 4 meses
   garantiaMeses: 24,
   garantiaKm: 999999,
   depreciacionPrimerAnio: 0.17,
@@ -158,6 +164,7 @@ export const COCHE_ACTUAL: CocheCandidato = {
   averiasAnual: 400,
   seguroTodoRiesgoAnual: 850,
   seguroTercerosAnual: 250,
+  // Michelin Pilot Sport 4S 235/35 R19 de serie (km77)
   neumaticosJuego: 850,
   neumaticosVidaKm: 35000,
   ayudas: 0,
