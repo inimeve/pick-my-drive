@@ -6,6 +6,7 @@ import { importeGrupo, resumir, type Resumen } from "../engine/resumen";
 import type { Resultado } from "../engine/simulacion";
 import type { CocheCandidato, Escenario } from "../engine/tipos";
 import { MAX_SERIES } from "./analisis";
+import { signoAyuda } from "./ayuda";
 import { MOTORIZACIONES } from "./editor";
 import { el, eur, eurCent, pct } from "./formato";
 import { colorSerie } from "./graficas";
@@ -199,7 +200,7 @@ export function pintarTablaOpciones(caja: HTMLElement) {
       prefs.orden = orden?.id !== c.id ? { id: c.id, sube: true } : orden.sube ? { id: c.id, sube: false } : null;
       repinta();
     });
-    return el("th", c.num ? { class: "num" } : {}, b);
+    return el("th", c.num ? { class: "num" } : {}, b, signoAyuda(c.id, c.nombre));
   };
 
   const fila = (o: Opcion) => {

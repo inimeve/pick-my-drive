@@ -6,6 +6,7 @@ import { GRUPOS_DESGLOSE, MODALIDADES, nombreModalidad } from "../engine/modalid
 import { importeGrupo, resumir, type Resumen } from "../engine/resumen";
 import type { Resultado } from "../engine/simulacion";
 import type { ModalidadId } from "../engine/tipos";
+import { signoAyuda } from "../ui/ayuda";
 import { pintarGraficas, pintarVeredicto, seriesDe } from "../ui/analisis";
 import { editorCoche, MOTORIZACIONES, pintarCalculosOfertas } from "../ui/editor";
 import { el, eur, meses, num, pct } from "../ui/formato";
@@ -64,27 +65,29 @@ function pintarCaraACara() {
   };
 
   const oportunidad = comp.perfil.oportunidadActiva;
-  type Fila = [string, (x: Col) => string, string?];
+  type Fila = [string, (x: Col) => string, string | undefined, string?];
   const filas: (Fila | string)[] = [
     "Cómo es",
-    ["¿Es tuyo al final?", ({ s }) => (s.tuyo ? "Sí, lo puedes vender" : "No, lo devuelves")],
-    ["Cuota del contrato", ({ s }) => (s.cuota === undefined ? "—" : `${eur(s.cuota)}/mes`)],
-    ["TAE", ({ r }) => (r.financiacion ? pct(r.financiacion.tae) : "—")],
+    ["¿Es tuyo al final?", ({ s }) => (s.tuyo ? "Sí, lo puedes vender" : "No, lo devuelves"), undefined, "tuyo"],
+    ["Cuota del contrato", ({ s }) => (s.cuota === undefined ? "—" : `${eur(s.cuota)}/mes`), undefined, "cuota"],
+    ["TAE", ({ r }) => (r.financiacion ? pct(r.financiacion.tae) : "—"), undefined, "tae"],
     "Lo que pagas",
-    ["El primer día", ({ s }) => eur(s.pagoInicial)],
-    ["Media al mes", ({ s }) => eur(s.mediaMes)],
-    ["Pagado en total", ({ s }) => eur(s.pagado)],
+    ["El primer día", ({ s }) => eur(s.pagoInicial), undefined, "hoy"],
+    ["Media al mes", ({ s }) => eur(s.mediaMes), undefined, "mes"],
+    ["Pagado en total", ({ s }) => eur(s.pagado), undefined, "pagado"],
     "Las cuentas",
     [
       "− Recuperas al final",
       ({ s }) => (Math.round(s.alFinal) < 0 ? eur(-s.alFinal) : Math.round(s.alFinal) > 0 ? `pagas ${eur(s.alFinal)}` : "Nada"),
+      undefined,
+      "final",
     ],
-    ...(oportunidad ? [["+ Dejas de ganar", ({ s }: Col) => eur(s.oportunidad)] as Fila] : []),
-    ["= Coste real", ({ s }) => eur(s.costeNeto), "total"],
-    ["Coste real al mes", ({ s }) => eur(s.costeNeto / H)],
+    ...(oportunidad ? [["+ Dejas de ganar", ({ s }: Col) => eur(s.oportunidad), undefined, "oportunidad"] as Fila] : []),
+    ["= Coste real", ({ s }) => eur(s.costeNeto), "total", "real"],
+    ["Coste real al mes", ({ s }) => eur(s.costeNeto / H), undefined, "realMes"],
     "En qué se va el dinero",
     ...GRUPOS_DESGLOSE.filter((g) => columnas.some(({ r }) => Math.round(importeGrupo(r, g.id)) !== 0)).map(
-      (g): Fila => [g.nombre, ({ r }) => eur(importeGrupo(r, g.id))],
+      (g): Fila => [g.nombre, ({ r }) => eur(importeGrupo(r, g.id)), undefined, `g-${g.id}`],
     ),
   ];
   const resumen = (m: ModalidadId) => MODALIDADES.find((x) => x.id === m)!.resumen;
@@ -127,7 +130,7 @@ function pintarCaraACara() {
               : el(
                   "tr",
                   f[2] ? { class: f[2] } : {},
-                  el("th", {}, f[0]),
+                  el("th", {}, f[0], f[3] && signoAyuda(f[3], f[0])),
                   ...columnas.map((x) => el("td", { class: "num" }, f[1](x))),
                   ...faltan.map(() => el("td", { class: "falta" })),
                 ),
