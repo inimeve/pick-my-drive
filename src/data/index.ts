@@ -1,4 +1,4 @@
-import type { CocheCandidato, Escenario, PerfilUso } from "../engine/tipos";
+import type { CocheCandidato, Escenario, ModalidadId, PerfilUso } from "../engine/tipos";
 import { COCHES, OFERTAS } from "./coches";
 import { COCHES_BMW, COCHE_ACTUAL } from "./bmw";
 import { ofertasGenericas, type ParametrosMercado } from "./ofertas";
@@ -104,11 +104,17 @@ export function cocheActualConOferta(): { coche: CocheCandidato; escenarios: Esc
   };
 }
 
-/** Coches de segunda mano: solo contado o préstamo, que es lo que se ofrece en el mercado */
+/** Modalidades que tienen sentido para un coche: el actual solo se puede seguir usando ("contado");
+ * los de segunda mano, contado o préstamo, que es lo que se ofrece en el mercado; los nuevos, todas */
+export function modalidadesPosibles(coche: CocheCandidato): ModalidadId[] {
+  if (coche.id === COCHE_ACTUAL.id) return ["contado"];
+  if (coche.estado === "usado") return ["contado", "prestamo"];
+  return ["contado", "prestamo", "cuota_final", "renting", "suscripcion"];
+}
+
 export function ofertasUsado(coche: CocheCandidato): Escenario[] {
-  return ofertasPorDefecto(coche).filter((e) =>
-    ["contado", "prestamo"].includes(e.condiciones.modalidad),
-  );
+  const posibles = modalidadesPosibles(coche);
+  return ofertasPorDefecto(coche).filter((e) => posibles.includes(e.condiciones.modalidad));
 }
 
 export { COCHES_BMW };
