@@ -83,6 +83,13 @@ describe("contado", () => {
     expect(r.caja[0]).toBe(30000);
   });
 
+  it("el Desembolso acumulado es plano en el precio si no hay costes de uso", () => {
+    const r = simular(contado, coche, ctx);
+    expect(r.desembolsoAcumulado[0]).toBe(30000);
+    expect(r.desembolsoAcumulado[1]).toBeCloseTo(30000, 6);
+    expect(r.desembolsoAcumulado[60]).toBeCloseTo(30000, 6);
+  });
+
   it("desglosa el impuesto de matriculación y la depreciación", () => {
     const r = simular(contado, coche, ctx);
     const imp = matriculacionIncluida(coche);

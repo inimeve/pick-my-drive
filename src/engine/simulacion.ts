@@ -33,6 +33,11 @@ export interface Financiacion {
   cuotaFinal: number;
 }
 
+function acumula(xs: number[]): number[] {
+  let suma = 0;
+  return xs.map((x) => (suma += x));
+}
+
 export interface Resultado {
   escenarioId: string;
   aplica: boolean;
@@ -43,6 +48,8 @@ export interface Resultado {
   costeNetoSinPenalizacion: number[];
   /** Dinero que sale del bolsillo cada mes (0..H) */
   caja: number[];
+  /** Lo puesto de bolsillo hasta cada mes (0..H): suma de `caja`, sin restar el valor del coche */
+  desembolsoAcumulado: number[];
   /** Lo que se paga el primer día, sin descontar ayudas (llegan meses después) */
   pagoInicial: number;
   /** Desglose del Coste neto al final del Horizonte */
@@ -83,6 +90,7 @@ export function simular(
       costeNeto: [],
       costeNetoSinPenalizacion: [],
       caja: [],
+      desembolsoAcumulado: [],
       pagoInicial: 0,
       desglose: {},
       avisos,
@@ -203,6 +211,7 @@ export function simular(
     costeNeto,
     costeNetoSinPenalizacion,
     caja,
+    desembolsoAcumulado: acumula(caja),
     pagoInicial,
     desglose,
     financiacion,

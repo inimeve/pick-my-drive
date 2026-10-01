@@ -122,11 +122,19 @@ function lineas(series: Serie[], datos: (s: Serie) => { x: number; y: number }[]
   }));
 }
 
+export type VistaCoste = "continuar" | "salir" | "desembolso";
+
+function serieCoste(r: Serie["resultado"], vista: VistaCoste): number[] {
+  if (vista === "salir") return r.costeNeto;
+  if (vista === "continuar") return r.costeNetoSinPenalizacion;
+  return r.desembolsoAcumulado;
+}
+
 export function graficaCosteNeto(
   canvas: HTMLCanvasElement,
   series: Serie[],
   H: number,
-  conPenalizacion: boolean,
+  vista: VistaCoste,
 ) {
   const t = tema();
   pinta(canvas, {
@@ -134,10 +142,7 @@ export function graficaCosteNeto(
     data: {
       datasets: lineas(
         series,
-        (s) =>
-          (conPenalizacion ? s.resultado.costeNeto : s.resultado.costeNetoSinPenalizacion).map(
-            (y, x) => ({ x, y }),
-          ),
+        (s) => serieCoste(s.resultado, vista).map((y, x) => ({ x, y })),
         t,
       ),
     },

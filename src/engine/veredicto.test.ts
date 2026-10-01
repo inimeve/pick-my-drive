@@ -9,6 +9,7 @@ const resultado = (escenarioId: string, costeNeto: number[]): Resultado => ({
   costeNeto,
   costeNetoSinPenalizacion: costeNeto,
   caja: [],
+  desembolsoAcumulado: [],
   pagoInicial: 0,
   desglose: {},
   avisos: [],

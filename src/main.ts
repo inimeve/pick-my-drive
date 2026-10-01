@@ -18,7 +18,7 @@ import {
 } from "./estado";
 import { campoCheck, campoDeslizador, campoNumero, campoSelect, campoTexto } from "./ui/campos";
 import { el, eur, eurCent, meses, num, pct } from "./ui/formato";
-import { colorSerie, graficaCaja, graficaCosteNeto, graficaDesglose, type Serie } from "./ui/graficas";
+import { colorSerie, graficaCaja, graficaCosteNeto, graficaDesglose, type Serie, type VistaCoste } from "./ui/graficas";
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 
@@ -260,23 +260,39 @@ function pintarVista() {
 }
 
 /** Vista de la gráfica de Coste neto: no se guarda con la comparativa */
-let conPenalizacion = false;
+let vistaCoste: VistaCoste = "continuar";
+
+const TEXTOS_COSTE: Record<VistaCoste, [string, string]> = {
+  continuar: [
+    "Coste neto acumulado",
+    "Lo que te cuesta llegar a ese mes sin cancelar el contrato: lo pagado más lo que vale o debes del coche. Donde se cruzan dos curvas, cambia cuál conviene.",
+  ],
+  salir: [
+    "Coste neto acumulado",
+    "Lo que te habría costado si cancelaras el contrato ese mes: lo pagado más el coste de salir (deuda, penalización por cancelar y exceso de km, menos lo que vale el coche).",
+  ],
+  desembolso: [
+    "Desembolso acumulado",
+    "Lo que has puesto de tu bolsillo hasta ese mes (entrada, cuotas, impuestos y gastos de uso), sin descontar lo que vale el coche.",
+  ],
+};
 
 function pintarModoSalida() {
-  const boton = (texto: string, penaliza: boolean) => {
-    const b = el("button", { class: "boton", "aria-pressed": String(conPenalizacion === penaliza) }, texto);
+  const boton = (texto: string, vista: VistaCoste) => {
+    const b = el("button", { class: "boton", "aria-pressed": String(vistaCoste === vista) }, texto);
     b.addEventListener("click", () => {
-      conPenalizacion = penaliza;
+      vistaCoste = vista;
       pintarGraficas();
     });
     return b;
   };
-  $("texto-coste").textContent = conPenalizacion
-    ? "Lo que te habría costado si cancelaras el contrato ese mes: lo pagado más el coste de salir (deuda, penalización por cancelar y exceso de km, menos lo que vale el coche)."
-    : "Lo que te cuesta llegar a ese mes sin cancelar el contrato: lo pagado más lo que vale o debes del coche. Donde se cruzan dos curvas, cambia cuál conviene.";
+  const [titulo, texto] = TEXTOS_COSTE[vistaCoste];
+  $("titulo-coste").textContent = titulo;
+  $("texto-coste").textContent = texto;
   $("modo-salida").replaceChildren(
-    boton("Sigo hasta el final", false),
-    boton("Salgo antes de tiempo", true),
+    boton("Sigo hasta el final", "continuar"),
+    boton("Salgo antes de tiempo", "salir"),
+    boton("Lo que pago", "desembolso"),
   );
 }
 
@@ -284,7 +300,7 @@ function pintarGraficas() {
   const series = seriesVisibles();
   const H = comp.perfil.horizonteMeses;
   pintarModoSalida();
-  graficaCosteNeto($("g-coste"), series, H, conPenalizacion);
+  graficaCosteNeto($("g-coste"), series, H, vistaCoste);
   graficaCaja($("g-caja"), series, H);
   graficaDesglose($("g-desglose"), series);
   $("pagos-iniciales").replaceChildren(
