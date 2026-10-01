@@ -6,6 +6,7 @@
     <title>Pick My Drive</title>
     <meta name="description" content="Compara contado, préstamo, cuota final, renting y suscripción con el coste completo de cada coche." />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚗</text></svg>" />
+    <link rel="stylesheet" href="/src/estilos.css" />
   </head>
   <body>
     <header class="cabecera">
@@ -22,24 +23,58 @@
     </header>
 
     <main>
-      <section id="veredicto" class="tarjeta veredicto" aria-live="polite"></section>
+      <section class="tarjeta acto">
+        <div class="acto-cabecera"><span class="acto-num">1</span><h2>Tus opciones</h2></div>
+        <p class="ayuda">Antes de ver números: estas son las formas de hacerte con un coche que estás comparando y lo que implica cada una. Elige las que quieras comparar.</p>
 
-      <section class="tarjeta">
-        <h2>Tu perfil de uso</h2>
+        <h3>Tu situación</h3>
         <p class="ayuda">Lo que es igual en todos los escenarios: cuánto conduces, durante cuánto tiempo y dónde vives.</p>
         <div id="perfil" class="perfil"></div>
         <details class="mas-ajustes">
           <summary>Más ajustes: energía, inflación, seguro, valor residual</summary>
           <div id="perfil-avanzado" class="perfil"></div>
         </details>
+
+        <div id="opciones"></div>
+
+        <details class="plegable">
+          <summary>¿Qué significa cada modalidad?</summary>
+          <div id="modalidades" class="modalidades"></div>
+        </details>
+
+        <details class="plegable">
+          <summary>Tus coches</summary>
+          <p class="ayuda">Cada coche tiene su ficha, donde cambias sus datos y sus ofertas. Los valores por defecto son estimaciones de mercado; cámbialos por los de la oferta real que te den.</p>
+          <div id="coches" class="lista-coches"></div>
+          <div class="botonera">
+            <button id="btn-anadir-coche" class="boton">+ Añadir coche</button>
+            <button id="btn-coche-actual" class="boton">+ Mi coche actual</button>
+          </div>
+        </details>
       </section>
 
-      <section class="tarjeta">
-        <div class="titulo-con-filtros">
-          <h2>Comparativa</h2>
-          <div id="vista" class="filtros" role="group" aria-label="Qué escenarios ver"></div>
+      <section class="tarjeta acto">
+        <div class="acto-cabecera"><span class="acto-num">2</span><h2>El análisis</h2></div>
+        <p class="ayuda">Tres preguntas, de la más intuitiva a la más importante.</p>
+        <div id="que-se-compara" class="que-se-compara"></div>
+
+        <h3 class="pregunta">1. ¿Cuánto sale de tu bolsillo cada mes?</h3>
+        <figure class="grafica">
+          <figcaption>
+            <strong>Pagos mes a mes</strong>
+            <span id="texto-caja"></span>
+          </figcaption>
+          <div class="lienzo"><canvas id="g-caja"></canvas></div>
+          <div id="pagos-iniciales" class="chips"></div>
+        </figure>
+        <div class="como-leer">
+          <strong>Cómo leer esto</strong>
+          <p>Cada barra es lo que sale de tu cuenta ese mes: cuotas, gasolina o electricidad, seguro, taller e impuestos.</p>
+          <p>Un pico al principio es la entrada o el pago al contado. Un pico al final suele ser la cuota final de una financiación.</p>
+          <p>Ojo: pagar poco cada mes no significa que sea más barato; eso se ve en la siguiente gráfica.</p>
         </div>
 
+        <h3 class="pregunta">2. ¿Cuánto te cuesta de verdad, contando lo que vale el coche?</h3>
         <figure class="grafica">
           <figcaption>
             <strong id="titulo-coste">Coste neto acumulado</strong>
@@ -48,45 +83,31 @@
           </figcaption>
           <div class="lienzo alto"><canvas id="g-coste"></canvas></div>
         </figure>
+        <div class="como-leer">
+          <strong>Cómo leer esto</strong>
+          <p>Cada línea es lo que te ha costado de verdad esa opción hasta ese mes: todo lo que has pagado menos lo que te darían por el coche si lo vendieras.</p>
+          <p>Cuanto más abajo, mejor. Donde dos líneas se cruzan, cambia cuál conviene: si piensas cambiar de coche antes, mira ese punto del eje.</p>
+        </div>
 
-        <div class="dos-columnas">
-          <figure class="grafica">
-            <figcaption>
-              <strong>Pagos mes a mes</strong>
-              <span id="texto-caja">Lo que sale de tu bolsillo cada mes (sin contar el pago inicial, que va aparte).</span>
-            </figcaption>
-            <div class="lienzo"><canvas id="g-caja"></canvas></div>
-            <div id="pagos-iniciales" class="chips"></div>
-          </figure>
-          <figure class="grafica">
-            <figcaption>
-              <strong>¿En qué se va el dinero?</strong>
-              <span>Desglose del coste neto al final del horizonte.</span>
-            </figcaption>
-            <div class="lienzo"><canvas id="g-desglose"></canvas></div>
-          </figure>
+        <h3 class="pregunta">3. ¿En qué se va el dinero?</h3>
+        <figure class="grafica">
+          <figcaption>
+            <strong>Desglose del coste neto</strong>
+            <span>Al final del horizonte.</span>
+          </figcaption>
+          <div class="lienzo"><canvas id="g-desglose"></canvas></div>
+        </figure>
+        <div class="como-leer">
+          <strong>Cómo leer esto</strong>
+          <p>La barra entera es el coste real al final. Cada color es un tipo de gasto.</p>
+          <p>«Depreciación» es el dinero que pierde el coche por hacerse viejo: no lo pagas como factura, pero lo pierdes al venderlo.</p>
         </div>
       </section>
 
-      <section class="tarjeta">
-        <h2>Clasificación</h2>
-        <p class="ayuda">Todos los escenarios activos, del más barato al más caro al final del horizonte.</p>
-        <div class="tabla-scroll"><table id="clasificacion" class="tabla"></table></div>
-      </section>
-
-      <section class="tarjeta">
-        <div class="titulo-con-filtros">
-          <h2>Coches y ofertas</h2>
-          <button id="btn-anadir-coche" class="boton">+ Añadir coche</button>
-          <button id="btn-coche-actual" class="boton">+ Mi coche actual</button>
-        </div>
-        <p class="ayuda">Cada coche con sus costes de uso y una oferta por modalidad. Los valores son estimaciones de mercado; cámbialos por los de la oferta real que te den.</p>
-        <div id="coches"></div>
-      </section>
-
-      <section class="tarjeta">
-        <h2>Las modalidades</h2>
-        <div id="modalidades" class="modalidades"></div>
+      <section class="tarjeta acto">
+        <div class="acto-cabecera"><span class="acto-num">3</span><h2>La conclusión</h2></div>
+        <p id="texto-conclusion" class="ayuda"></p>
+        <div id="veredicto" class="veredicto" aria-live="polite"></div>
       </section>
     </main>
 
@@ -95,6 +116,6 @@
     </footer>
 
     <div id="aviso" class="aviso" role="status"></div>
-    <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="/src/paginas/inicio.ts"></script>
   </body>
 </html>
