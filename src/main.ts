@@ -259,10 +259,32 @@ function pintarVista() {
   );
 }
 
+/** Vista de la gráfica de Coste neto: no se guarda con la comparativa */
+let conPenalizacion = false;
+
+function pintarModoSalida() {
+  const boton = (texto: string, penaliza: boolean) => {
+    const b = el("button", { class: "boton", "aria-pressed": String(conPenalizacion === penaliza) }, texto);
+    b.addEventListener("click", () => {
+      conPenalizacion = penaliza;
+      pintarGraficas();
+    });
+    return b;
+  };
+  $("texto-coste").textContent = conPenalizacion
+    ? "Lo que te habría costado si cancelaras el contrato ese mes: lo pagado más el coste de salir (deuda, penalización por cancelar y exceso de km, menos lo que vale el coche)."
+    : "Lo que te cuesta llegar a ese mes sin cancelar el contrato: lo pagado más lo que vale o debes del coche. Donde se cruzan dos curvas, cambia cuál conviene.";
+  $("modo-salida").replaceChildren(
+    boton("Sigo hasta el final", false),
+    boton("Salgo antes de tiempo", true),
+  );
+}
+
 function pintarGraficas() {
   const series = seriesVisibles();
   const H = comp.perfil.horizonteMeses;
-  graficaCosteNeto($("g-coste"), series, H);
+  pintarModoSalida();
+  graficaCosteNeto($("g-coste"), series, H, conPenalizacion);
   graficaCaja($("g-caja"), series, H);
   graficaDesglose($("g-desglose"), series);
   $("pagos-iniciales").replaceChildren(

@@ -37,8 +37,10 @@ export interface Resultado {
   escenarioId: string;
   aplica: boolean;
   motivoNoAplica?: string;
-  /** Coste neto si se sale del Escenario en el mes m (0..H) */
+  /** Coste neto si se sale del Escenario en el mes m (0..H), con penalización por cancelar el contrato */
   costeNeto: number[];
+  /** Igual que `costeNeto` pero suponiendo que el contrato no se cancela: sin penalización */
+  costeNetoSinPenalizacion: number[];
   /** Dinero que sale del bolsillo cada mes (0..H) */
   caja: number[];
   /** Lo que se paga el primer día, sin descontar ayudas (llegan meses después) */
@@ -55,8 +57,9 @@ interface Ciclo {
   fin: number;
   /** Apuntes del ciclo indexados por mes absoluto */
   apuntes: Apunte[];
-  /** Coste de salida si se abandona en el mes m (inicio <= m < fin, o cualquier m si no termina) */
-  salida: (m: number) => Apunte[];
+  /** Coste de salida si se abandona en el mes m (inicio <= m < fin, o cualquier m si no termina).
+   * Con `penalizar` falso no incluye la penalización por cancelar un contrato de uso. */
+  salida: (m: number, penalizar?: boolean) => Apunte[];
   incluye?: Inclusiones;
 }
 
@@ -78,6 +81,7 @@ export function simular(
       motivoNoAplica:
         "El leasing es para autónomos y empresas: su ventaja es deducir el IVA y meter las cuotas como gasto. Un particular no puede hacerlo y muchas entidades ni se lo ofrecen.",
       costeNeto: [],
+      costeNetoSinPenalizacion: [],
       caja: [],
       pagoInicial: 0,
       desglose: {},
@@ -159,16 +163,21 @@ export function simular(
     return s;
   });
 
-  const costeNeto: number[] = [];
-  for (let m = 0; m <= H; m++) {
-    const activo = cicloActivo(ciclos, m);
-    let total = 0;
-    ciclos.forEach((ciclo, k) => {
-      if (ciclo.inicio <= activo.inicio) total += acumulado[k]![m]!;
-    });
-    if (m < activo.fin) for (const a of activo.salida(m)) total += a.importe;
-    costeNeto.push(total);
-  }
+  const costeNetoCon = (penalizar: boolean) => {
+    const serie: number[] = [];
+    for (let m = 0; m <= H; m++) {
+      const activo = cicloActivo(ciclos, m);
+      let total = 0;
+      ciclos.forEach((ciclo, k) => {
+        if (ciclo.inicio <= activo.inicio) total += acumulado[k]![m]!;
+      });
+      if (m < activo.fin) for (const a of activo.salida(m, penalizar)) total += a.importe;
+      serie.push(total);
+    }
+    return serie;
+  };
+  const costeNeto = costeNetoCon(true);
+  const costeNetoSinPenalizacion = costeNetoCon(false);
 
   // desglose por categoría al final del Horizonte
   const desglose: Resultado["desglose"] = {};
@@ -192,6 +201,7 @@ export function simular(
     escenarioId: escenario.id,
     aplica: true,
     costeNeto,
+    costeNetoSinPenalizacion,
     caja,
     pagoInicial,
     desglose,
@@ -421,11 +431,11 @@ function cicloUso(
     fin,
     apuntes,
     incluye: c.incluye,
-    salida: (m) => {
+    salida: (m, penalizar = true) => {
       const transcurridos = m - inicio;
       const restantes = Math.max(0, inicio + c.plazoMeses - m);
       const importe =
-        restantes * c.cuota * c.penalizacionCancelacion +
+        (penalizar ? restantes * c.cuota * c.penalizacionCancelacion : 0) +
         excesoKm(ctx.perfil, c.kmAnualesContrato, transcurridos, c.excesoKm) +
         (transcurridos > 0 ? c.daniosDevolucion : 0);
       return importe > 0 ? [{ mes: m, categoria: "fin_contrato", importe }] : [];

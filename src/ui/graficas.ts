@@ -122,12 +122,24 @@ function lineas(series: Serie[], datos: (s: Serie) => { x: number; y: number }[]
   }));
 }
 
-export function graficaCosteNeto(canvas: HTMLCanvasElement, series: Serie[], H: number) {
+export function graficaCosteNeto(
+  canvas: HTMLCanvasElement,
+  series: Serie[],
+  H: number,
+  conPenalizacion: boolean,
+) {
   const t = tema();
   pinta(canvas, {
     type: "line",
     data: {
-      datasets: lineas(series, (s) => s.resultado.costeNeto.map((y, x) => ({ x, y })), t),
+      datasets: lineas(
+        series,
+        (s) =>
+          (conPenalizacion ? s.resultado.costeNeto : s.resultado.costeNetoSinPenalizacion).map(
+            (y, x) => ({ x, y }),
+          ),
+        t,
+      ),
     },
     options: {
       maintainAspectRatio: false,

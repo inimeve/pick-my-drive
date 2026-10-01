@@ -146,6 +146,14 @@ describe("renting", () => {
     expect(r.costeNeto[24]).toBeCloseTo(2000 + 400 * 24 + 0.5 * 400 * 36 + exceso + 300, 6);
   });
 
+  it("sin penalización, la curva no incluye las cuotas restantes y coincide al final del Horizonte", () => {
+    const r = simular(renting(60), coche, ctx);
+    const exceso = (5000 / 12) * 24 * 0.06;
+    expect(r.costeNetoSinPenalizacion[0]).toBeCloseTo(2000, 6);
+    expect(r.costeNetoSinPenalizacion[24]).toBeCloseTo(2000 + 400 * 24 + exceso + 300, 6);
+    expect(r.costeNetoSinPenalizacion[60]).toBeCloseTo(r.costeNeto[60]!, 6);
+  });
+
   it("la renovación se contrata hasta el final del Horizonte, sin penalización", () => {
     const r = simular(renting(48), coche, ctx);
     const exceso = 5000 * 5 * 0.06;

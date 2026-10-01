@@ -7,6 +7,7 @@ const resultado = (escenarioId: string, costeNeto: number[]): Resultado => ({
   escenarioId,
   aplica: true,
   costeNeto,
+  costeNetoSinPenalizacion: costeNeto,
   caja: [],
   pagoInicial: 0,
   desglose: {},
