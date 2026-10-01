@@ -744,3 +744,42 @@ main {
     margin-left: 0;
   }
 }
+
+/* Signo «?» junto a un concepto y su explicación, fija abajo a la izquierda */
+.signo-ayuda {
+  width: 16px;
+  height: 16px;
+  margin-left: 6px;
+  padding: 0;
+  border: 1px solid var(--eje);
+  border-radius: 50%;
+  background: none;
+  color: var(--tinta-suave);
+  font: 600 11px/1 inherit;
+  vertical-align: middle;
+  cursor: help;
+}
+.signo-ayuda:hover,
+.signo-ayuda:focus-visible {
+  border-color: var(--acento);
+  color: var(--acento);
+}
+.panel-ayuda {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 10;
+  max-width: min(360px, calc(100vw - 32px));
+  padding: 12px 14px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--superficie-2);
+  color: var(--tinta);
+  font-size: 14px;
+  line-height: 1.45;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  pointer-events: none;
+}
+.panel-ayuda[hidden] {
+  display: none;
+}
