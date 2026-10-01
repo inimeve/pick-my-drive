@@ -1,0 +1,3 @@
+# Leasing visible pero marcado como no aplicable a particulares
+
+La herramienta está pensada para particulares. El Leasing es arrendamiento financiero pensado para quien tiene actividad económica: su atractivo está en deducir el IVA y meter las cuotas como gasto, cosa que un particular no puede hacer, y muchas entidades ni siquiera se lo ofrecen. En lugar de quitarlo sin más, se muestra como Modalidad "no aplica" con la explicación, para que quien lo busque entienda por qué no se compara. Si en el futuro se añade un perfil de autónomo o empresa, esta decisión debe revisarse junto con la fiscalidad (IVA, gasto deducible, amortización).

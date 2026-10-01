@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pick My Drive</title>
+    <meta name="description" content="Compara contado, préstamo, cuota final, renting y suscripción con el coste completo de cada coche." />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚗</text></svg>" />
+  </head>
+  <body>
+    <header class="cabecera">
+      <div class="marca">
+        <h1>Pick My Drive</h1>
+        <p>¿Contado, préstamo, cuota final, renting o suscripción? El coste completo de cada opción, mes a mes.</p>
+      </div>
+      <div class="acciones">
+        <button id="btn-compartir" class="boton">Copiar enlace</button>
+        <button id="btn-guardar" class="boton">Guardar</button>
+        <select id="sel-guardadas" class="boton" aria-label="Mis comparativas guardadas"></select>
+        <button id="btn-restablecer" class="boton boton-sutil">Restablecer</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="veredicto" class="tarjeta veredicto" aria-live="polite"></section>
+
+      <section class="tarjeta">
+        <h2>Tu perfil de uso</h2>
+        <p class="ayuda">Lo que es igual en todos los escenarios: cuánto conduces, durante cuánto tiempo y dónde vives.</p>
+        <div id="perfil" class="perfil"></div>
+        <details class="mas-ajustes">
+          <summary>Más ajustes: energía, inflación, seguro, valor residual</summary>
+          <div id="perfil-avanzado" class="perfil"></div>
+        </details>
+      </section>
+
+      <section class="tarjeta">
+        <div class="titulo-con-filtros">
+          <h2>Comparativa</h2>
+          <div id="vista" class="filtros" role="group" aria-label="Qué escenarios ver"></div>
+        </div>
+
+        <figure class="grafica">
+          <figcaption>
+            <strong>Coste neto acumulado</strong>
+            <span>Lo que te habría costado si cambiaras de coche ese mes: lo pagado más el coste de salir (deuda y penalizaciones menos lo que vale el coche). Donde se cruzan dos curvas, cambia cuál conviene.</span>
+          </figcaption>
+          <div class="lienzo alto"><canvas id="g-coste"></canvas></div>
+        </figure>
+
+        <div class="dos-columnas">
+          <figure class="grafica">
+            <figcaption>
+              <strong>Pagos mes a mes</strong>
+              <span>Lo que sale de tu bolsillo cada mes (sin contar el pago inicial, que va aparte).</span>
+            </figcaption>
+            <div class="lienzo"><canvas id="g-caja"></canvas></div>
+            <div id="pagos-iniciales" class="chips"></div>
+          </figure>
+          <figure class="grafica">
+            <figcaption>
+              <strong>¿En qué se va el dinero?</strong>
+              <span>Desglose del coste neto al final del horizonte.</span>
+            </figcaption>
+            <div class="lienzo"><canvas id="g-desglose"></canvas></div>
+          </figure>
+        </div>
+      </section>
+
+      <section class="tarjeta">
+        <h2>Clasificación</h2>
+        <p class="ayuda">Todos los escenarios activos, del más barato al más caro al final del horizonte.</p>
+        <div class="tabla-scroll"><table id="clasificacion" class="tabla"></table></div>
+      </section>
+
+      <section class="tarjeta">
+        <div class="titulo-con-filtros">
+          <h2>Coches y ofertas</h2>
+          <button id="btn-anadir-coche" class="boton">+ Añadir coche</button>
+        </div>
+        <p class="ayuda">Cada coche con sus costes de uso y una oferta por modalidad. Los valores son estimaciones de mercado; cámbialos por los de la oferta real que te den.</p>
+        <div id="coches"></div>
+      </section>
+
+      <section class="tarjeta">
+        <h2>Las modalidades</h2>
+        <div id="modalidades" class="modalidades"></div>
+      </section>
+    </main>
+
+    <footer class="pie">
+      <p>Herramienta orientativa: no sustituye una oferta vinculante ni asesoramiento financiero. Los datos por defecto llevan su fuente y fecha en <a href="https://github.com/inimeve/pick-my-drive/tree/main/docs/research">docs/research</a>.</p>
+    </footer>
+
+    <div id="aviso" class="aviso" role="status"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
