@@ -166,14 +166,19 @@ export function graficaCosteNeto(
   });
 }
 
-export function graficaCaja(canvas: HTMLCanvasElement, series: Serie[], H: number) {
+export function graficaCaja(
+  canvas: HTMLCanvasElement,
+  series: Serie[],
+  H: number,
+  incluirInicial: boolean,
+) {
   const t = tema();
   pinta(canvas, {
     type: "line",
     data: {
       datasets: lineas(
         series,
-        (s) => s.resultado.caja.map((y, x) => ({ x, y })).filter((p) => p.x > 0),
+        (s) => s.resultado.caja.map((y, x) => ({ x, y })).filter((p) => incluirInicial || p.x > 0),
         t,
       ).map((d) => ({ ...d, stepped: "middle" as const })),
     },

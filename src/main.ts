@@ -301,7 +301,11 @@ function pintarGraficas() {
   const H = comp.perfil.horizonteMeses;
   pintarModoSalida();
   graficaCosteNeto($("g-coste"), series, H, vistaCoste);
-  graficaCaja($("g-caja"), series, H);
+  graficaCaja($("g-caja"), series, H, vistaCoste === "desembolso");
+  $("texto-caja").textContent =
+    vistaCoste === "desembolso"
+      ? "Lo que sale de tu bolsillo cada mes, incluido el pago inicial del mes 0."
+      : "Lo que sale de tu bolsillo cada mes (sin contar el pago inicial, que va aparte).";
   graficaDesglose($("g-desglose"), series);
   $("pagos-iniciales").replaceChildren(
     el("span", {}, "Pago el primer día (las ayudas llegan después):"),
