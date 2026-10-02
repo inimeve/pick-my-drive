@@ -468,6 +468,12 @@ function editorCoche(c: CocheCandidato): HTMLElement {
         campoNumero("Seguro a todo riesgo", c.seguroTodoRiesgoAnual, set("seguroTodoRiesgoAnual"), { paso: 10, sufijo: "€/año" }),
         campoNumero("Seguro a terceros ampliado", c.seguroTercerosAnual, set("seguroTercerosAnual"), { paso: 10, sufijo: "€/año" }),
         campoNumero("Mantenimiento", c.mantenimientoAnual, set("mantenimientoAnual"), { paso: 10, sufijo: "€/año" }),
+        campoNumero("Mantenimiento ya pagado (edad del coche)", (c.mantenimientoIncluidoMeses ?? 0) / 12, (v) => set("mantenimientoIncluidoMeses")(Math.round(v * 12)), {
+          min: 0,
+          paso: 1,
+          sufijo: "años",
+          ayuda: "Hasta que el coche cumple esta edad no pagas mantenimiento, por ejemplo si lo incluyó el vendedor en el precio",
+        }),
         campoNumero("Averías sin garantía", c.averiasAnual, set("averiasAnual"), { paso: 10, sufijo: "€/año" }),
         campoNumero("Juego de neumáticos", c.neumaticosJuego, set("neumaticosJuego"), { paso: 10, sufijo: "€" }),
         campoNumero("Duración neumáticos", c.neumaticosVidaKm, set("neumaticosVidaKm"), { paso: 1000, sufijo: "km" }),
