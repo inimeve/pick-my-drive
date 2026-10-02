@@ -131,6 +131,37 @@ const BMW: Omit<CocheCandidato, "garantiaMeses">[] = [
     neumaticosJuego: 850,
     fuente: FUENTE,
   },
+  // Clásicos modernos de 17 a 22 años. docs/research/bmw-e46-e61.md (2026-10-02). El motor sube el
+  // mantenimiento un 6 % por año de edad, así que su base es baja a propósito: a esta edad ya casi
+  // duplica el valor base. Con tanta edad solo cuenta el seguro a terceros (aniosTodoRiesgo = 5).
+  {
+    ...USADO_BMW,
+    id: "bmw-530i-e61",
+    nombre: "BMW 530i Touring E61 (post LCI) Pack M",
+    version: "272 CV (N53, inyección directa), 2009, unos 175.000 km. Pack M (M Sport) completo y bien conservado",
+    pvp: 12500, co2: 188, cvFiscales: 19.97,
+    edadInicialMeses: 204, kmIniciales: 175000,
+    consumo: { litros100: 10.2 },
+    depreciacionAnual: 0.06,
+    mantenimientoAnual: 700, averiasAnual: 2200,
+    seguroTodoRiesgoAnual: 600,
+    neumaticosJuego: 800,
+    fuente: "docs/research/bmw-e46-e61.md: anuncios de España, Francia y Alemania (oct-2026); costes de uso estimados",
+  },
+  {
+    ...USADO_BMW,
+    id: "bmw-330i-e46",
+    nombre: "BMW 330i Touring E46 Pack M",
+    version: "231 CV (M54B30), 2004, unos 220.000 km. Paquete M (M Sport) completo y bien conservado",
+    pvp: 10000, co2: 222, cvFiscales: 19.9,
+    edadInicialMeses: 264, kmIniciales: 220000,
+    consumo: { litros100: 10.6 },
+    depreciacionAnual: 0.03,
+    mantenimientoAnual: 550, averiasAnual: 1600,
+    seguroTodoRiesgoAnual: 500,
+    neumaticosJuego: 480,
+    fuente: "docs/research/bmw-e46-e61.md: anuncios de España y Alemania (oct-2026); costes de uso estimados",
+  },
 ];
 
 // garantiaMeses es la edad del coche a la que acaba: los 12 meses del vendedor cuentan desde la compra

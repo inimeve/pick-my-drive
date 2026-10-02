@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Coche · Pick My Drive</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚗</text></svg>" />
+    <link rel="stylesheet" href="/src/estilos.css" />
+  </head>
+  <body>
+    <header class="cabecera cabecera-ficha">
+      <div class="marca">
+        <a href="./" class="volver">← Todas las opciones</a>
+        <h1 id="titulo">&nbsp;</h1>
+        <p id="subtitulo">&nbsp;</p>
+      </div>
+    </header>
+
+    <main>
+      <section class="tarjeta acto">
+        <div class="acto-cabecera"><span class="acto-num">1</span><h2>El coche y sus ofertas</h2></div>
+        <p class="ayuda">Cambia aquí sus datos y las condiciones de cada modalidad; todo lo de abajo se recalcula al momento. Junto a cada oferta ves su cuota, su TAE y su coste.</p>
+        <div id="editor"></div>
+      </section>
+
+      <section class="tarjeta acto">
+        <div class="acto-cabecera"><span class="acto-num">2</span><h2>Sus modalidades, cara a cara</h2></div>
+        <p class="ayuda">Las mismas cuentas para cada forma de hacerte con este coche.</p>
+        <div id="cara-a-cara"></div>
+      </section>
+
+      <section class="tarjeta acto">
+        <div class="acto-cabecera"><span class="acto-num">3</span><h2>El análisis</h2></div>
+        <p class="ayuda">Cómo evoluciona cada modalidad mes a mes.</p>
+
+        <h3 class="pregunta">1. ¿Cuánto sale de tu bolsillo cada mes?</h3>
+        <figure class="grafica">
+          <figcaption>
+            <strong>Pagos mes a mes</strong>
+            <span id="texto-caja"></span>
+          </figcaption>
+          <div class="lienzo"><canvas id="g-caja"></canvas></div>
+          <div id="pagos-iniciales" class="chips"></div>
+        </figure>
+        <div class="como-leer">
+          <strong>Cómo leer esto</strong>
+          <p>Cada barra es lo que sale de tu cuenta ese mes: cuotas, gasolina o electricidad, seguro, taller e impuestos.</p>
+          <p>Un pico al principio es la entrada o el pago al contado. Un pico al final suele ser la cuota final de una financiación.</p>
+        </div>
+
+        <h3 class="pregunta">2. ¿Cuánto te cuesta de verdad, contando lo que vale el coche?</h3>
+        <figure class="grafica">
+          <figcaption>
+            <strong id="titulo-coste">Coste neto acumulado</strong>
+            <span id="texto-coste"></span>
+            <div id="modo-salida" class="filtros" role="group" aria-label="Qué mostrar en la gráfica de coste"></div>
+          </figcaption>
+          <div class="lienzo alto"><canvas id="g-coste"></canvas></div>
+        </figure>
+        <div class="como-leer">
+          <strong>Cómo leer esto</strong>
+          <p>Cada línea es lo que te ha costado de verdad esa modalidad hasta ese mes: todo lo que has pagado menos lo que te darían por el coche si lo vendieras.</p>
+          <p>Cuanto más abajo, mejor. Donde dos líneas se cruzan, cambia cuál conviene.</p>
+        </div>
+
+        <h3 class="pregunta">3. ¿En qué se va el dinero?</h3>
+        <figure class="grafica">
+          <figcaption>
+            <strong>Desglose del coste neto</strong>
+            <span>Al final del horizonte.</span>
+          </figcaption>
+          <div class="lienzo"><canvas id="g-desglose"></canvas></div>
+        </figure>
+      </section>
+
+      <section class="tarjeta acto">
+        <div class="acto-cabecera"><span class="acto-num">4</span><h2>La conclusión</h2></div>
+        <p class="ayuda">Para este coche, la modalidad que más te conviene y cuándo dejaría de ser así.</p>
+        <div id="veredicto" class="veredicto" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <footer class="pie">
+      <p>Herramienta orientativa: no sustituye una oferta vinculante ni asesoramiento financiero.</p>
+    </footer>
+
+    <div id="aviso" class="aviso" role="status"></div>
+    <script type="module" src="/src/paginas/coche.ts"></script>
+  </body>
+</html>

@@ -14,7 +14,9 @@ import type { CocheCandidato, Escenario, ModalidadId, PerfilUso } from "./engine
 export type Vista =
   | { tipo: "mejores" }
   | { tipo: "coche"; cocheId: string }
-  | { tipo: "modalidad"; modalidad: ModalidadId };
+  | { tipo: "modalidad"; modalidad: ModalidadId }
+  /** Escenarios elegidos a mano, en el orden en que se eligieron (su posición fija su color) */
+  | { tipo: "eleccion"; escenarios: string[] };
 
 export interface Comparativa {
   version: 1;
