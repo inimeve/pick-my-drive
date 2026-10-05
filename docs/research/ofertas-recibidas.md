@@ -54,3 +54,31 @@ Cargadas el **5 de octubre de 2026** en la plantilla "Kia Niro, BYD, Toyota y Ma
 ## Mazda CX-30 Centre-Line (Idoneo)
 
 Renting de **402 €/mes** con IVA, 36 meses, 15.000 km/año y fianza de importe no publicado. Se añade al CX-30 Centre-Line manual de `coches.md`, con sus ofertas de allí.
+
+## Condiciones del renting de Idoneo (investigado el 5-oct-2026)
+
+Sale de la página de propuestas (cotizaciones y letra pequeña) y de las guías de [Idoneo](https://idoneo.es/renting/guias/contrato-de-renting). La propuesta **no publica** la fianza, el precio del exceso de km, la penalización por cancelar, los daños ni el nombre de la empresa de renting.
+
+**Precios por plazo y km al año** (€/mes con IVA):
+
+| Km al año | Niro Drive blanco 36 / 48 / 60 meses | CX-30 Centre-Line 36 / 48 / 60 meses |
+|---|---|---|
+| 10.000 | 382 / 378 / 371 | 382 / 387 / 387 |
+| 15.000 | 403 / 397 / **390** | **402** / 405 / 403 |
+| 20.000 | 424 / 415 / 407 | 422 / 423 / 419 |
+| 25.000 | 450 / 440 / 433 | 452 / 452 / 451 |
+| 30.000 | 478 / 466 / 459 | 482 / 486 / 482 |
+
+El Niro Drive rojo (2027): 392 € a 60 meses con 10.000 km, **419 €** con 15.000 km, 450 € con 20.000 km, y **sin fianza**.
+
+| Condición | Qué dice | Lo que usa la comparativa |
+|---|---|---|
+| Qué incluye | Seguro a todo riesgo **sin franquicia**, mantenimiento, averías, neumáticos, impuestos, ITV y asistencia | Todo incluido: coincide |
+| Cuota | **Puede variar cada año según la siniestralidad** (parte del seguro) | Cuota fija: puede quedarse corta |
+| Neumáticos | El número que se cambia depende de los km contratados y del desgaste | Incluidos |
+| Fianza | Solo el Niro blanco de 390 € y el CX-30 la llevan; importe no publicado, equivale a una o varias cuotas y se devuelve al entregar el coche sin daños ni deudas | No se modela: es dinero parado (una cuota de 400 € a un 3 % durante 5 años son unos 60 €) |
+| Exceso de km | No publicado. Las guías dan 0,03-0,10 €/km. Los 5.000 km más al año cuestan en la cuota 17-30 €/mes, o sea 0,04-0,07 €/km | 0,07 €/km. Con 15.000 km al año no hay exceso |
+| Cancelación y daños | No publicados | 50 % de las cuotas pendientes y 300 €: estimaciones |
+| Validez | **7 días**; sujeta a la aprobación de la operadora de renting; solo para modelos con menos de 6 meses de antigüedad | Sin fecha en la etiqueta |
+
+**Conclusión:** las cifras cargadas son coherentes, no cambio ninguna. Hay dos riesgos que no se pueden modelar: la cuota puede subir cada año y la fianza es desconocida. El Niro de 2027 cuesta 29 € más al mes (unos 1.700 € en 5 años) pero no pide fianza.

@@ -305,7 +305,7 @@ function ofertasNiroRecibidas(): Escenario[] {
     prestamo(drive()),
     real(renting(drive(), {
       cuota: 390, entrada: 0, plazoMeses: 60, kmAnualesContrato: 15000, excesoKm: 0.07,
-      fuente: `Idoneo (oct-2026): 390 € con IVA, la unidad de 2026; la de 2027 sale a 419 €. Pide fianza (importe no publicado). ${EXCESO}`,
+      fuente: `Idoneo (oct-2026): 390 € con IVA, la unidad de 2026; la de 2027 sale a 419 € y no pide fianza. Todo incluido (seguro a todo riesgo sin franquicia, mantenimiento, averías, neumáticos, impuestos, ITV y asistencia). Propuesta válida 7 días y sujeta a la aprobación de la financiera. La parte del seguro puede variar cada año según la siniestralidad. Pide fianza, que se devuelve al entregar el coche (importe no publicado). ${EXCESO}: Idoneo da entre 0,03 y 0,10 €/km`,
     }), IDONEO),
 
     real(contado(emotion()), KIA_SANTANDER),
@@ -453,7 +453,7 @@ export function ofertasToyotaMazda(): Escenario[] {
     ...OFERTAS.filter((e) => e.cocheId === centreLine.id && e.condiciones.modalidad !== "renting"),
     real(renting(centreLine, {
       cuota: 402, entrada: 0, plazoMeses: 36, kmAnualesContrato: 15000, excesoKm: 0.07,
-      fuente: `Idoneo (oct-2026): CX-30 Centre-Line de 2025, 402 € con IVA; pide fianza (importe no publicado). ${EXCESO}`,
+      fuente: `Idoneo (oct-2026): CX-30 Centre-Line de 2025, 402 € con IVA. Todo incluido (seguro a todo riesgo sin franquicia, mantenimiento, averías, neumáticos, impuestos, ITV y asistencia). Propuesta válida 7 días y sujeta a la aprobación de la financiera. La parte del seguro puede variar cada año según la siniestralidad. Pide fianza, que se devuelve al entregar el coche (importe no publicado). ${EXCESO}: Idoneo da entre 0,03 y 0,10 €/km`,
     }), IDONEO),
   ];
 }
