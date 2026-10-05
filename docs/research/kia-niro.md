@@ -10,7 +10,7 @@ Investigación hecha el **5 de octubre de 2026**. Convenciones (las mismas que e
 
 ## 1. Qué Niro se vende hoy
 
-El **Niro 2026 llega a España solo como híbrido (HEV)**, con etiqueta ECO. Ya no hay Niro eléctrico ni híbrido enchufable en el catálogo español. Por eso la plantilla solo incluye el HEV. (Los anuncios de Bipi con un "Niro PHEV Drive" y las tarifas de Kia Flex del e-Niro son de la generación anterior.)
+El **Niro 2026 llega a España solo como híbrido (HEV)**, con etiqueta ECO. Ya no hay Niro eléctrico ni híbrido enchufable en el catálogo español. Por eso la plantilla solo incluye el HEV. La plantilla ya no lleva el Niro de segunda mano: solo se valoran coches nuevos. (Los anuncios de Bipi con un "Niro PHEV Drive" y las tarifas de Kia Flex del e-Niro son de la generación anterior.)
 
 Acabados: **Concept, Drive y Emotion**, con los paquetes Design (+1.800 €) y Luxury (+3.000 €).
 
@@ -39,6 +39,8 @@ Versión elegida: **Niro HEV Concept**, la más barata y la que tiene más ofert
 - **Financiando = 24.410 €** (descuento por financiar de 1.400 €)
 
 Si en realidad los 1.790 € también exigen financiar, el contado sería 27.600 € y el Niro quedaría peor parado al contado. **Es el dato más importante de comprobar.**
+
+Revisión del 5-oct-2026: otra fuente ([Qué coche me compro](https://www.quecochemecompro.com/precios/kia-niro/)) da una tarifa distinta, **33.458 €**, y un descuento máximo de **9.048 €** "financiando con la marca" (33.458 − 9.048 = 24.410). Ambas tarifas llegan a los mismos 24.410 €, pero ninguna explica los 1.790 €, y esta segunda sugiere que el precio completo exige financiar. El contado de 25.810 € puede ser, por tanto, **optimista**.
 
 ## 3. Ficha técnica (Niro HEV 2026)
 
@@ -115,21 +117,7 @@ No aplica a un particular (ver `CONTEXT.md`).
 
 No encontré valores residuales del Niro. Parto del índice GANVAM para híbridos (68 % a 3 años, ver `coches.md` §0.1), pero lo bajo a **64 % a 3 años y 53 % a 5 años** (**estimación**). El motivo: el Niro sale con más de 10.000 € de descuento sobre tarifa, y el valor de reventa se mueve más cerca del precio realmente pagado que de la tarifa.
 
-## 6. Niro de segunda mano (2023)
-
-| Dato | Valor | Nota |
-|---|---|---|
-| Rango de anuncios de profesionales (2023) | 18.900 a 26.490 € | coches.net y similares, sin fecha exacta |
-| Precio propuesto | **22.000 €** | **estimación**: parte media del rango |
-| Km | unos 55.000 | **estimación**. La media de todos los Niro usados es 67.224 km y los de 2023 tienen menos |
-| Edad | 36 meses | |
-| CO₂ y consumo | 103 g/km y 4,6 l/100 km (WLTP 4,4-4,6) | Concept 2022-2024, km77 |
-| CV fiscales | **11,56** | Mismo motor que el 2026 |
-| Garantía | 84 meses de edad, 150.000 km | Los 7 años de Kia desde la matriculación; le quedan 4 |
-
-Comprado a un profesional: sin ITP. Solo se ofrecen contado y préstamo, como en los otros usados.
-
-## 7. Lo que no encontré
+## 6. Lo que no encontré
 
 - El desglose de los 1.790 € de diferencia en el precio (§2).
 - Las condiciones de la financiación de Kia con cuota final (comisión de apertura, km, exceso).

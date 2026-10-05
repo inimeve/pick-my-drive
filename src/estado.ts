@@ -5,6 +5,8 @@ import {
   ESCENARIOS_POR_DEFECTO,
   MUNICIPIOS,
   cocheActualConOferta,
+  cocheActualCx30ConOferta,
+  ofertasByd,
   ofertasKia,
   ofertasUsado,
   PERFIL_POR_DEFECTO,
@@ -44,22 +46,23 @@ export const PLANTILLAS: { id: PlantillaId; nombre: string }[] = [
   { id: "actual", nombre: "Actual (coches por defecto)" },
   { id: "vacia", nombre: "Vacía" },
   { id: "bmw", nombre: "BMW de segunda mano y mi Focus" },
-  { id: "kia", nombre: "Kia Niro (nuevo y usado) y mi Focus" },
+  { id: "kia", nombre: "Kia Niro y BYD híbridos (nuevos) y mi Mazda CX-30" },
 ];
 
 export function comparativaDePlantilla(id: PlantillaId): Comparativa {
   const base = comparativaPorDefecto();
   if (id === "actual") return base;
   if (id === "vacia") return { ...base, coches: [], escenarios: [] };
-  const mio = cocheActualConOferta();
   if (id === "kia") {
-    const [nuevo, usado] = structuredClone(COCHES_KIA) as [CocheCandidato, CocheCandidato];
+    const mio = cocheActualCx30ConOferta();
+    const nuevos = structuredClone(COCHES_KIA);
     return {
       ...base,
-      coches: [nuevo, usado, mio.coche],
-      escenarios: [...ofertasKia(), ...ofertasUsado(usado), ...mio.escenarios],
+      coches: [...nuevos, mio.coche],
+      escenarios: [...ofertasKia(), ...ofertasByd(), ...mio.escenarios],
     };
   }
+  const mio = cocheActualConOferta();
   const coches = [...structuredClone(COCHES_BMW), mio.coche];
   return {
     ...base,
