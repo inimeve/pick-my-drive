@@ -225,7 +225,7 @@ export const COCHES: CocheCandidato[] = [
 const BANCO = "Préstamo bancario típico: TIN 5,5%, comisión de apertura 0,5% (comparadores, sep-2026)";
 const SIN_INCLUIR_NEUMATICOS: Inclusiones = { ...TODO_INCLUIDO, neumaticos: false };
 
-function prestamo(coche: CocheCandidato): Escenario {
+export function prestamo(coche: CocheCandidato): Escenario {
   return {
     id: `${coche.id}:prestamo`,
     cocheId: coche.id,
@@ -243,7 +243,7 @@ function prestamo(coche: CocheCandidato): Escenario {
   };
 }
 
-function contado(coche: CocheCandidato): Escenario {
+export function contado(coche: CocheCandidato): Escenario {
   return { id: `${coche.id}:contado`, cocheId: coche.id, visible: true, condiciones: { modalidad: "contado", descuento: 0 } };
 }
 
@@ -259,7 +259,7 @@ interface CuotaFinal {
   fuente: string;
 }
 
-function cuotaFinal(coche: CocheCandidato, o: CuotaFinal): Escenario {
+export function cuotaFinal(coche: CocheCandidato, o: CuotaFinal): Escenario {
   const { fuente, ...c } = o;
   return {
     id: `${coche.id}:cuota_final`,
@@ -280,7 +280,7 @@ interface Uso {
   fuente: string;
 }
 
-function renting(coche: CocheCandidato, o: Uso): Escenario {
+export function renting(coche: CocheCandidato, o: Uso): Escenario {
   const { fuente, incluye = TODO_INCLUIDO, ...c } = o;
   return {
     id: `${coche.id}:renting`,
@@ -291,7 +291,7 @@ function renting(coche: CocheCandidato, o: Uso): Escenario {
   };
 }
 
-function suscripcion(coche: CocheCandidato, o: Uso): Escenario {
+export function suscripcion(coche: CocheCandidato, o: Uso): Escenario {
   const { fuente, incluye = TODO_INCLUIDO, ...c } = o;
   return {
     id: `${coche.id}:suscripcion`,
@@ -303,8 +303,8 @@ function suscripcion(coche: CocheCandidato, o: Uso): Escenario {
 }
 
 const coche = (id: string) => COCHES.find((c) => c.id === id)!;
-const EXCESO = "€/km de exceso no publicado: estimación";
-const BIPI = "Bipi (sep-2026): 800 km/mes, 0,12 €/km de exceso, permanencia de 3 meses";
+export const EXCESO = "€/km de exceso no publicado: estimación";
+export const BIPI = "Bipi (sep-2026): 800 km/mes, 0,12 €/km de exceso, permanencia de 3 meses";
 
 /** Ofertas investigadas; donde no hay oferta publicada se usa una estimación marcada */
 export const OFERTAS: Escenario[] = [

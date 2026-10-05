@@ -1,6 +1,7 @@
 import type { CocheCandidato, Escenario, ModalidadId, PerfilUso } from "../engine/tipos";
 import { COCHES, OFERTAS } from "./coches";
 import { COCHES_BMW, COCHE_ACTUAL } from "./bmw";
+import { COCHES_KIA, ofertasKia } from "./kia";
 import { ofertasGenericas, type ParametrosMercado } from "./ofertas";
 
 export { MUNICIPIOS, TERRITORIOS } from "./territorios";
@@ -117,4 +118,4 @@ export function ofertasUsado(coche: CocheCandidato): Escenario[] {
   return ofertasPorDefecto(coche).filter((e) => posibles.includes(e.condiciones.modalidad));
 }
 
-export { COCHES_BMW };
+export { COCHES_BMW, COCHES_KIA, ofertasKia };
