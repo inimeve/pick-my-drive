@@ -1,4 +1,4 @@
-import type { CocheCandidato, Escenario } from "../engine/tipos";
+import type { CocheCandidato, Escenario, OfertaReal } from "../engine/tipos";
 import { BIPI, COCHES, EXCESO, OFERTAS, contado, cuotaFinal, prestamo, renting, suscripcion } from "./coches";
 
 // Fuente: docs/research/kia-niro.md y byd-hibridos.md (consultado 2026-10-05). Los datos salen de
@@ -284,21 +284,32 @@ export function cocheActualCx30(): CocheCandidato {
 const porId = (id: string) => COCHES_KIA.find((c) => c.id === id)!;
 const nuevo = porId("niro-hev");
 
+/** Marca una oferta como sacada de un presupuesto real */
+function real(e: Escenario, oferta: OfertaReal): Escenario {
+  return { ...e, ofertaReal: oferta };
+}
+
+const KIA_SANTANDER: OfertaReal = { origen: "Presupuesto de un concesionario de Kia en Santander (24-sep-2026)", hasta: "2026-09-30" };
+const KIA_ERANDIO: OfertaReal = { origen: "Presupuesto de un concesionario de Kia en Erandio (5-oct-2026)", hasta: "2026-10-31" };
+const TOYOTA: OfertaReal = { origen: "Presupuesto de un concesionario de Toyota en Lejona (30-jun-2026)", hasta: "2026-06-30" };
+const MAZDA: OfertaReal = { origen: "Presupuesto de un concesionario de Mazda en Bilbao (27-jul-2026)" };
+const IDONEO: OfertaReal = { origen: "Propuesta de renting de Idoneo (oct-2026)" };
+
 const drive = () => porId("niro-hev-drive");
 const emotion = () => porId("niro-hev-emotion");
 
 /** Ofertas concretas de concesionarios de Kia (sep y oct de 2026) */
 function ofertasNiroRecibidas(): Escenario[] {
   return [
-    contado(drive()),
+    real(contado(drive()), KIA_ERANDIO),
     prestamo(drive()),
-    renting(drive(), {
+    real(renting(drive(), {
       cuota: 390, entrada: 0, plazoMeses: 60, kmAnualesContrato: 15000, excesoKm: 0.07,
       fuente: `Idoneo (oct-2026): 390 € con IVA, la unidad de 2026; la de 2027 sale a 419 €. Pide fianza (importe no publicado). ${EXCESO}`,
-    }),
+    }), IDONEO),
 
-    contado(emotion()),
-    {
+    real(contado(emotion()), KIA_SANTANDER),
+    real({
       id: `${emotion().id}:prestamo`,
       cocheId: emotion().id,
       visible: true,
@@ -308,12 +319,12 @@ function ofertasNiroRecibidas(): Escenario[] {
         modalidad: "prestamo", descuento: 968, entrada: 6925, tin: 0.0795, plazoMeses: 60,
         comisionApertura: 0.0395, comisionCancelacion: 0.01,
       },
-    },
-    cuotaFinal(emotion(), {
+    }, KIA_SANTANDER),
+    real(cuotaFinal(emotion(), {
       descuento: 2117.5, entrada: 6695, tin: 0.0795, plazoMeses: 37, cuotaFinal: 21187, comisionApertura: 0.0395,
       kmAnualesContrato: 15000, excesoKm: 0.08,
       fuente: `Flexiplan de Kia con Banco Cetelem (24-sep-2026, caducada): 3 promociones por financiar (2.117,50 € con IVA), entrada del 20%, TIN 7,95%, 37 cuotas, valor futuro garantizado de 21.186,77 € y 15.000 km al año. Sin el seguro opcional de pagos (822 €), que la cuota impresa (374,86 €) sí incluye. ${EXCESO}`,
-    }),
+    }), KIA_SANTANDER),
   ];
 }
 
@@ -389,13 +400,13 @@ export function ofertasByd(): Escenario[] {
     contado(porId("atto2-dmi-boost")),
     financiacionByd("atto2-dmi-boost", 6500),
     rentingByd("atto2-dmi-boost", 450, RENTING_ATTO),
-    cuotaFinal(porId("atto2-dmi-boost"), {
+    real(cuotaFinal(porId("atto2-dmi-boost"), {
       // El presupuesto de abril pedía 31.490 €, 1.500 € más que el precio de octubre
       descuento: -1500, entrada: 5000, tin: 0.055, plazoMeses: 48, cuotaFinal: 12792, comisionApertura: 0.0375,
       kmAnualesContrato: 15000, excesoKm: 0.1,
       fuente:
         "Easy Plan de BYD con CA Auto Bank (27-abr-2026, válida hasta el 12-may: caducada): 31.490 € (1.500 € más que hoy, por eso el descuento negativo), entrada 5.000 €, TIN 5,5%, comisión del 3,75%, 48 cuotas, última de 12.792 €, 15.000 km y 0,10 €/km de exceso. Sin el seguro de vida opcional (1.212 €), que la cuota impresa (430,63 €) sí incluye.",
-    }),
+    }), { origen: "Presupuesto de un concesionario de BYD en Bilbao (27-abr-2026)", hasta: "2026-05-12" }),
   ];
 }
 
@@ -422,27 +433,27 @@ export function ofertasToyotaMazda(): Escenario[] {
   const exclusive = porId("cx30-exclusive");
   const centreLine = porId("cx30");
   return [
-    contado(yaris),
+    real(contado(yaris), TOYOTA),
     prestamo(yaris),
-    cuotaFinal(yaris, {
+    real(cuotaFinal(yaris, {
       descuento: 650, entrada: 6000, tin: 0.075, plazoMeses: 48, cuotaFinal: 15242, comisionApertura: 0.0299,
       kmAnualesContrato: 25000, excesoKm: 0.1,
       fuente: `Toyota Easy (30-jun-2026, caducada): entrada de 6.000 €, bonificación de 650 €, TIN 7,5%, 49 cuotas redondeadas a 48 y VFG de 15.241,98 €, con 25.000 km al año. Sin Toyota Easy Complet (2.195 € de mantenimiento, ampliación de garantía y seguro): la cuota impresa (319,44 €) lo incluye. ${EXCESO}`,
-    }),
+    }), TOYOTA),
 
-    contado(exclusive),
+    real(contado(exclusive), MAZDA),
     prestamo(exclusive),
-    cuotaFinal(exclusive, {
+    real(cuotaFinal(exclusive, {
       descuento: 1400, entrada: 10000, tin: 0.1, plazoMeses: 35, cuotaFinal: 21231, comisionApertura: 0,
       cuotaOfertada: 257.54, kmAnualesContrato: 10000, excesoKm: 0.08,
       fuente: `Mazda Flexiopción (27-jul-2026): entrada de 10.000 €, 35 cuotas de 257,54 € y valor final garantizado de 21.230,64 €, con tres revisiones gratis. El TIN sale de la cuota (≈10%) e incluye cualquier comisión o servicio que lleve dentro: pide la TAE. Km del contrato no publicados: se asumen 10.000. ${EXCESO}`,
-    }),
+    }), MAZDA),
 
     // El Centre-Line se compara con su renting de Idoneo; el resto, como en coches.ts
     ...OFERTAS.filter((e) => e.cocheId === centreLine.id && e.condiciones.modalidad !== "renting"),
-    renting(centreLine, {
+    real(renting(centreLine, {
       cuota: 402, entrada: 0, plazoMeses: 36, kmAnualesContrato: 15000, excesoKm: 0.07,
       fuente: `Idoneo (oct-2026): CX-30 Centre-Line de 2025, 402 € con IVA; pide fianza (importe no publicado). ${EXCESO}`,
-    }),
+    }), IDONEO),
   ];
 }

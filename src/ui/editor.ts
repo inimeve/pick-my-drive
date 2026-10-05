@@ -4,7 +4,7 @@ import { modalidadesPosibles, ofertasPorDefecto } from "../data";
 import { nombreModalidad } from "../engine/modalidades";
 import type { CocheCandidato, Escenario, Motorizacion } from "../engine/tipos";
 import { campoCheck, campoNumero, campoSelect, campoTexto } from "./campos";
-import { el, eur, eurCent, pct } from "./formato";
+import { el, etiquetaOferta, eur, eurCent, pct } from "./formato";
 
 export const MOTORIZACIONES: { valor: Motorizacion; texto: string }[] = [
   { valor: "gasolina", texto: "Gasolina" },
@@ -208,6 +208,7 @@ function editorOferta(e: Escenario): HTMLElement {
       "div",
       { class: "oferta-cabecera" },
       el("strong", {}, nombreModalidad(c.modalidad)),
+      etiquetaOferta(e),
       el("span", { class: "oferta-calculo", "data-calculo": e.id }),
       el("span", { class: "botonera" }, campoCheck("En la comparativa", e.visible, (v) => { e.visible = v; cambio(); }), quitar),
     ),

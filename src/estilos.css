@@ -615,6 +615,23 @@ main {
   vertical-align: 2px;
 }
 
+.etiqueta-oferta {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--exito);
+  color: var(--exito);
+  margin-left: 6px;
+  vertical-align: 2px;
+  white-space: nowrap;
+}
+.etiqueta-oferta.caducada {
+  border-color: var(--eje);
+  color: var(--tinta-2);
+}
+
 /* --- Actos: la página se lee en orden, de las opciones a la conclusión --- */
 .acto-cabecera {
   display: flex;

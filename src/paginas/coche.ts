@@ -9,7 +9,7 @@ import type { ModalidadId } from "../engine/tipos";
 import { signoAyuda } from "../ui/ayuda";
 import { pintarGraficas, pintarVeredicto, seriesDe } from "../ui/analisis";
 import { editorCoche, MOTORIZACIONES, pintarCalculosOfertas } from "../ui/editor";
-import { el, eur, meses, num, pct } from "../ui/formato";
+import { el, etiquetaOferta, eur, meses, num, pct } from "../ui/formato";
 import { colorSerie } from "../ui/graficas";
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -113,6 +113,7 @@ function pintarCaraACara() {
                 { class: "num" },
                 el("span", { class: "punto", style: `background:${colorSerie(ORDEN_MODALIDAD.indexOf(e.condiciones.modalidad))}` }),
                 ` ${nombreModalidad(e.condiciones.modalidad)}`,
+                etiquetaOferta(e),
                 el("div", { class: "ayuda" }, resumen(e.condiciones.modalidad)),
               ),
             ),

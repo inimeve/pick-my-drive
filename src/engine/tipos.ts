@@ -209,12 +209,21 @@ export type Condiciones =
   | CondicionesRenting
   | CondicionesLeasing;
 
+/** Presupuesto o propuesta real de un concesionario o comparador, en lugar de una estimación */
+export interface OfertaReal {
+  /** Quién la hizo y cuándo */
+  origen: string;
+  /** Último día de validez (AAAA-MM-DD), si se conoce */
+  hasta?: string;
+}
+
 export interface Escenario {
   id: string;
   cocheId: string;
   condiciones: Condiciones;
   visible: boolean;
   fuente?: string;
+  ofertaReal?: OfertaReal;
 }
 
 export type Categoria =

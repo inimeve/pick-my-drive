@@ -8,7 +8,7 @@ import type { CocheCandidato, Escenario } from "../engine/tipos";
 import { MAX_SERIES } from "./analisis";
 import { signoAyuda } from "./ayuda";
 import { MOTORIZACIONES } from "./editor";
-import { el, eur, eurCent, pct } from "./formato";
+import { el, etiquetaOferta, eur, eurCent, pct } from "./formato";
 import { colorSerie } from "./graficas";
 
 export interface Opcion {
@@ -219,7 +219,7 @@ export function pintarTablaOpciones(caja: HTMLElement) {
         title: llena ? `Puedes comparar ${MAX_SERIES} opciones como mucho` : "Pulsa para elegirla y compararla",
       },
       el("td", { class: "comparar" }, cb, i >= 0 ? el("span", { class: "punto", style: `background:${colorSerie(i)}` }) : undefined),
-      el("td", {}, ficha),
+      el("td", {}, ficha, etiquetaOferta(o.escenario)),
       ...activas.map((c) => el("td", c.num ? { class: "num" } : c.nota ? { class: "nota" } : {}, c.texto(o))),
     );
     tr.addEventListener("click", () => !llena && alternar(id));
