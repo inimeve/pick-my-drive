@@ -1,7 +1,7 @@
 // La comparativa (index.html), en tres actos: tus opciones → el análisis → la conclusión.
-import { alCambiar, app, avisar, cambio, nombreCoche, recalcular, reemplazar, urlCoche } from "../app";
+import { alCambiar, app, avisar, cambio, nombreCoche, nombreOpcion, recalcular, reemplazar, urlCoche } from "../app";
 import { cocheActualConOferta, MUNICIPIOS, ofertasPorDefecto, plantillaCoche, TERRITORIOS } from "../data";
-import { MODALIDADES, nombreModalidad } from "../engine/modalidades";
+import { MODALIDADES } from "../engine/modalidades";
 import type { ModalidadId, PerfilUso } from "../engine/tipos";
 import {
   borrarGuardada,
@@ -121,7 +121,7 @@ function pintarCoches() {
           "span",
           { class: "resumen" },
           `${MOTORIZACIONES.find((m) => m.valor === c.motorizacion)?.texto} · ${eur(c.pvp)} · `,
-          ofertas.length ? ofertas.map((e) => nombreModalidad(e.condiciones.modalidad)).join(", ") : "sin ofertas",
+          ofertas.length ? ofertas.map(nombreOpcion).join(", ") : "sin ofertas",
         ),
         el("span", { class: "ir" }, "Ver y editar →"),
       );
@@ -183,7 +183,7 @@ function pintarQueSeCompara() {
               "span",
               { class: "chip" },
               el("span", { class: "punto", style: `background:${colorSerie(i)}` }),
-              `${nombreCoche(o.coche)} · ${nombreModalidad(o.escenario.condiciones.modalidad)} `,
+              `${nombreCoche(o.coche)} · ${nombreOpcion(o.escenario)} `,
               x,
             ),
           ];

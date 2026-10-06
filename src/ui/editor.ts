@@ -1,5 +1,5 @@
 // Editor de un Coche candidato y sus ofertas. Vive en la ficha del coche (coche.html).
-import { app, cambio, escenariosDe } from "../app";
+import { app, cambio, escenariosDe, nombreOpcion } from "../app";
 import { modalidadesPosibles, ofertasPorDefecto } from "../data";
 import { nombreModalidad } from "../engine/modalidades";
 import type { CocheCandidato, Escenario, Motorizacion } from "../engine/tipos";
@@ -207,7 +207,7 @@ function editorOferta(e: Escenario): HTMLElement {
     el(
       "div",
       { class: "oferta-cabecera" },
-      el("strong", {}, nombreModalidad(c.modalidad)),
+      el("strong", {}, nombreOpcion(e)),
       etiquetaOferta(e),
       el("span", { class: "oferta-calculo", "data-calculo": e.id }),
       el("span", { class: "botonera" }, campoCheck("En la comparativa", e.visible, (v) => { e.visible = v; cambio(); }), quitar),

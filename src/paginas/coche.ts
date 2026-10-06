@@ -1,6 +1,6 @@
 // La ficha de un coche (coche.html?id=…): sus datos y ofertas editables, sus modalidades cara a cara,
 // el análisis y la conclusión solo para él.
-import { alCambiar, app, cambio, escenariosDe, nombreCoche, ORDEN_MODALIDAD, recalcular, urlCoche, urlComparativa } from "../app";
+import { alCambiar, app, cambio, escenariosDe, nombreCoche, nombreOpcion, ORDEN_MODALIDAD, recalcular, urlCoche, urlComparativa } from "../app";
 import { modalidadesPosibles, ofertasPorDefecto } from "../data";
 import { GRUPOS_DESGLOSE, MODALIDADES, nombreModalidad } from "../engine/modalidades";
 import { importeGrupo, resumir, type Resumen } from "../engine/resumen";
@@ -112,7 +112,7 @@ function pintarCaraACara() {
                 "th",
                 { class: "num" },
                 el("span", { class: "punto", style: `background:${colorSerie(ORDEN_MODALIDAD.indexOf(e.condiciones.modalidad))}` }),
-                ` ${nombreModalidad(e.condiciones.modalidad)}`,
+                ` ${nombreOpcion(e)}`,
                 etiquetaOferta(e),
                 el("div", { class: "ayuda" }, resumen(e.condiciones.modalidad)),
               ),
@@ -140,7 +140,7 @@ function pintarCaraACara() {
       ),
     ),
     ...(() => {
-      const avisos = columnas.flatMap(({ e, r }) => r.avisos.map((a) => `${nombreModalidad(e.condiciones.modalidad)}: ${a}`));
+      const avisos = columnas.flatMap(({ e, r }) => r.avisos.map((a) => `${nombreOpcion(e)}: ${a}`));
       return avisos.length ? [el("ul", { class: "avisos" }, ...avisos.map((a) => el("li", {}, a)))] : [];
     })(),
   );

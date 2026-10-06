@@ -1,5 +1,5 @@
 // Las tres gráficas del análisis y el veredicto. Las dos páginas tienen los mismos ids en su HTML.
-import { app, cocheDe, nombreCoche, nombreEscenario, ORDEN_MODALIDAD, simularTodo } from "../app";
+import { app, cocheDe, nombreCoche, nombreEscenario, nombreOpcion, ORDEN_MODALIDAD, simularTodo } from "../app";
 import { FECHA_DATOS } from "../data";
 import { nombreModalidad } from "../engine/modalidades";
 import type { Escenario } from "../engine/tipos";
@@ -45,7 +45,7 @@ export function seriesDe(vista: Vista): Serie[] {
         comp.escenarios.filter((e) => e.cocheId === c.id).flatMap((e) => resultados.get(e.id) ?? []),
       )[0];
       const e = mejor && comp.escenarios.find((x) => x.id === mejor.escenarioId);
-      if (e) serie(e, huecoCoche(c.id), `${nombreCoche(c)} · ${nombreModalidad(e.condiciones.modalidad)}`);
+      if (e) serie(e, huecoCoche(c.id), `${nombreCoche(c)} · ${nombreOpcion(e)}`);
     }
   }
   // con más de ocho se muestran los ocho más baratos

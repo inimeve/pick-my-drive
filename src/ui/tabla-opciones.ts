@@ -1,7 +1,7 @@
 // Tabla de opciones de la comparativa: una fila por Escenario activo, con columnas a elegir, filtros y orden.
 // Pulsar el coche abre su ficha; pulsar el resto de la fila lo elige para compararlo en las gráficas.
-import { app, cambio, nombreCoche, ORDEN_MODALIDAD, urlCoche } from "../app";
-import { GRUPOS_DESGLOSE, MODALIDADES, nombreModalidad } from "../engine/modalidades";
+import { app, cambio, nombreCoche, nombreOpcion, ORDEN_MODALIDAD, urlCoche } from "../app";
+import { GRUPOS_DESGLOSE, MODALIDADES } from "../engine/modalidades";
 import { importeGrupo, resumir, type Resumen } from "../engine/resumen";
 import type { Resultado } from "../engine/simulacion";
 import type { CocheCandidato, Escenario } from "../engine/tipos";
@@ -71,7 +71,7 @@ function columnas(): Columna[] {
     {
       id: "modalidad", nombre: "Cómo lo consigues", grupo: "Lo básico",
       valor: (o) => ORDEN_MODALIDAD.indexOf(o.escenario.condiciones.modalidad),
-      texto: (o) => nombreModalidad(o.escenario.condiciones.modalidad),
+      texto: (o) => nombreOpcion(o.escenario),
     },
     { id: "tuyo", nombre: "¿Es tuyo?", grupo: "Lo básico", valor: (o) => (o.resumen.tuyo ? 0 : 1), texto: (o) => (o.resumen.tuyo ? "Sí" : "No, lo devuelves") },
     { id: "motor", nombre: "Motor", grupo: "Lo básico", valor: (o) => motor(o.coche), texto: (o) => motor(o.coche) },
@@ -207,7 +207,7 @@ export function pintarTablaOpciones(caja: HTMLElement) {
     const id = o.escenario.id;
     const i = elegidasIds.indexOf(id);
     const llena = i < 0 && elegidasIds.length >= MAX_SERIES;
-    const cb = el("input", { type: "checkbox", "aria-label": `Comparar ${nombreCoche(o.coche)}, ${nombreModalidad(o.escenario.condiciones.modalidad)}` });
+    const cb = el("input", { type: "checkbox", "aria-label": `Comparar ${nombreCoche(o.coche)}, ${nombreOpcion(o.escenario)}` });
     cb.checked = i >= 0;
     cb.disabled = llena;
     const ficha = el("a", { class: "enlace-coche", href: urlCoche(o.coche.id) }, nombreCoche(o.coche));

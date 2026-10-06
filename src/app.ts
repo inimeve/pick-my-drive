@@ -21,10 +21,18 @@ export const ORDEN_MODALIDAD: ModalidadId[] = ["contado", "prestamo", "cuota_fin
 
 export const cocheDe = (e: Escenario) => app.comp.coches.find((c) => c.id === e.cocheId);
 export const nombreCoche = (c: CocheCandidato) => `${c.nombre}${c.estado === "usado" ? " (usado)" : ""}`;
+/** Nombre de la modalidad de un escenario; si su coche tiene otro de la misma modalidad, con el plazo */
+export const nombreOpcion = (e: Escenario) => {
+  const c = e.condiciones;
+  const repetida = app.comp.escenarios.some(
+    (x) => x.id !== e.id && x.cocheId === e.cocheId && x.condiciones.modalidad === c.modalidad,
+  );
+  return repetida && "plazoMeses" in c ? `${nombreModalidad(c.modalidad)} a ${c.plazoMeses} meses` : nombreModalidad(c.modalidad);
+};
 export const nombreEscenario = (id: string) => {
   const e = app.comp.escenarios.find((x) => x.id === id);
   const c = e && cocheDe(e);
-  return e && c ? `${nombreCoche(c)} · ${nombreModalidad(e.condiciones.modalidad)}` : id;
+  return e && c ? `${nombreCoche(c)} · ${nombreOpcion(e)}` : id;
 };
 
 /** Escenarios activos de un coche, en el orden de las modalidades */
