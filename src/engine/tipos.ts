@@ -166,6 +166,8 @@ export interface CondicionesPrestamo {
   comisionCancelacion: number;
   /** Si la oferta fija la cuota, se usa en lugar de calcularla y el TIN se deduce */
   cuotaOfertada?: number;
+  /** Mes en que se piensa amortizar toda la deuda pendiente (cancelación anticipada), pagando la comisión de cancelación */
+  cancelarEnMes?: number;
 }
 
 export interface CondicionesCuotaFinal {

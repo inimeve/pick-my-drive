@@ -30,6 +30,8 @@ export const nombreOpcion = (e: Escenario) => {
   );
   let nombre = nombreModalidad(c.modalidad);
   if (hermanas.length && "plazoMeses" in c) nombre += ` a ${c.plazoMeses} meses`;
+  if (c.modalidad === "prestamo" && c.cancelarEnMes !== undefined && c.cancelarEnMes < c.plazoMeses)
+    nombre += `, cancelado en el mes ${c.cancelarEnMes}`;
   if (e.proveedor && hermanas.some((x) => plazo(x) === plazo(e))) nombre += ` (${e.proveedor})`;
   return nombre;
 };

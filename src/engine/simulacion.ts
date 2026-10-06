@@ -108,7 +108,7 @@ export function simular(
       const r = cicloPrestamo(coche, ctx, c);
       ciclos = [r.ciclo];
       financiacion = r.financiacion;
-      if (c.plazoMeses > H)
+      if (c.plazoMeses > H && !(c.cancelarEnMes !== undefined && c.cancelarEnMes <= H))
         avisos.push(
           `El préstamo dura ${c.plazoMeses} meses, más que el Horizonte: al final se cancela la deuda pendiente.`,
         );
@@ -300,13 +300,14 @@ function resolverFinanciacion(
 }
 
 /** Apuntes de las cuotas de un préstamo, separando intereses y principal */
-function apuntesCuotas(f: Financiacion, inicio: number): Apunte[] {
+/** Cuotas de un préstamo; con `hasta` se cortan en ese mes (el resto de la deuda se cancela aparte) */
+function apuntesCuotas(f: Financiacion, inicio: number, hasta = f.plazoMeses): Apunte[] {
   const apuntes: Apunte[] = [
     { mes: inicio, categoria: "principal", importe: -f.principal },
   ];
   let saldo = f.principal;
   const i = f.tin / 12;
-  for (let k = 1; k <= f.plazoMeses; k++) {
+  for (let k = 1; k <= hasta; k++) {
     const interes = saldo * i;
     const amortizado = f.cuota - interes;
     saldo -= amortizado;
@@ -324,17 +325,23 @@ function cicloPrestamo(
   const compra = cicloCompra(coche, ctx, 0, c.descuento);
   const principal = coche.pvp - c.descuento - c.entrada;
   const f = resolverFinanciacion(principal, c, 0);
+  const cancela = c.cancelarEnMes !== undefined && c.cancelarEnMes < f.plazoMeses ? Math.max(0, c.cancelarEnMes) : undefined;
   compra.apuntes.push(
     { mes: 0, categoria: "comisiones", importe: principal * c.comisionApertura },
-    ...apuntesCuotas(f, 0),
+    ...apuntesCuotas(f, 0, cancela),
   );
+  if (cancela !== undefined)
+    compra.apuntes.push(
+      ...apuntesCancelacion(cancela, saldoPendiente(f.principal, f.tin, f.cuota, cancela), c.comisionCancelacion),
+    );
   return {
     financiacion: f,
     ciclo: {
       ...compra,
       salida: (m) => {
         const pagadas = Math.min(m, f.plazoMeses);
-        const saldo = saldoPendiente(f.principal, f.tin, f.cuota, pagadas);
+        const saldo =
+          cancela !== undefined && m >= cancela ? 0 : saldoPendiente(f.principal, f.tin, f.cuota, pagadas);
         return [
           ...compra.salida(m),
           ...apuntesCancelacion(m, saldo, c.comisionCancelacion),

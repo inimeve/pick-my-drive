@@ -166,6 +166,12 @@ function editorOferta(e: Escenario): HTMLElement {
           paso: 1, sufijo: "€/mes", ayuda: "Si la oferta te da la cuota, ponla aquí y se deduce el TIN real",
         }),
       );
+      if (c.modalidad === "prestamo")
+        campos.push(
+          campoNumero("Cancelar en el mes (opcional)", c.cancelarEnMes ?? 0, (v) => set("cancelarEnMes")(v > 0 ? v : undefined), {
+            paso: 12, sufijo: "meses", ayuda: "Si piensas devolver toda la deuda antes de tiempo: ese mes pagas lo que quede más la comisión de cancelación",
+          }),
+        );
       if (c.modalidad === "cuota_final") {
         n("Km/año del contrato", "kmAnualesContrato", { paso: 1000, sufijo: "km" });
         n("Exceso de km", "excesoKm", { paso: 0.01, sufijo: "€/km" });

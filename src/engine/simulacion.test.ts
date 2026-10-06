@@ -125,6 +125,37 @@ describe("préstamo", () => {
   it("la caja del primer mes es la entrada", () => {
     expect(simular(prestamo(0.08), coche, ctx).caja[0]).toBeCloseTo(5000, 6);
   });
+
+  describe("cancelado antes de tiempo", () => {
+    const cancelado = (mes: number) => {
+      const e = prestamo(0.08, 0.01);
+      return { ...e, condiciones: { ...e.condiciones, cancelarEnMes: mes } } as Escenario;
+    };
+
+    it("en el mes de cancelar se paga la cuota, la deuda pendiente y la comisión; después ya no hay cuotas", () => {
+      const sin = simular(prestamo(0.08, 0.01), coche, ctx);
+      const con = simular(cancelado(36), coche, ctx);
+      const cuota = sin.financiacion!.cuota;
+      // los meses sin cuota coinciden con el contado, que no tiene préstamo
+      const a = simular(contado, coche, ctx);
+      expect(con.caja[37]).toBeCloseTo(a.caja[37]!, 6);
+      expect(con.caja[60]).toBeCloseTo(a.caja[60]!, 6);
+      expect(con.caja[35]).toBeCloseTo(sin.caja[35]!, 6);
+      expect(con.caja[36]! - a.caja[36]!).toBeGreaterThan(cuota);
+    });
+
+    it("sale más barato que seguir pagando intereses y cuesta lo mismo que salir del préstamo ese mes", () => {
+      const sin = simular(prestamo(0.08, 0.01), coche, ctx);
+      const con = simular(cancelado(36), coche, ctx);
+      expect(con.costeNeto[60]!).toBeLessThan(sin.costeNeto[60]!);
+      expect(con.costeNeto[36]).toBeCloseTo(sin.costeNeto[36]!, 6);
+      expect(con.desglose.principal ?? 0).toBeCloseTo(0, 6);
+    });
+
+    it("no avisa de que el préstamo dura más que el Horizonte si se cancela dentro de él", () => {
+      expect(simular(cancelado(36), coche, ctx).avisos.some((a) => a.includes("más que el Horizonte"))).toBe(false);
+    });
+  });
 });
 
 describe("renting", () => {
