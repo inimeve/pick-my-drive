@@ -179,17 +179,20 @@ export function cocheActualCx30(): CocheCandidato {
   };
 }
 
-/** Mi CX-30: seguir con él tal cual o pedir un préstamo bancario por su valor a 3, 5 o 7 años */
+/** Mi CX-30: seguir con él tal cual o pedir un préstamo bancario por su valor a 3, 5 o 7 años, o a 7 años
+ * cancelándolo a los 3 */
 export function cocheActualCx30ConOferta(): { coche: CocheCandidato; escenarios: Escenario[] } {
   const coche = cocheActualCx30();
-  const prestamo = (plazoMeses: number): Escenario => ({
-    id: `${coche.id}:prestamo:${plazoMeses}`,
+  const prestamo = (plazoMeses: number, cancelarEnMes?: number): Escenario => ({
+    id: `${coche.id}:prestamo:${plazoMeses}${cancelarEnMes ? `:cancelado-${cancelarEnMes}` : ""}`,
     cocheId: coche.id,
     visible: true,
-    fuente: `${BANCO}. Sin entrada: se pide prestado todo el valor del coche (18.193 €) a ${plazoMeses / 12} años.`,
+    fuente: `${BANCO}. Sin entrada: se pide prestado todo el valor del coche (18.193 €) a ${plazoMeses / 12} años.${
+      cancelarEnMes ? ` En el mes ${cancelarEnMes} se devuelve toda la deuda pendiente, con un 1% de comisión de cancelación (supuesto: los bancos cobran hasta el 1% si quedan más de 12 meses).` : ""
+    }`,
     condiciones: {
       modalidad: "prestamo", descuento: 0, entrada: 0, tin: 0.055, plazoMeses,
-      comisionApertura: 0.005, comisionCancelacion: 0.01,
+      comisionApertura: 0.005, comisionCancelacion: 0.01, cancelarEnMes,
     },
   });
   return {
@@ -202,7 +205,8 @@ export function cocheActualCx30ConOferta(): { coche: CocheCandidato; escenarios:
         condiciones: { modalidad: "contado", descuento: 0 },
         fuente: "Seguir con el coche: lo que ya pagaste no cuenta, sí lo que sacarías vendiéndolo hoy",
       },
-      ...[36, 60, 84].map(prestamo),
+      ...[36, 60, 84].map((p) => prestamo(p)),
+      prestamo(84, 36),
     ],
   };
 }
