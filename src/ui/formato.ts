@@ -33,11 +33,14 @@ export function el<K extends keyof HTMLElementTagNameMap>(
   return e;
 }
 
-/** Marca de las opciones que salen de un presupuesto real; avisa si ya ha caducado */
+/** Marca de las opciones que salen de un presupuesto o de una oferta publicada por la marca; avisa si ya ha caducado */
 export function etiquetaOferta(e: Escenario): HTMLElement | undefined {
   const o = e.ofertaReal;
   if (!o) return undefined;
+  const web = o.tipo === "web";
   const caducada = o.hasta !== undefined && o.hasta < new Date().toISOString().slice(0, 10);
   const validez = o.hasta ? (caducada ? ` Caducó el ${o.hasta}.` : ` Válida hasta el ${o.hasta}.`) : " Sin fecha de validez.";
-  return el("span", { class: caducada ? "etiqueta-oferta caducada" : "etiqueta-oferta", title: `${o.origen}.${validez}` }, caducada ? "Oferta real · caducada" : "Oferta real");
+  const texto = web ? (caducada ? "Oferta web · caducada" : "Oferta web") : caducada ? "Presupuesto · caducado" : "Presupuesto";
+  const clase = ["etiqueta-oferta", web && "web", caducada && "caducada"].filter(Boolean).join(" ");
+  return el("span", { class: clase, title: `${o.origen}.${validez}` }, texto);
 }

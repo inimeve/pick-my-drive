@@ -209,8 +209,11 @@ export type Condiciones =
   | CondicionesRenting
   | CondicionesLeasing;
 
-/** Presupuesto o propuesta real de un concesionario o comparador, en lugar de una estimación */
+/** Oferta real en lugar de una estimación: un presupuesto o una oferta publicada por la marca */
 export interface OfertaReal {
+  /** Presupuesto hecho para ti (concesionario, plataforma de renting) u oferta que la marca publica en
+   * su web o su configurador; sin indicar, presupuesto */
+  tipo?: "presupuesto" | "web";
   /** Quién la hizo y cuándo */
   origen: string;
   /** Último día de validez (AAAA-MM-DD), si se conoce */

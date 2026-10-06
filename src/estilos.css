@@ -627,6 +627,10 @@ main {
   vertical-align: 2px;
   white-space: nowrap;
 }
+.etiqueta-oferta.web {
+  border-color: var(--acento);
+  color: var(--acento);
+}
 .etiqueta-oferta.caducada {
   border-color: var(--eje);
   color: var(--tinta-2);
