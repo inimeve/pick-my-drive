@@ -56,4 +56,4 @@ Ficha: CO₂ 69 g/km (Active) y 41 g/km (Boost); consumo ponderado 3,1 y 1,8 l/1
 
 ## 6. Mazda CX-30 como coche actual
 
-La plantilla Kia ya no usa el Focus ST. En su lugar entra un **CX-30 2.0 e-Skyactiv G** con los datos del usado típico de `coches.md` §1b (2023, ~45.000 km, 23.500 € de valor de venta). **No sé el año ni los km del CX-30 real**: hay que ajustarlos en el editor.
+La plantilla "Opción inteligente" (antes "Kia") ya no usa el Focus ST. En su lugar entra un **CX-30 2.0 e-Skyactiv G** con los datos del usado típico de `coches.md` §1b (2023, ~45.000 km, 23.500 € de valor de venta). **No sé el año ni los km del CX-30 real**: hay que ajustarlos en el editor.
