@@ -1,14 +1,12 @@
 import {
   COCHES_BMW,
-  COCHES_KIA,
+  COCHES_OPCION_INTELIGENTE,
   COCHES_POR_DEFECTO,
   ESCENARIOS_POR_DEFECTO,
   MUNICIPIOS,
   cocheActualConOferta,
   cocheActualCx30ConOferta,
-  ofertasByd,
-  ofertasToyotaMazda,
-  ofertasKia,
+  ofertasOpcionInteligente,
   ofertasUsado,
   PERFIL_POR_DEFECTO,
   TERRITORIOS,
@@ -41,26 +39,26 @@ export function comparativaPorDefecto(): Comparativa {
   });
 }
 
-export type PlantillaId = "actual" | "vacia" | "bmw" | "kia";
+export type PlantillaId = "actual" | "vacia" | "bmw" | "opcion-inteligente";
 
 export const PLANTILLAS: { id: PlantillaId; nombre: string }[] = [
   { id: "actual", nombre: "Actual (coches por defecto)" },
   { id: "vacia", nombre: "Vacía" },
   { id: "bmw", nombre: "BMW de segunda mano y mi Focus" },
-  { id: "kia", nombre: "Kia Niro, BYD, Toyota y Mazda (nuevos) y mi Mazda CX-30" },
+  { id: "opcion-inteligente", nombre: "Opción inteligente" },
 ];
 
 export function comparativaDePlantilla(id: PlantillaId): Comparativa {
   const base = comparativaPorDefecto();
   if (id === "actual") return base;
   if (id === "vacia") return { ...base, coches: [], escenarios: [] };
-  if (id === "kia") {
+  if (id === "opcion-inteligente") {
     const mio = cocheActualCx30ConOferta();
-    const nuevos = structuredClone(COCHES_KIA);
+    const nuevos = structuredClone(COCHES_OPCION_INTELIGENTE);
     return {
       ...base,
       coches: [...nuevos, mio.coche],
-      escenarios: [...ofertasKia(), ...ofertasByd(), ...ofertasToyotaMazda(), ...mio.escenarios],
+      escenarios: [...ofertasOpcionInteligente(), ...mio.escenarios],
     };
   }
   const mio = cocheActualConOferta();

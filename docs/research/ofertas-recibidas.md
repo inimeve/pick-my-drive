@@ -1,6 +1,6 @@
 # Ofertas recibidas de concesionarios (PDF) y de Idoneo
 
-Cargadas el **5 de octubre de 2026** en la plantilla "Kia Niro, BYD, Toyota y Mazda". Salen de los PDF de los concesionarios y de la página de propuestas de renting de Idoneo, no de la investigación general. Se han dejado fuera los datos personales. Los seguros y servicios opcionales que van dentro de las cuotas impresas **no** se han cargado: el comparador ya cuenta seguro y mantenimiento aparte.
+Cargadas el **5 de octubre de 2026** en la plantilla "Opción inteligente" (antes "Kia Niro, BYD, Toyota y Mazda"). Salen de los PDF de los concesionarios y de la página de propuestas de renting de Idoneo, no de la investigación general. Se han dejado fuera los datos personales. Los seguros y servicios opcionales que van dentro de las cuotas impresas **no** se han cargado: el comparador ya cuenta seguro y mantenimiento aparte.
 
 **Casi todas están caducadas** (la fecha de validez es anterior al 5-oct-2026). Sirven para comparar condiciones, no como oferta en vigor.
 
