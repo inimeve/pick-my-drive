@@ -1,5 +1,5 @@
 import type { CocheCandidato, Escenario, OfertaReal } from "../engine/tipos";
-import { COCHES, EXCESO, contado, cuotaFinal, renting } from "./coches";
+import { BANCO, COCHES, EXCESO, contado, cuotaFinal, renting } from "./coches";
 
 // Plantilla "Opción inteligente": un coche por modelo y solo las ofertas sacadas de la investigación
 // (docs/research/financiacion-flexible.md, ofertas-recibidas.md, kia-niro.md y byd-hibridos.md). Sin préstamos ni suscripciones
@@ -179,9 +179,19 @@ export function cocheActualCx30(): CocheCandidato {
   };
 }
 
-/** Mi CX-30: solo se puede seguir con él */
+/** Mi CX-30: seguir con él tal cual o pedir un préstamo bancario por su valor a 3, 5 o 7 años */
 export function cocheActualCx30ConOferta(): { coche: CocheCandidato; escenarios: Escenario[] } {
   const coche = cocheActualCx30();
+  const prestamo = (plazoMeses: number): Escenario => ({
+    id: `${coche.id}:prestamo:${plazoMeses}`,
+    cocheId: coche.id,
+    visible: true,
+    fuente: `${BANCO}. Sin entrada: se pide prestado todo el valor del coche (18.193 €) a ${plazoMeses / 12} años.`,
+    condiciones: {
+      modalidad: "prestamo", descuento: 0, entrada: 0, tin: 0.055, plazoMeses,
+      comisionApertura: 0.005, comisionCancelacion: 0.01,
+    },
+  });
   return {
     coche,
     escenarios: [
@@ -192,23 +202,24 @@ export function cocheActualCx30ConOferta(): { coche: CocheCandidato; escenarios:
         condiciones: { modalidad: "contado", descuento: 0 },
         fuente: "Seguir con el coche: lo que ya pagaste no cuenta, sí lo que sacarías vendiéndolo hoy",
       },
+      ...[36, 60, 84].map(prestamo),
     ],
   };
 }
 
 const porId = (id: string) => COCHES_OPCION_INTELIGENTE.find((c) => c.id === id)!;
 
-/** Marca una oferta como sacada de un presupuesto real */
+/** Marca una oferta como sacada de un presupuesto o de una oferta publicada por la marca */
 function real(e: Escenario, oferta: OfertaReal): Escenario {
   return { ...e, ofertaReal: oferta };
 }
 
-const KIA_ERANDIO: OfertaReal = { origen: "Presupuesto de un concesionario de Kia en Erandio (5-oct-2026)", hasta: "2026-10-31" };
-const MAZDA: OfertaReal = { origen: "Presupuesto de un concesionario de Mazda en Bilbao (27-jul-2026)" };
-const IDONEO: OfertaReal = { origen: "Propuesta de renting de Idoneo (oct-2026)" };
-const TOYOTA_WEB: OfertaReal = { origen: "Configurador de Toyota España (6-oct-2026)", hasta: "2026-10-31" };
-const MAZDA_WEB: OfertaReal = { origen: "Calculadora FlexiOpción del configurador de Mazda España (6-oct-2026)", hasta: "2026-10-31" };
-const BYD_WEB: OfertaReal = { origen: "Configurador de BYD España (6-oct-2026)", hasta: "2026-10-31" };
+const KIA_ERANDIO: OfertaReal = { tipo: "presupuesto", origen: "Presupuesto de un concesionario de Kia en Erandio (5-oct-2026)", hasta: "2026-10-31" };
+const MAZDA: OfertaReal = { tipo: "presupuesto", origen: "Presupuesto de un concesionario de Mazda en Bilbao (27-jul-2026)" };
+const IDONEO: OfertaReal = { tipo: "presupuesto", origen: "Propuesta de renting de Idoneo (oct-2026)" };
+const TOYOTA_WEB: OfertaReal = { tipo: "web", origen: "Configurador de Toyota España (6-oct-2026)", hasta: "2026-10-31" };
+const MAZDA_WEB: OfertaReal = { tipo: "web", origen: "Calculadora FlexiOpción del configurador de Mazda España (6-oct-2026)", hasta: "2026-10-31" };
+const BYD_WEB: OfertaReal = { tipo: "web", origen: "Configurador de BYD España (6-oct-2026)", hasta: "2026-10-31" };
 
 const IDONEO_CONDICIONES =
   "Todo incluido (seguro a todo riesgo sin franquicia, mantenimiento, averías, neumáticos, impuestos, ITV y asistencia). Propuesta válida 7 días y sujeta a la aprobación de la financiera. La parte del seguro puede variar cada año según la siniestralidad.";
@@ -219,6 +230,26 @@ const ADELANTO_AUTO_PLUS = 2250;
 
 const BYD_RENTING =
   "BYD Renting con Arval (configurador de BYD, 6-oct-2026, hasta fin de mes): 60 meses, 15.000 km al año y sin pago inicial. Incluye seguro a todo riesgo, mantenimiento, reparaciones, neumáticos ilimitados, impuestos, ITV y asistencia. Km adicional 0,12 €; el km no recorrido se devuelve a 0,05 €.";
+
+/** FlexiOpción del CX-30 con 0 € de entrada y 20.000 km al año (el tramo siguiente a 10.000): la calculadora
+ * de Mazda da 36 y 48 meses. Cobra una cuota menos que meses, pero la primera es más alta: contando tantas cuotas
+ * como meses, lo pagado sale casi igual (21.024 € frente a 21.056 € a 36 meses). La de 60 meses no la
+ * ofrece: se extrapola la última cuota con la misma caída que de 36 a 48 (×0,849 al año; en los BYD es ×0,87) */
+function flexiOpcionCx30(cx30: CocheCandidato): Escenario[] {
+  const base = `FlexiOpción con entrada mínima (calculadora de Mazda, 6-oct-2026, hasta el 31-oct): 32.970 € financiando, entrada 0 €, TIN 9,75%, TAE 10,24%, sin comisión, 20.000 km al año, el tramo siguiente a 10.000. Incluye los tres primeros mantenimientos. Con Openbank. El contado (34.920 €) es el del presupuesto de julio. ${EXCESO}`;
+  const opcion = (meses: number, cuotaFinalGarantizada: number, detalle: string): Escenario => {
+    const e = cuotaFinal(cx30, {
+      descuento: 1950, entrada: 0, tin: 0.0975, plazoMeses: meses, cuotaFinal: cuotaFinalGarantizada,
+      comisionApertura: 0, kmAnualesContrato: 20000, excesoKm: 0.08, fuente: `${detalle} ${base}`,
+    });
+    return { ...e, id: `${e.id}:${meses}` };
+  };
+  return [
+    real(opcion(36, 19812, "36 meses: 1 cuota de 711,63 €, 34 de 598,37 € y una última de 19.812,40 € (máx. 60.000 km)."), MAZDA_WEB),
+    real(opcion(48, 16816, "48 meses: 1 cuota de 673,21 €, 46 de 553,89 € y una última de 16.815,73 € (máx. 80.000 km)."), MAZDA_WEB),
+    opcion(60, 14272, "60 meses: Mazda no lo ofrece. Extrapolado: última cuota de unos 14.272 € (la de 48 meses × 0,849, la misma caída que de 36 a 48) y cuota calculada con el mismo TIN. Estimación."),
+  ];
+}
 
 /** Financiación con Valor Mínimo Garantizado de BYD (CA Auto Bank) con la entrada mínima y 15.000 km al año:
  * cuota y última cuota de la calculadora del configurador para cada número de cuotas */
@@ -268,11 +299,7 @@ export function ofertasOpcionInteligente(): Escenario[] {
     }), TOYOTA_WEB),
 
     real(contado(cx30), MAZDA),
-    real(cuotaFinal(cx30, {
-      descuento: 1950, entrada: 0, tin: 0.0975, plazoMeses: 35, cuotaFinal: 19812, comisionApertura: 0,
-      kmAnualesContrato: 20000, excesoKm: 0.08,
-      fuente: `FlexiOpción con entrada mínima (calculadora de Mazda, 6-oct-2026, hasta el 31-oct): 32.970 € financiando, entrada 0 €, TIN 9,75%, TAE 10,24%, sin comisión, 36 meses (1 cuota de 711,63 €, 34 de 598,37 € y una última de 19.812,40 €) con 20.000 km al año (máx. 60.000), el tramo siguiente a 10.000. Incluye los tres primeros mantenimientos. Con Openbank. El contado (34.920 €) es el del presupuesto de julio. ${EXCESO}`,
-    }), MAZDA_WEB),
+    ...flexiOpcionCx30(cx30),
 
     real(contado(dolphin), BYD_WEB),
     ...PLAZOS_BYD.map((p) => flexibleByd(dolphin, "24.120", 241, "952,77", p, DOLPHIN[p])),

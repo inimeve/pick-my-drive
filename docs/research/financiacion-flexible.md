@@ -34,6 +34,12 @@ Calculadora del [configurador de Mazda](https://www.mazda.es/configurador/MAZDA_
 | 10.000 | 693,94 € | 580,19 € | 20.550,82 € |
 | **20.000** | 711,63 € | 598,37 € | 19.812,40 € |
 
+Con 20.000 km al año y 0 € de entrada, a **48 meses**: 1 cuota de 673,21 €, 46 de 553,89 € y una última de 16.815,73 € (máximo 80.000 km).
+
+**60 meses no lo ofrece** (el plazo máximo es 48). En la plantilla se extrapola (**estimación**): la última cuota baja de 36 a 48 meses en una proporción de ×0,849, y en los BYD la caída por año es casi constante (×0,87). Aplicando ×0,849 otra vez sale una última cuota de unos **14.272 €** (43 % del precio financiando); la cuota se calcula con el mismo TIN, unos 511 €/mes.
+
+La plantilla cuenta tantas cuotas como meses (36, 48 y 60) en vez de una menos con la primera más alta: lo pagado sale prácticamente igual (21.024 € frente a 21.056 € a 36 meses).
+
 - PVP de tarifa 39.070 €; precio financiando 32.970 €. TIN 9,75 %, TAE 10,24 %, sin comisión de apertura. Financia Openbank (Santander Consumer).
 - Incluye los tres primeros mantenimientos en un plazo de 36 meses (o 60.000 km).
 - La comparativa usa 20.000 km, porque con 10.000 los 15.000 km del perfil darían exceso. El contado (34.920 €) es el del presupuesto de julio: Mazda no publica precio sin financiar.

@@ -222,7 +222,7 @@ export const COCHES: CocheCandidato[] = [
   },
 ];
 
-const BANCO = "Préstamo bancario típico: TIN 5,5%, comisión de apertura 0,5% (comparadores, sep-2026)";
+export const BANCO = "Préstamo bancario típico: TIN 5,5%, comisión de apertura 0,5% (comparadores, sep-2026)";
 const SIN_INCLUIR_NEUMATICOS: Inclusiones = { ...TODO_INCLUIDO, neumaticos: false };
 
 export function prestamo(coche: CocheCandidato): Escenario {
