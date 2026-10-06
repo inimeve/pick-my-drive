@@ -55,6 +55,18 @@ Cargadas el **5 de octubre de 2026** en la plantilla "Opción inteligente" (ante
 
 Renting de **402 €/mes** con IVA, 36 meses, 15.000 km/año y fianza de importe no publicado. Se añade al CX-30 Centre-Line manual de `coches.md`, con sus ofertas de allí.
 
+## BYD Atto 2 DM-i Boost (Idoneo, oct-2026)
+
+Midnight Blue, entrega rápida y **sin fianza**. Precios en €/mes con IVA:
+
+| Km al año | 36 meses | 48 meses | 60 meses |
+|---|---|---|---|
+| 10.000 | 506 | 475 | 453 |
+| 15.000 | **537** | **503** | **483** |
+| 20.000 | 562 | 536 | 526 |
+
+Se cargan los tres plazos con 15.000 km al año. A 60 meses sale 6,78 €/mes más barato que BYD Renting (489,78 €). La misma propuesta trae un Atto 2 DM-i **Active** a 471 €/mes (72 meses, 15.000 km, con fianza), que no se ha cargado porque la plantilla compara el Boost.
+
 ## Condiciones del renting de Idoneo (investigado el 5-oct-2026)
 
 Sale de la página de propuestas (cotizaciones y letra pequeña) y de las guías de [Idoneo](https://idoneo.es/renting/guias/contrato-de-renting). La propuesta **no publica** la fianza, el precio del exceso de km, la penalización por cancelar, los daños ni el nombre de la empresa de renting.

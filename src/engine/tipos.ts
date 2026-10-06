@@ -227,6 +227,8 @@ export interface Escenario {
   visible: boolean;
   fuente?: string;
   ofertaReal?: OfertaReal;
+  /** Quién la ofrece (BYD Renting, Idoneo…): distingue dos ofertas del mismo coche, modalidad y plazo */
+  proveedor?: string;
 }
 
 export type Categoria =

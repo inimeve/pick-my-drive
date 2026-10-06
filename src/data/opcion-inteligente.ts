@@ -276,6 +276,18 @@ function flexibleByd(coche: CocheCandidato, precio: string, entrada: number, com
   return real({ ...e, id: `${e.id}:${plazo}` }, BYD_WEB);
 }
 
+/** Renting de Idoneo del Atto 2 DM-i Boost (Midnight Blue, entrega rápida, sin fianza) con 15.000 km al año.
+ * Tabla de la propuesta (€/mes con IVA): 10.000 km 506/475/453, 15.000 km 537/503/483, 20.000 km 562/536/526 a 36/48/60 meses */
+function rentingIdoneoAtto(atto: CocheCandidato): Escenario[] {
+  return ([[36, 537], [48, 503], [60, 483]] as const).map(([plazoMeses, cuota]) => {
+    const e = renting(atto, {
+      cuota, entrada: 0, plazoMeses, kmAnualesContrato: 15000, excesoKm: 0.07,
+      fuente: `Idoneo (oct-2026): Atto 2 Boost DM-i Midnight Blue, ${cuota} € con IVA a ${plazoMeses} meses y 15.000 km al año, sin fianza y con entrega rápida. ${IDONEO_CONDICIONES} ${EXCESO}: Idoneo da entre 0,03 y 0,10 €/km`,
+    });
+    return { ...real({ ...e, id: `${e.id}:idoneo:${plazoMeses}` }, IDONEO), proveedor: "Idoneo" };
+  });
+}
+
 /** Ofertas investigadas de los coches de la plantilla, sin estimaciones de mercado. Las financiaciones
  * flexibles son las de los configuradores de cada marca con la entrada mínima que aceptan */
 export function ofertasOpcionInteligente(): Escenario[] {
@@ -310,9 +322,10 @@ export function ofertasOpcionInteligente(): Escenario[] {
 
     real(contado(atto), BYD_WEB),
     ...PLAZOS_BYD.map((p) => flexibleByd(atto, "27.740", 277, "1.095,77", p, ATTO[p])),
-    real(renting(atto, {
+    { ...real(renting(atto, {
       cuota: 489.78, entrada: 0, plazoMeses: 60, kmAnualesContrato: 15000, excesoKm: 0.12,
       fuente: `${BYD_RENTING} Cuota: 489,78 € con IVA.`,
-    }), BYD_WEB),
+    }), BYD_WEB), proveedor: "BYD Renting" },
+    ...rentingIdoneoAtto(atto),
   ];
 }
