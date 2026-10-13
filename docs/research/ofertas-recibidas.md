@@ -55,6 +55,37 @@ Cargadas el **5 de octubre de 2026** en la plantilla "Opción inteligente" (ante
 
 Renting de **402 €/mes** con IVA, 36 meses, 15.000 km/año y fianza de importe no publicado. Se añade al CX-30 Centre-Line manual de `coches.md`, con sus ofertas de allí.
 
+## BYD Atto 2 DM-i Boost y Dolphin G DM-i Comfort (concesionario de Bilbao/Barakaldo, 13-oct-2026, válida hasta el 28-oct)
+
+Dos presupuestos de contado y tres simulaciones de **Easy Plan** (CA Auto Bank) del Atto 2, todas del 13-oct. El presupuesto de contado no resta el Plan Auto+: según el vendedor, BYD adelanta los 2.250 € sin intereses durante 6 meses, pero la ayuda la tramita el cliente.
+
+| Concepto | Dolphin G DM-i Comfort | Atto 2 DM-i Boost |
+|---|---|---|
+| Precio de fábrica | 29.700 € | 31.200 € |
+| Campaña BYD y soporte BYD plan auto (sin IVA) | −590,91 − 1.000 € (−1.925 € con IVA) | −1.000 € (−1.210 € con IVA) |
+| Matriculación y pre-entrega | 875 € | 875 € |
+| **Total** | **28.650 €** | **30.865 €** |
+
+Coinciden al euro con los configuradores de BYD del mismo día (véase `byd-hibridos.md`), más los 875 € que la web no incluye.
+
+Simulaciones de Easy Plan del Atto 2 (15.000 km/año, 0,10 €/km de exceso, 48 cuotas y una última a los 49 meses). En todas va financiado un seguro de vida opcional (CPI LOAN VIDA) y la comisión de apertura del 3,75 %:
+
+| | A | B | C |
+|---|---|---|---|
+| Precio | 30.865 € | **28.865 €** (2.000 € menos por financiar) | 30.865 € |
+| Entrada | 13.000 € | 13.000 € | 9.250 € |
+| Seguro de vida financiado | 817,39 € | 725,89 € | 988,98 € |
+| Comisión de apertura financiada | 700,59 € | 622,16 € | 847,65 € |
+| Importe del crédito | 19.382,98 € | 17.213,05 € | 23.451,63 € |
+| TIN / TAE | 5,99 % / 7,42 % | 8,99 % / 10,69 % | 5,99 % / 7,51 % |
+| Cuota | 208,31 € | 196,71 € | 303,84 € |
+| Última cuota | 13.415,83 € | 13.416,29 € | 13.416,05 € |
+| Total adeudado | 23.414,71 € | 22.858,36 € | 28.000,37 € |
+
+- La última cuota es la misma que el Valor Mínimo Garantizado de la web (13.415,81 €).
+- La letra pequeña avisa de que, si la financiera aporta parte del descuento, hay una duración mínima; si se cancela antes, se devuelve. Puede afectar a la B: **hay que preguntar** cuánto y durante cuánto tiempo.
+- Con la misma deuda que la web (15.258 € antes de comisión), sin seguro de vida y restando la ayuda, el total a pagar sale en 32.768 € con A y 32.086 € con B, frente a 33.317 € en la web (con 875 € de matriculación en todas). Es un cálculo mío con las mismas fórmulas, que reproducen al céntimo las cuotas impresas.
+
 ## BYD Atto 2 DM-i Boost (Idoneo, oct-2026)
 
 Midnight Blue, entrega rápida y **sin fianza**. Precios en €/mes con IVA:

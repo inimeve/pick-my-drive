@@ -64,7 +64,19 @@ La plantilla lleva los tres plazos, con la entrada mínima y 15.000 km al año:
 | Atto 2 DM-i Boost | 60 | 381,15 € | 11.700,09 € | 8,60 % |
 - El precio ya resta los 2.250 € del Plan Auto+ que adelanta CA Auto Bank. En la comparativa la ayuda va aparte (como ingreso), así que se suma a la entrada.
 - No publica el precio del exceso de km: se usan los 0,10 €/km del presupuesto de abril.
+- La entrada máxima que acepta la calculadora es el **45 %** del precio financiando.
 - La promoción "desde 20.940 €" del Atto 2 DM-i (y la equivalente del Dolphin G) es otra cosa: un préstamo a 72 meses con 36 de permanencia y un mínimo de 15.000 €, sin TIN publicado. No es financiación flexible y no se ha cargado.
+
+### Revisión del 13-oct, con la entrada máxima
+
+Condiciones sin cambios: TIN 6,99 %, comisión del 3,99 % al contado, válido hasta el 31-oct. Con 48 cuotas, 15.000 km al año y la entrada máxima:
+
+| Coche | Precio financiando | Entrada | Comisión | Cuota | Última cuota | TAE | Total adeudado |
+|---|---|---|---|---|---|---|---|
+| Atto 2 DM-i Boost | 27.740 € | 12.482 € | 608,79 € | 123,66 € | 13.415,81 € | 8,53 % | 19.960,28 € |
+| Dolphin G DM-i **Comfort** | 25.525 € | 11.486 € | 560,16 € | 116,79 € | 12.176,84 € | 8,54 % | 18.342,92 € |
+
+El concesionario mejora estas condiciones en el mismo producto: TIN del 5,99 % y comisión del 3,75 % financiada, o bien 2.000 € de descuento con TIN del 8,99 %. Véase `ofertas-recibidas.md` (13-oct).
 
 **BYD Renting** (Arval), con 0 € de entrada, 60 meses y 15.000 km al año: **487,80 €** el Dolphin G Boost y **489,78 €** el Atto 2 DM-i Boost. Incluye seguro a todo riesgo, mantenimiento, reparaciones, neumáticos ilimitados, impuestos e ITV. El km adicional cuesta 0,12 € y el no recorrido se devuelve a 0,05 €. Sustituye a los rentings de comparadores que había antes.
 
