@@ -24,7 +24,6 @@ export const nombreCoche = (c: CocheCandidato) => `${c.nombre}${c.estado === "us
 /** Nombre de la modalidad de un escenario; si su coche tiene otro de la misma modalidad, con el plazo */
 export const nombreOpcion = (e: Escenario) => {
   const c = e.condiciones;
-  const plazo = (x: Escenario) => ("plazoMeses" in x.condiciones ? x.condiciones.plazoMeses : undefined);
   const hermanas = app.comp.escenarios.filter(
     (x) => x.id !== e.id && x.cocheId === e.cocheId && x.condiciones.modalidad === c.modalidad,
   );
@@ -32,7 +31,7 @@ export const nombreOpcion = (e: Escenario) => {
   if (hermanas.length && "plazoMeses" in c) nombre += ` a ${c.plazoMeses} meses`;
   if (c.modalidad === "prestamo" && c.cancelarEnMes !== undefined && c.cancelarEnMes < c.plazoMeses)
     nombre += `, cancelado en el mes ${c.cancelarEnMes}`;
-  if (e.proveedor && hermanas.some((x) => plazo(x) === plazo(e))) nombre += ` (${e.proveedor})`;
+  if (e.proveedor) nombre += ` (${e.proveedor})`;
   return nombre;
 };
 export const nombreEscenario = (id: string) => {

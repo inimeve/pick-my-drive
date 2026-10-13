@@ -83,6 +83,12 @@ describe("contado", () => {
     expect(r.caja[0]).toBe(30000);
   });
 
+  it("si vale menos de lo que se paga, el Valor residual parte de lo que vale", () => {
+    const r = simular(contado, { ...coche, valorMercado: 25000 }, ctx);
+    const valor = valorResidual({ ...coche, pvp: 25000 }, 60, ctx.perfil);
+    expect(r.costeNeto[60]).toBeCloseTo(30000 - valor, 6);
+  });
+
   it("el Desembolso acumulado es plano en el precio si no hay costes de uso", () => {
     const r = simular(contado, coche, ctx);
     expect(r.desembolsoAcumulado[0]).toBe(30000);

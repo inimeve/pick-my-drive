@@ -105,6 +105,13 @@ export function editorCoche(c: CocheCandidato, al: AccionesCoche = {}): HTMLElem
       ),
       grupo(
         "Valor y garantía",
+        c.estado === "usado"
+          ? campoNumero("Valor de mercado al adquirirlo", c.valorMercado ?? c.pvp, (v) => set("valorMercado")(v === c.pvp ? undefined : v), {
+              paso: 100,
+              sufijo: "€",
+              ayuda: "Si pagas más o menos de lo que vale (una cuota final, por ejemplo): de aquí parte lo que valdrá al venderlo",
+            })
+          : undefined,
         campoNumero("Pierde el primer año", c.depreciacionPrimerAnio, set("depreciacionPrimerAnio"), { porcentaje: true, sufijo: "%" }),
         campoNumero("Pierde cada año siguiente", c.depreciacionAnual, set("depreciacionAnual"), { porcentaje: true, sufijo: "%" }),
         campoNumero("Garantía (edad del coche)", c.garantiaMeses / 12, (v) => set("garantiaMeses")(Math.round(v * 12)), { paso: 1, sufijo: "años" }),

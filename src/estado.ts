@@ -1,5 +1,8 @@
 import {
   COCHES_BMW,
+  COCHES_BYD_BARAKALDO,
+  cocheActualCx30ConPrestamo,
+  ofertasBydBarakaldo,
   MUNICIPIOS,
   cocheActualConOferta,
   ofertasUsado,
@@ -35,16 +38,27 @@ export function comparativaPorDefecto(): Comparativa {
   });
 }
 
-export type PlantillaId = "vacia" | "bmw";
+export type PlantillaId = "vacia" | "bmw" | "byd-cx30";
 
 export const PLANTILLAS: { id: PlantillaId; nombre: string }[] = [
   { id: "vacia", nombre: "Vacía" },
   { id: "bmw", nombre: "BMW de segunda mano y mi Focus" },
+  { id: "byd-cx30", nombre: "BYD Atto 2 y Dolphin G frente a quedarme mi CX-30" },
 ];
 
 export function comparativaDePlantilla(id: PlantillaId): Comparativa {
   const base = comparativaPorDefecto();
   if (id === "vacia") return base;
+  if (id === "byd-cx30") {
+    const mio = cocheActualCx30ConPrestamo();
+    return {
+      ...base,
+      // las financiaciones de BYD son a 48 meses: con más horizonte se renovarían con otro coche igual
+      perfil: { ...base.perfil, horizonteMeses: 48 },
+      coches: [...structuredClone(COCHES_BYD_BARAKALDO), mio.coche],
+      escenarios: [...ofertasBydBarakaldo(), ...mio.escenarios],
+    };
+  }
   const mio = cocheActualConOferta();
   const coches = [...structuredClone(COCHES_BMW), mio.coche];
   return {

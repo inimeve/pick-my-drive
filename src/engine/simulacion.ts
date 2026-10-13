@@ -226,9 +226,9 @@ function cicloActivo(ciclos: Ciclo[], m: number): Ciclo {
   return activo;
 }
 
-/** Valor de mercado de referencia: lo que se pagó por el coche */
+/** Valor de mercado de referencia: lo que se pagó por el coche, salvo que se sepa que vale otra cosa */
 function cocheAlPrecio(coche: CocheCandidato, descuento: number): CocheCandidato {
-  return { ...coche, pvp: coche.pvp - descuento };
+  return { ...coche, pvp: coche.valorMercado ?? coche.pvp - descuento };
 }
 
 /** Apuntes de adquirir el coche en propiedad en el mes `inicio` */

@@ -34,6 +34,9 @@ export interface CocheCandidato {
   motorizacion: Motorizacion;
   /** Precio final de venta: con IVA, transporte e impuesto de matriculación */
   pvp: number;
+  /** Lo que vale en el mercado al adquirirlo, si no coincide con lo que se paga (una cuota final por encima
+   * de su valor, por ejemplo): de aquí parte el Valor residual */
+  valorMercado?: number;
   /** Emisiones WLTP en g/km, para el impuesto de matriculación */
   co2: number;
   cvFiscales: number;
