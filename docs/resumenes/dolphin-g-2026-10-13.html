@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BYD Dolphin G: opciones</title>
+<style>
+  @page { size: A4; margin: 0; }
+  :root {
+    color-scheme: light;
+    --tinta: #0b0b0b;
+    --tinta-2: #52514e;
+    --tinta-3: #7a7974;
+    --linea: #e4e3df;
+    --portada: #f3f3f3;
+    --coche: #c2501b;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #e9e8e4; }
+  body {
+    font: 8.5pt/1.35 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--tinta);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  h1, h2, p { margin: 0; }
+  .hoja {
+    width: 210mm;
+    height: 297mm;
+    margin: 10mm auto;
+    padding: 0 13mm 8mm;
+    background: #fff;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.12);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 2.2mm;
+  }
+  @media print {
+    html, body { background: #fff; }
+    .hoja { margin: 0; box-shadow: none; }
+  }
+  @media screen and (max-width: 220mm) {
+    .hoja { width: auto; height: auto; margin: 0; padding: 0 16px 16px; box-shadow: none; }
+    .portada { margin: 0 -16px; grid-template-columns: 1fr; height: auto; }
+    .foto { height: 50vw; }
+    .titulo { padding: 16px; }
+    .tabla-envoltorio { overflow-x: auto; }
+  }
+  h2 {
+    font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--tinta-2); font-weight: 600;
+  }
+  .portada { margin: 0 -13mm; display: grid; grid-template-columns: 1.35fr 1fr; background: var(--portada); height: 42mm; }
+  .foto { background: url("https://www.byd.com/material/byd-site/configuration/dolphin-g/pc/exterior/orangesunset/comfort/01.webp") no-repeat 52% 62% / cover; }
+  .foto.fundido {
+    -webkit-mask-image: linear-gradient(to right, #000 80%, transparent 100%), linear-gradient(to bottom, #000 82%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, #000 80%, transparent 100%), linear-gradient(to bottom, #000 82%, transparent 100%);
+    mask-composite: intersect;
+  }
+  .titulo { padding: 2mm 13mm 2mm 0; display: flex; flex-direction: column; justify-content: center; gap: 1mm; }
+  .marca { font-size: 8pt; letter-spacing: 0.3em; color: var(--coche); font-weight: 700; }
+  .titulo h1 { font-size: 17.5pt; line-height: 1.05; letter-spacing: -0.02em; }
+  .fecha { color: var(--tinta-2); }
+  .ficha { margin: 1.5mm 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.6mm 3mm; font-size: 8pt; }
+  .ficha dt { color: var(--tinta-3); }
+  .ficha dd { margin: 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 7.8pt; font-variant-numeric: tabular-nums; }
+  thead th {
+    text-align: right; font-weight: 600; color: var(--tinta-2); font-size: 7pt;
+    padding: 0 0.9mm 1.2mm; border-bottom: 0.75pt solid var(--tinta); white-space: nowrap; vertical-align: bottom;
+  }
+  thead th:first-child, tbody th { text-align: left; padding-left: 0; }
+  tbody th { font-weight: 600; padding: 0.7mm 0.9mm 0.7mm 0; white-space: nowrap; }
+  tbody td { text-align: right; padding: 0.7mm 0.9mm; white-space: nowrap; }
+  tbody tr { border-bottom: 0.5pt solid var(--linea); }
+  .fuerte { font-weight: 650; }
+  .sub { display: block; font-weight: 400; font-size: 6.6pt; color: var(--tinta-3); }
+  .nota { font-size: 6.6pt; line-height: 1.3; color: var(--tinta-2); }
+  .nota p + p { margin-top: 1mm; }
+  .barras { display: grid; gap: 0.2mm; font-size: 7.6pt; }
+  .barra-fila { display: grid; grid-template-columns: 66mm 1fr; align-items: center; gap: 3mm; }
+  .barra-etq { white-space: nowrap; }
+  .barra-etq { text-align: right; color: var(--tinta-2); }
+  .barra-pista { display: flex; align-items: center; gap: 2mm; }
+  .barra { height: 2.3mm; background: var(--coche); border-radius: 0 4px 4px 0; }
+  .barra-val { font-weight: 650; font-variant-numeric: tabular-nums; }
+  .energia { display: grid; grid-template-columns: 32mm 1fr; column-gap: 4mm; row-gap: 1.2mm; align-items: center; background: var(--portada); margin: -2.6mm -13mm 0; padding: 2mm 13mm 2.5mm; border-top: 0.5pt solid var(--linea); }
+  .energia h2 { line-height: 1.2; }
+  .energia .nota { grid-column: 1 / -1; }
+  .cifras { display: flex; gap: 5mm; align-items: baseline; }
+  .cifras b { display: block; font-size: 11pt; color: var(--coche); font-variant-numeric: tabular-nums; }
+  .cifras span { font-size: 6.8pt; color: var(--tinta-2); }
+  .cifras .total { padding-left: 5mm; border-left: 0.5pt solid var(--linea); }
+  .pie { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; padding-top: 1.5mm; border-top: 0.5pt solid var(--linea); }
+  .pie ul { margin: 1mm 0 0; padding-left: 4mm; font-size: 6.8pt; line-height: 1.2; }
+  .pie li + li { margin-top: 0.1mm; }
+</style>
+</head>
+<body>
+<main class="hoja">
+  <header class="portada">
+    <div class="foto fundido" role="img" aria-label="BYD Dolphin G en Orange Sunset"></div>
+    <div class="titulo">
+      <p class="marca">BYD</p>
+      <h1>Dolphin G DM-i Comfort</h1>
+      <p class="fecha">Formas de pago · 13 de octubre de 2026</p>
+      <dl class="ficha"><dt>Potencia</dt><dd>212 CV (156 kW)</dd><dt>Batería</dt><dd>18,3 kWh · 105 km eléctricos</dd><dt>Consumo</dt><dd>1,4 l/100 km ponderado</dd><dt>Maletero</dt><dd>425 / 1.225 l</dd></dl>
+    </div>
+  </header>
+
+  <section class="energia">
+    <h2>Energía</h2>
+    <div class="cifras">
+      <div><b>9,1&nbsp;€</b><span>cada 100 km</span></div>
+      <div><b>114 €</b><span>al mes</span></div>
+      <div><b>1.372 €</b><span>al año</span></div>
+      <div class="total"><b>5.487 €</b><span>en 4 años</span></div>
+    </div>
+    <h2>Tenerlo 4 años</h2>
+    <div class="cifras">
+      <div><b>2.714 €</b><span>Seguro</span></div><div><b>1.390 €</b><span>Mantenimiento</span></div><div><b>1.018 €</b><span>Neumáticos</span></div><div><b>142 €</b><span>ITV e impuesto</span></div><div><b>0 €</b><span>Averías</span></div>
+      <div class="total"><b>5.264 €</b><span>en total</span></div>
+    </div>
+    <p class="nota"><strong>Energía:</strong> 15.000 km al año: el 15 % en eléctrico, con todo cargado fuera de casa (19 kWh/100 km a 0,45 €/kWh), y el 85 % con gasolina (5 l/100 km reales con la batería vacía, a 1,85 €/l). A precios de hoy (Bizkaia, 1-oct-2026). <strong>Tenerlo:</strong> Seguro a todo riesgo, mantenimiento y neumáticos estimados, con un 3 % de inflación al año. Sin ITV en estos 4 años (es nuevo) y con la bonificación del 75 % del impuesto de circulación de Bilbao para enchufables. Garantía de 6 años: sin averías. Ni la energía ni estos costes están sumados al coste neto: son iguales en todas las opciones.</p>
+  </section>
+
+  <h2>Las opciones</h2>
+  <div class="tabla-envoltorio">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Opción</th>
+          <th scope="col">Precio</th>
+          <th scope="col">El primer día</th>
+          <th scope="col">Cuotas</th>
+          <th scope="col">Última cuota<br>o cancelación</th>
+          <th scope="col">TIN</th>
+          <th scope="col">Pagado hasta<br>el mes 48</th>
+          <th scope="col">Pagado si te<br>lo quedas</th>
+          <th scope="col" class="fuerte">Coste neto<br>a 4 años</th>
+        </tr>
+      </thead>
+      <tbody><tr>
+      <th scope="row">Contado<span class="sub">Concesionario · hasta 28-oct</span></th>
+      <td>28.650 €</td>
+      <td>28.650 €</td>
+      <td>—</td>
+      <td>—</td>
+      <td>—</td>
+      <td>26.400 €<span class="sub">es tuyo</span></td>
+      <td>26.400 €</td>
+      <td class="fuerte">12.733 €</td>
+    </tr><tr>
+      <th scope="row">Easy Plan A<span class="sub">Estimación</span></th>
+      <td>28.650 €</td>
+      <td>13.000 €</td>
+      <td>48 × 157,23 €</td>
+      <td>12.177 €<span class="sub">mes 49</span></td>
+      <td>5,99 %<span class="sub">TAE 7,39 %</span></td>
+      <td>18.297 €<span class="sub">si lo devuelves</span></td>
+      <td>30.474 €</td>
+      <td class="fuerte">16.807 €</td>
+    </tr><tr>
+      <th scope="row">Easy Plan B<span class="sub">Estimación</span></th>
+      <td>26.650 €</td>
+      <td>13.000 €</td>
+      <td>48 × 142,19 €</td>
+      <td>12.177 €<span class="sub">mes 49</span></td>
+      <td>8,99 %<span class="sub">TAE 10,63 %</span></td>
+      <td>17.575 €<span class="sub">si lo devuelves</span></td>
+      <td>29.752 €</td>
+      <td class="fuerte">16.085 €</td>
+    </tr><tr>
+      <th scope="row">Easy Plan C<span class="sub">Estimación</span></th>
+      <td>28.650 €</td>
+      <td>9.250 €</td>
+      <td>48 × 248,59 €</td>
+      <td>12.177 €<span class="sub">mes 49</span></td>
+      <td>5,99 %<span class="sub">TAE 7,49 %</span></td>
+      <td>18.932 €<span class="sub">si lo devuelves</span></td>
+      <td>31.109 €</td>
+      <td class="fuerte">17.442 €</td>
+    </tr><tr>
+      <th scope="row">Easy Plan, entrada mín.<span class="sub">Web de BYD · hasta 31-oct</span></th>
+      <td>28.650 €</td>
+      <td>2.138 €</td>
+      <td>48 × 385,68 €</td>
+      <td>12.177 €<span class="sub">mes 49</span></td>
+      <td>6,99 %<span class="sub">TAE 8,84 %</span></td>
+      <td>20.651 €<span class="sub">si lo devuelves</span></td>
+      <td>32.828 €</td>
+      <td class="fuerte">19.161 €</td>
+    </tr><tr>
+      <th scope="row">Easy Plan, entrada máx.<span class="sub">Web de BYD · hasta 31-oct</span></th>
+      <td>28.650 €</td>
+      <td>12.921 €</td>
+      <td>48 × 116,79 €</td>
+      <td>12.177 €<span class="sub">mes 49</span></td>
+      <td>6,99 %<span class="sub">TAE 8,54 %</span></td>
+      <td>18.527 €<span class="sub">si lo devuelves</span></td>
+      <td>30.704 €</td>
+      <td class="fuerte">17.037 €</td>
+    </tr><tr>
+      <th scope="row">Lineal 5,99 %<span class="sub">Estimación</span></th>
+      <td>28.650 €</td>
+      <td>13.650 €</td>
+      <td>48 × 257,84 €<span class="sub">de 72 cuotas</span></td>
+      <td>5.876 €<span class="sub">cancelar, mes 48</span></td>
+      <td>5,99 %<span class="sub">TAE 7,54 %</span></td>
+      <td>23.776 €<span class="sub">debes 5.818 €</span></td>
+      <td>29.653 €</td>
+      <td class="fuerte">15.986 €</td>
+    </tr><tr>
+      <th scope="row">Lineal −2.000 € al 8,99 %<span class="sub">Estimación</span></th>
+      <td>26.650 €</td>
+      <td>11.650 €</td>
+      <td>48 × 280,45 €<span class="sub">de 72 cuotas</span></td>
+      <td>6.201 €<span class="sub">cancelar, mes 48</span></td>
+      <td>8,99 %<span class="sub">TAE 10,84 %</span></td>
+      <td>22.862 €<span class="sub">debes 6.139 €</span></td>
+      <td>29.062 €</td>
+      <td class="fuerte">15.395 €</td>
+    </tr><tr>
+      <th scope="row">Lineal 5,99 %, entrada mín.<span class="sub">Estimación</span></th>
+      <td>28.650 €</td>
+      <td>287 €</td>
+      <td>48 × 487,55 €<span class="sub">de 72 cuotas</span></td>
+      <td>11.112 €<span class="sub">cancelar, mes 48</span></td>
+      <td>5,99 %<span class="sub">TAE 7,54 %</span></td>
+      <td>21.439 €<span class="sub">debes 11.002 €</span></td>
+      <td>32.551 €</td>
+      <td class="fuerte">18.884 €</td>
+    </tr><tr>
+      <th scope="row">Lineal −2.000 €, entrada mín.<span class="sub">Estimación</span></th>
+      <td>26.650 €</td>
+      <td>267 €</td>
+      <td>48 × 493,27 €<span class="sub">de 72 cuotas</span></td>
+      <td>10.906 €<span class="sub">cancelar, mes 48</span></td>
+      <td>8,99 %<span class="sub">TAE 10,84 %</span></td>
+      <td>21.694 €<span class="sub">debes 10.798 €</span></td>
+      <td>32.600 €</td>
+      <td class="fuerte">18.933 €</td>
+    </tr></tbody>
+    </table>
+  </div>
+  <p class="nota">Precio con IVA, matriculación y pre-entrega (875 €, que la web no incluye), sin restar el Plan Auto+ (2.250 €, pendiente de BOE: si no se aprueba o no corresponde, el coche cuesta 2.250 € más). Los totales pagados ya restan la ayuda. En la web la adelanta CA Auto Bank y ya va descontada de lo financiado (por eso su primer día es menor); en el concesionario se tramita aparte y BYD la adelanta 6 meses sin intereses. Si no se concede, hay que devolverla o pagarla en 6 meses. <strong>Easy Plan A, B y C (estimación):</strong> el concesionario solo ha dado el precio al contado, así que son las opciones que dio para el Atto 2 adaptadas al Dolphin: la misma entrada, TIN, descuento y comisión del 3,75 % financiada, sin seguro de vida, y la última cuota de la web (el Valor Mínimo Garantizado no depende de la entrada). Sus cuotas y TAE, como las de la web con entrada mínima, están calculadas con la fórmula que reproduce al céntimo las reales.</p>
+  <p class="nota"><strong>Lineal (estimación):</strong> financiación lineal de CA Auto Bank, que el concesionario no ha ofrecido todavía. La promoción de BYD pide financiar al menos 15.000 € a 72 meses o más, con 36 de permanencia. Se usan el TIN y el descuento que el concesionario dio para el Atto 2 (opciones A y B), la comisión del 3,75 % financiada y una cancelación en el mes 48 con un 1 % de comisión, para cubrir los mismos 4 años. La de entrada mínima financia todo menos el 1 %. La TAE es calculada. Falta confirmar el TIN, si hay descuento en lineal y si cancelar obliga a devolverlo.</p>
+
+  <h2>Coste neto a 4 años</h2>
+  <div class="barras" role="img" aria-label="Coste neto a 4 años de cada opción"><div class="barra-fila" title="Contado: 12.733 €">
+      <span class="barra-etq">Contado · concesionario</span>
+      <span class="barra-pista"><span class="barra" style="width:63.6653952%"></span><span class="barra-val">12.733 €</span></span>
+    </div><div class="barra-fila" title="Easy Plan A: 16.807 €">
+      <span class="barra-etq">Easy Plan A · estimación</span>
+      <span class="barra-pista"><span class="barra" style="width:84.03559519999988%"></span><span class="barra-val">16.807 €</span></span>
+    </div><div class="barra-fila" title="Easy Plan B: 16.085 €">
+      <span class="barra-etq">Easy Plan B · estimación</span>
+      <span class="barra-pista"><span class="barra" style="width:80.42599520000006%"></span><span class="barra-val">16.085 €</span></span>
+    </div><div class="barra-fila" title="Easy Plan C: 17.442 €">
+      <span class="barra-etq">Easy Plan C · estimación</span>
+      <span class="barra-pista"><span class="barra" style="width:87.21199520000002%"></span><span class="barra-val">17.442 €</span></span>
+    </div><div class="barra-fila" title="Easy Plan, entrada mín.: 19.161 €">
+      <span class="barra-etq">Easy Plan, entrada mín. · web</span>
+      <span class="barra-pista"><span class="barra" style="width:95.80496020000005%"></span><span class="barra-val">19.161 €</span></span>
+    </div><div class="barra-fila" title="Easy Plan, entrada máx.: 17.037 €">
+      <span class="barra-etq">Easy Plan, entrada máx. · web</span>
+      <span class="barra-pista"><span class="barra" style="width:85.18577570000019%"></span><span class="barra-val">17.037 €</span></span>
+    </div><div class="barra-fila" title="Lineal 5,99 %: 15.986 €">
+      <span class="barra-etq">Lineal 5,99 % · estimación</span>
+      <span class="barra-pista"><span class="barra" style="width:79.92899580229782%"></span><span class="barra-val">15.986 €</span></span>
+    </div><div class="barra-fila" title="Lineal −2.000 € al 8,99 %: 15.395 €">
+      <span class="barra-etq">Lineal −2.000 € al 8,99 % · estimación</span>
+      <span class="barra-pista"><span class="barra" style="width:76.9773106829217%"></span><span class="barra-val">15.395 €</span></span>
+    </div><div class="barra-fila" title="Lineal 5,99 %, entrada mín.: 18.884 €">
+      <span class="barra-etq">Lineal 5,99 %, entrada mín. · estimación</span>
+      <span class="barra-pista"><span class="barra" style="width:94.42049578264486%"></span><span class="barra-val">18.884 €</span></span>
+    </div><div class="barra-fila" title="Lineal −2.000 €, entrada mín.: 18.933 €">
+      <span class="barra-etq">Lineal −2.000 €, entrada mín. · estimación</span>
+      <span class="barra-pista"><span class="barra" style="width:94.66665675965774%"></span><span class="barra-val">18.933 €</span></span>
+    </div></div>
+
+  <footer class="pie">
+    <div>
+      <h2>Cómo funciona el Easy Plan</h2>
+      <ul><li>48 cuotas y una última (Valor Mínimo Garantizado) a los 49 meses.</li><li>Al final: devolverlo, quedárselo pagando la última o cambiarlo.</li><li>15.000 km al año incluidos; 0,10 €/km de más si se devuelve.</li><li>Comisión: 3,75 % financiada o 3,99 % al firmar (web).</li><li>B: 2.000 € menos con TIN 8,99 %; tiene duración mínima.</li><li>Entrada en la web: de 255 € a 11.486 € (el 45 % del precio).</li></ul>
+    </div>
+    <div class="nota">
+      <p><strong>Coste neto a 4 años:</strong> lo pagado durante 48 meses, menos lo que valdría el coche al final (unos 13.700 €), menos la ayuda. No cuenta lo que habría rendido el dinero ni incluye energía, seguro, mantenimiento ni impuestos, que son iguales en todas las opciones. Con 15.000 km al año, sin exceso de km.</p>
+      <p>Fuentes: presupuesto de contado del concesionario BYD de Barakaldo y configurador de BYD España, del 13-oct-2026. Foto: configurador de BYD. Cálculos de pick-my-drive.</p>
+    </div>
+  </footer>
+</main>
+</body>
+</html>

@@ -13,7 +13,6 @@
     --tinta-3: #7a7974;
     --linea: #e4e3df;
     --portada: #f3f3f3;
-    /* el azul del Midnight Blue de la foto */
     --coche: #1d5f86;
   }
   * { box-sizing: border-box; }
@@ -35,7 +34,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: 2.6mm;
+    gap: 2.2mm;
   }
   @media print {
     html, body { background: #fff; }
@@ -52,13 +51,19 @@
     font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.07em;
     color: var(--tinta-2); font-weight: 600;
   }
-  .portada { margin: 0 -13mm; display: grid; grid-template-columns: 1.35fr 1fr; background: var(--portada); height: 50mm; }
+  .portada { margin: 0 -13mm; display: grid; grid-template-columns: 1.35fr 1fr; background: var(--portada); height: 42mm; }
   .foto { background: url("https://www.byd.com/material/byd-site/configuration/byd-atto2-dm-i/pc/exterior/midnightblue/01.webp") no-repeat 50% 58% / 130%; }
-  .titulo { padding: 4mm 13mm 4mm 0; display: flex; flex-direction: column; justify-content: center; gap: 1.5mm; }
+  .foto.fundido {
+    -webkit-mask-image: linear-gradient(to right, #000 80%, transparent 100%), linear-gradient(to bottom, #000 82%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, #000 80%, transparent 100%), linear-gradient(to bottom, #000 82%, transparent 100%);
+    mask-composite: intersect;
+  }
+  .titulo { padding: 2mm 13mm 2mm 0; display: flex; flex-direction: column; justify-content: center; gap: 1mm; }
   .marca { font-size: 8pt; letter-spacing: 0.3em; color: var(--coche); font-weight: 700; }
   .titulo h1 { font-size: 22pt; line-height: 1.05; letter-spacing: -0.02em; }
   .fecha { color: var(--tinta-2); }
-  .ficha { margin: 3mm 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.6mm 3mm; font-size: 8pt; }
+  .ficha { margin: 1.5mm 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.6mm 3mm; font-size: 8pt; }
   .ficha dt { color: var(--tinta-3); }
   .ficha dd { margin: 0; }
   table { width: 100%; border-collapse: collapse; font-size: 7.8pt; font-variant-numeric: tabular-nums; }
@@ -71,24 +76,26 @@
   tbody td { text-align: right; padding: 0.7mm 0.9mm; white-space: nowrap; }
   tbody tr { border-bottom: 0.5pt solid var(--linea); }
   .fuerte { font-weight: 650; }
-  .sub { display: block; font-weight: 400; font-size: 7pt; color: var(--tinta-3); }
+  .sub { display: block; font-weight: 400; font-size: 6.6pt; color: var(--tinta-3); }
   .nota { font-size: 6.6pt; line-height: 1.3; color: var(--tinta-2); }
   .nota p + p { margin-top: 1mm; }
-  .barras { display: grid; gap: 0.6mm; }
+  .barras { display: grid; gap: 0.2mm; font-size: 7.6pt; }
   .barra-fila { display: grid; grid-template-columns: 66mm 1fr; align-items: center; gap: 3mm; }
   .barra-etq { white-space: nowrap; }
   .barra-etq { text-align: right; color: var(--tinta-2); }
   .barra-pista { display: flex; align-items: center; gap: 2mm; }
-  .barra { height: 2.5mm; background: var(--coche); border-radius: 0 4px 4px 0; }
+  .barra { height: 2.3mm; background: var(--coche); border-radius: 0 4px 4px 0; }
   .barra-val { font-weight: 650; font-variant-numeric: tabular-nums; }
-  .energia { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 6mm; row-gap: 1mm; align-items: center; background: var(--portada); margin: -2.6mm -13mm 0; padding: 2mm 13mm 3mm; border-top: 0.5pt solid var(--linea); }
-  .energia h2 { grid-column: 1 / -1; }
-  .cifras { display: flex; gap: 6mm; }
-  .cifras b { display: block; font-size: 12pt; color: var(--coche); font-variant-numeric: tabular-nums; }
-  .cifras span { font-size: 7pt; color: var(--tinta-2); }
+  .energia { display: grid; grid-template-columns: 32mm 1fr; column-gap: 4mm; row-gap: 1.2mm; align-items: center; background: var(--portada); margin: -2.6mm -13mm 0; padding: 2mm 13mm 2.5mm; border-top: 0.5pt solid var(--linea); }
+  .energia h2 { line-height: 1.2; }
+  .energia .nota { grid-column: 1 / -1; }
+  .cifras { display: flex; gap: 5mm; align-items: baseline; }
+  .cifras b { display: block; font-size: 11pt; color: var(--coche); font-variant-numeric: tabular-nums; }
+  .cifras span { font-size: 6.8pt; color: var(--tinta-2); }
+  .cifras .total { padding-left: 5mm; border-left: 0.5pt solid var(--linea); }
   .pie { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; padding-top: 1.5mm; border-top: 0.5pt solid var(--linea); }
-  .pie ul { margin: 1mm 0 0; padding-left: 4mm; font-size: 7pt; line-height: 1.25; }
-  .pie li + li { margin-top: 0.3mm; }
+  .pie ul { margin: 1mm 0 0; padding-left: 4mm; font-size: 6.8pt; line-height: 1.2; }
+  .pie li + li { margin-top: 0.1mm; }
 </style>
 </head>
 <body>
@@ -104,14 +111,19 @@
   </header>
 
   <section class="energia">
-    <h2>Energía (igual en todas las opciones)</h2>
+    <h2>Energía</h2>
     <div class="cifras">
       <div><b>9,8&nbsp;€</b><span>cada 100 km</span></div>
       <div><b>122 €</b><span>al mes</span></div>
       <div><b>1.466 €</b><span>al año</span></div>
-      <div><b>5.864 €</b><span>en 4 años</span></div>
+      <div class="total"><b>5.864 €</b><span>en 4 años</span></div>
     </div>
-    <p class="nota">15.000 km al año: el 15 % en eléctrico, con todo cargado fuera de casa (19 kWh/100 km a 0,45 €/kWh), y el 85 % con gasolina (5,4 l/100 km reales con la batería vacía, a 1,85 €/l). A precios de hoy (Bizkaia, 1-oct-2026); no está sumada al coste neto.</p>
+    <h2>Tenerlo 4 años</h2>
+    <div class="cifras">
+      <div><b>3.053 €</b><span>Seguro</span></div><div><b>1.390 €</b><span>Mantenimiento</span></div><div><b>945 €</b><span>Neumáticos</span></div><div><b>142 €</b><span>ITV e impuesto</span></div><div><b>0 €</b><span>Averías</span></div>
+      <div class="total"><b>5.530 €</b><span>en total</span></div>
+    </div>
+    <p class="nota"><strong>Energía:</strong> 15.000 km al año: el 15 % en eléctrico, con todo cargado fuera de casa (19 kWh/100 km a 0,45 €/kWh), y el 85 % con gasolina (5,4 l/100 km reales con la batería vacía, a 1,85 €/l). A precios de hoy (Bizkaia, 1-oct-2026). <strong>Tenerlo:</strong> Seguro a todo riesgo, mantenimiento y neumáticos estimados, con un 3 % de inflación al año. Sin ITV en estos 4 años (es nuevo) y con la bonificación del 75 % del impuesto de circulación de Bilbao para enchufables. Garantía de 6 años: sin averías. Ni la energía ni estos costes están sumados al coste neto: son iguales en todas las opciones.</p>
   </section>
 
   <h2>Las opciones</h2>
@@ -125,7 +137,7 @@
           <th scope="col">Cuotas</th>
           <th scope="col">Última cuota<br>o cancelación</th>
           <th scope="col">TIN</th>
-          <th scope="col">Pagado si lo<br>devuelves</th>
+          <th scope="col">Pagado hasta<br>el mes 48</th>
           <th scope="col">Pagado si te<br>lo quedas</th>
           <th scope="col" class="fuerte">Coste neto<br>a 4 años</th>
         </tr>
@@ -137,7 +149,7 @@
       <td>—</td>
       <td>—</td>
       <td>—</td>
-      <td>—</td>
+      <td>28.615 €<span class="sub">es tuyo</span></td>
       <td>28.615 €</td>
       <td class="fuerte">13.471 €</td>
     </tr><tr>
@@ -147,7 +159,7 @@
       <td>48 × 188,40 €*</td>
       <td>13.416 €<span class="sub">mes 49</span></td>
       <td>5,99 %<span class="sub">TAE 7,42 %</span></td>
-      <td>19.793 €</td>
+      <td>19.793 €<span class="sub">si lo devuelves</span></td>
       <td>33.209 €</td>
       <td class="fuerte">18.065 €</td>
     </tr><tr>
@@ -157,7 +169,7 @@
       <td>48 × 177,97 €*</td>
       <td>13.416 €<span class="sub">mes 49</span></td>
       <td>8,99 %<span class="sub">TAE 10,69 %</span></td>
-      <td>19.293 €</td>
+      <td>19.293 €<span class="sub">si lo devuelves</span></td>
       <td>32.709 €</td>
       <td class="fuerte">17.564 €</td>
     </tr><tr>
@@ -167,7 +179,7 @@
       <td>48 × 279,75 €*</td>
       <td>13.416 €<span class="sub">mes 49</span></td>
       <td>5,99 %<span class="sub">TAE 7,51 %</span></td>
-      <td>20.428 €</td>
+      <td>20.428 €<span class="sub">si lo devuelves</span></td>
       <td>33.844 €</td>
       <td class="fuerte">18.700 €</td>
     </tr><tr>
@@ -177,7 +189,7 @@
       <td>48 × 415,86 €</td>
       <td>13.416 €<span class="sub">mes 49</span></td>
       <td>6,99 %<span class="sub">TAE 8,84 %</span></td>
-      <td>22.209 €</td>
+      <td>22.209 €<span class="sub">si lo devuelves</span></td>
       <td>35.625 €</td>
       <td class="fuerte">20.481 €</td>
     </tr><tr>
@@ -187,7 +199,7 @@
       <td>48 × 123,66 €</td>
       <td>13.416 €<span class="sub">mes 49</span></td>
       <td>6,99 %<span class="sub">TAE 8,53 %</span></td>
-      <td>19.901 €</td>
+      <td>19.901 €<span class="sub">si lo devuelves</span></td>
       <td>33.317 €</td>
       <td class="fuerte">18.173 €</td>
     </tr><tr>
@@ -197,7 +209,7 @@
       <td>48 × 257,84 €<span class="sub">de 72 cuotas</span></td>
       <td>5.876 €<span class="sub">cancelar, mes 48</span></td>
       <td>5,99 %<span class="sub">TAE 7,54 %</span></td>
-      <td>—</td>
+      <td>25.991 €<span class="sub">debes 5.818 €</span></td>
       <td>31.868 €</td>
       <td class="fuerte">16.724 €</td>
     </tr><tr>
@@ -207,7 +219,7 @@
       <td>48 × 280,45 €<span class="sub">de 72 cuotas</span></td>
       <td>6.201 €<span class="sub">cancelar, mes 48</span></td>
       <td>8,99 %<span class="sub">TAE 10,84 %</span></td>
-      <td>—</td>
+      <td>25.077 €<span class="sub">debes 6.139 €</span></td>
       <td>31.277 €</td>
       <td class="fuerte">16.133 €</td>
     </tr><tr>
@@ -217,7 +229,7 @@
       <td>48 × 525,24 €<span class="sub">de 72 cuotas</span></td>
       <td>11.971 €<span class="sub">cancelar, mes 48</span></td>
       <td>5,99 %<span class="sub">TAE 7,54 %</span></td>
-      <td>—</td>
+      <td>23.271 €<span class="sub">debes 11.852 €</span></td>
       <td>35.241 €</td>
       <td class="fuerte">20.097 €</td>
     </tr><tr>
@@ -227,13 +239,13 @@
       <td>48 × 534,27 €<span class="sub">de 72 cuotas</span></td>
       <td>11.813 €<span class="sub">cancelar, mes 48</span></td>
       <td>8,99 %<span class="sub">TAE 10,84 %</span></td>
-      <td>—</td>
+      <td>23.684 €<span class="sub">debes 11.696 €</span></td>
       <td>35.497 €</td>
       <td class="fuerte">20.353 €</td>
     </tr></tbody>
     </table>
   </div>
-  <p class="nota">Precio con IVA, matriculación y pre-entrega (875 €, que la web no incluye), sin restar el Plan Auto+ (2.250 €, pendiente de BOE: si no se aprueba o no corresponde, el coche cuesta 2.250 € más). Los totales pagados ya restan la ayuda. <strong>* Cuotas del concesionario sin el seguro de vida opcional</strong> que llevan sus simulaciones (817 € en A, 726 € en B y 989 € en C, financiado): con él son de 208,31 €, 196,71 € y 303,84 €. Se quita para comparar con la web, que no lo lleva. La TAE es la impresa, con el seguro.</p>
+  <p class="nota">Precio con IVA, matriculación y pre-entrega (875 €, que la web no incluye), sin restar el Plan Auto+ (2.250 €, pendiente de BOE: si no se aprueba o no corresponde, el coche cuesta 2.250 € más). Los totales pagados ya restan la ayuda. En la web la adelanta CA Auto Bank y ya va descontada de lo financiado (por eso su primer día es menor); en el concesionario se tramita aparte y BYD la adelanta 6 meses sin intereses. Si no se concede, hay que devolverla o pagarla en 6 meses. <strong>* Cuotas del concesionario sin el seguro de vida opcional</strong> que llevan sus simulaciones (817 € en A, 726 € en B y 989 € en C, financiado): con él son de 208,31 €, 196,71 € y 303,84 €. Se quita para comparar con la web, que no lo lleva. La TAE es la impresa, con el seguro.</p>
   <p class="nota"><strong>Lineal (estimación):</strong> financiación lineal de CA Auto Bank, que el concesionario no ha ofrecido todavía. La promoción de BYD pide financiar al menos 15.000 € a 72 meses o más, con 36 de permanencia. Se usan el TIN y el descuento de las opciones A y B, la comisión del 3,75 % financiada y una cancelación en el mes 48 con un 1 % de comisión, para cubrir los mismos 4 años. La de entrada mínima financia todo menos el 1 %. La TAE es calculada. Falta confirmar el TIN, si hay descuento en lineal y si cancelar obliga a devolverlo.</p>
 
   <h2>Coste neto a 4 años</h2>

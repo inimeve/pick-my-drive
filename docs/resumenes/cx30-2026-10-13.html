@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mazda CX-30: quedármelo</title>
+<style>
+  @page { size: A4; margin: 0; }
+  :root {
+    color-scheme: light;
+    --tinta: #0b0b0b;
+    --tinta-2: #52514e;
+    --tinta-3: #7a7974;
+    --linea: #e4e3df;
+    --portada: #f3f3f3;
+    --coche: #a3192b;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #e9e8e4; }
+  body {
+    font: 8.5pt/1.35 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--tinta);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  h1, h2, p { margin: 0; }
+  .hoja {
+    width: 210mm;
+    height: 297mm;
+    margin: 10mm auto;
+    padding: 0 13mm 8mm;
+    background: #fff;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.12);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 2.2mm;
+  }
+  @media print {
+    html, body { background: #fff; }
+    .hoja { margin: 0; box-shadow: none; }
+  }
+  @media screen and (max-width: 220mm) {
+    .hoja { width: auto; height: auto; margin: 0; padding: 0 16px 16px; box-shadow: none; }
+    .portada { margin: 0 -16px; grid-template-columns: 1fr; height: auto; }
+    .foto { height: 50vw; }
+    .titulo { padding: 16px; }
+    .tabla-envoltorio { overflow-x: auto; }
+  }
+  h2 {
+    font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--tinta-2); font-weight: 600;
+  }
+  .portada { margin: 0 -13mm; display: grid; grid-template-columns: 1.35fr 1fr; background: var(--portada); height: 42mm; }
+  .foto { background: url("https://cgi.cdn.mazda.media/compressed/cf1da74ec7730df1bc6c32b6562c9588f2da237450a7d58b7e2c063924ec7a18/MERGED/6/36.jpg") no-repeat 46% 58% / 108%; }
+  .foto.fundido {
+    -webkit-mask-image: linear-gradient(to right, #000 80%, transparent 100%), linear-gradient(to bottom, #000 82%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, #000 80%, transparent 100%), linear-gradient(to bottom, #000 82%, transparent 100%);
+    mask-composite: intersect;
+  }
+  .titulo { padding: 2mm 13mm 2mm 0; display: flex; flex-direction: column; justify-content: center; gap: 1mm; }
+  .marca { font-size: 8pt; letter-spacing: 0.3em; color: var(--coche); font-weight: 700; }
+  .titulo h1 { font-size: 19pt; line-height: 1.05; letter-spacing: -0.02em; }
+  .fecha { color: var(--tinta-2); }
+  .ficha { margin: 1.5mm 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.6mm 3mm; font-size: 8pt; }
+  .ficha dt { color: var(--tinta-3); }
+  .ficha dd { margin: 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 7.8pt; font-variant-numeric: tabular-nums; }
+  thead th {
+    text-align: right; font-weight: 600; color: var(--tinta-2); font-size: 7pt;
+    padding: 0 0.9mm 1.2mm; border-bottom: 0.75pt solid var(--tinta); white-space: nowrap; vertical-align: bottom;
+  }
+  thead th:first-child, tbody th { text-align: left; padding-left: 0; }
+  tbody th { font-weight: 600; padding: 0.7mm 0.9mm 0.7mm 0; white-space: nowrap; }
+  tbody td { text-align: right; padding: 0.7mm 0.9mm; white-space: nowrap; }
+  tbody tr { border-bottom: 0.5pt solid var(--linea); }
+  .fuerte { font-weight: 650; }
+  .sub { display: block; font-weight: 400; font-size: 6.6pt; color: var(--tinta-3); }
+  .nota { font-size: 6.6pt; line-height: 1.3; color: var(--tinta-2); }
+  .nota p + p { margin-top: 1mm; }
+  .barras { display: grid; gap: 0.2mm; font-size: 7.6pt; }
+  .barra-fila { display: grid; grid-template-columns: 66mm 1fr; align-items: center; gap: 3mm; }
+  .barra-etq { white-space: nowrap; }
+  .barra-etq { text-align: right; color: var(--tinta-2); }
+  .barra-pista { display: flex; align-items: center; gap: 2mm; }
+  .barra { height: 2.3mm; background: var(--coche); border-radius: 0 4px 4px 0; }
+  .barra-val { font-weight: 650; font-variant-numeric: tabular-nums; }
+  .energia { display: grid; grid-template-columns: 32mm 1fr; column-gap: 4mm; row-gap: 1.2mm; align-items: center; background: var(--portada); margin: -2.6mm -13mm 0; padding: 2mm 13mm 2.5mm; border-top: 0.5pt solid var(--linea); }
+  .energia h2 { line-height: 1.2; }
+  .energia .nota { grid-column: 1 / -1; }
+  .cifras { display: flex; gap: 5mm; align-items: baseline; }
+  .cifras b { display: block; font-size: 11pt; color: var(--coche); font-variant-numeric: tabular-nums; }
+  .cifras span { font-size: 6.8pt; color: var(--tinta-2); }
+  .cifras .total { padding-left: 5mm; border-left: 0.5pt solid var(--linea); }
+  .pie { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; padding-top: 1.5mm; border-top: 0.5pt solid var(--linea); }
+  .pie ul { margin: 1mm 0 0; padding-left: 4mm; font-size: 6.8pt; line-height: 1.2; }
+  .pie li + li { margin-top: 0.1mm; }
+</style>
+</head>
+<body>
+<main class="hoja">
+  <header class="portada">
+    <div class="foto fundido" role="img" aria-label="Mazda CX-30 en Soul Red Crystal"></div>
+    <div class="titulo">
+      <p class="marca">Mazda</p>
+      <h1>CX-30 2.0 e-Skyactiv G</h1>
+      <p class="fecha">Quedármelo · 13 de octubre de 2026</p>
+      <dl class="ficha"><dt>Motor</dt><dd>2.0 microhíbrido (ECO)</dd><dt>Año y km</dt><dd>2023 · unos 45.000 km</dd><dt>Consumo</dt><dd>6,8 l/100 km reales</dd><dt>Maletero</dt><dd>430 l</dd></dl>
+    </div>
+  </header>
+
+  <section class="energia">
+    <h2>Energía</h2>
+    <div class="cifras">
+      <div><b>12,6&nbsp;€</b><span>cada 100 km</span></div>
+      <div><b>157 €</b><span>al mes</span></div>
+      <div><b>1.887 €</b><span>al año</span></div>
+      <div class="total"><b>7.548 €</b><span>en 4 años</span></div>
+    </div>
+    <h2>Tenerlo 4 años</h2>
+    <div class="cifras">
+      <div><b>2.545 €</b><span>Seguro</span></div><div><b>1.780 €</b><span>Mantenimiento</span></div><div><b>1.272 €</b><span>Neumáticos</span></div><div><b>768 €</b><span>ITV e impuesto</span></div><div><b>370 €</b><span>Averías</span></div>
+      <div class="total"><b>6.736 €</b><span>en total</span></div>
+    </div>
+    <p class="nota"><strong>Energía:</strong> 15.000 km al año, todo con gasolina (6,8 l/100 km reales, a 1,85 €/l). A precios de hoy (Bizkaia, 1-oct-2026). <strong>Tenerlo:</strong> Mantenimiento, neumáticos y seguro de la tabla de gastos de Mazda, con un 3 % de inflación al año; el mantenimiento sube con la edad. Seguro a todo riesgo hasta que el coche cumple 7 años, así que todo el periodo. ITV a los 4 y a los 6 años. Garantía supuesta de 6 años o 150.000 km: averías solo el último año (hay que confirmar la real). Ni la energía ni estos costes están sumados al coste neto: son iguales en todas las opciones.</p>
+  </section>
+
+  <h2>Las opciones</h2>
+  <div class="tabla-envoltorio">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Opción</th>
+          <th scope="col">Precio</th>
+          <th scope="col">El primer día</th>
+          <th scope="col">Cuotas</th>
+          <th scope="col">Última cuota<br>o cancelación</th>
+          <th scope="col">TIN</th>
+          <th scope="col">Pagado hasta<br>el mes 48</th>
+          <th scope="col">Pagado si te<br>lo quedas</th>
+          <th scope="col" class="fuerte">Coste neto<br>a 4 años</th>
+        </tr>
+      </thead>
+      <tbody><tr>
+      <th scope="row">Al contado<span class="sub">Cuota final de la FlexiOpción</span></th>
+      <td>21.700 €</td>
+      <td>21.700 €</td>
+      <td>—</td>
+      <td>—</td>
+      <td>—</td>
+      <td>21.700 €<span class="sub">es tuyo</span></td>
+      <td>21.700 €</td>
+      <td class="fuerte">13.066 €</td>
+    </tr><tr>
+      <th scope="row">Préstamo a 48 meses<span class="sub">Banco · estimación</span></th>
+      <td>21.700 €</td>
+      <td>109 €</td>
+      <td>48 × 504,67 €</td>
+      <td>—</td>
+      <td>5,50 %<span class="sub">TAE 5,91 %</span></td>
+      <td>24.332 €<span class="sub">es tuyo</span></td>
+      <td>24.332 €</td>
+      <td class="fuerte">15.698 €</td>
+    </tr><tr>
+      <th scope="row">Préstamo a 72 meses<span class="sub">Banco · estimación · cancelado en el 48</span></th>
+      <td>21.700 €</td>
+      <td>109 €</td>
+      <td>48 × 354,53 €<span class="sub">de 72 cuotas</span></td>
+      <td>8.120 €<span class="sub">cancelar, mes 48</span></td>
+      <td>5,50 %<span class="sub">TAE 5,83 %</span></td>
+      <td>17.126 €<span class="sub">debes 8.040 €</span></td>
+      <td>25.247 €</td>
+      <td class="fuerte">16.612 €</td>
+    </tr></tbody>
+    </table>
+  </div>
+  <p class="nota">Precio: la cuota final de la FlexiOpción que queda por pagar para quedarse el coche. Hoy vale menos: 18.193 € según la tabla de gastos de Mazda (jul-2026). Sin ayudas.</p>
+  <p class="nota"><strong>Préstamo (estimación):</strong> préstamo personal de un banco por los 21.700 €, sin entrada, con condiciones típicas de mercado (TIN 5,5 % y comisión de apertura del 0,5 % al firmar; comparadores, sep-2026): no es una oferta. El de 72 meses se cancela en el mes 48 con un 1 % de comisión, para cubrir los mismos 4 años. La TAE es calculada.</p>
+
+  <h2>Coste neto a 4 años</h2>
+  <div class="barras" role="img" aria-label="Coste neto a 4 años de cada opción"><div class="barra-fila" title="Al contado: 13.066 €">
+      <span class="barra-etq">Al contado · cuota final</span>
+      <span class="barra-pista"><span class="barra" style="width:65.32953830235002%"></span><span class="barra-val">13.066 €</span></span>
+    </div><div class="barra-fila" title="Préstamo a 48 meses: 15.698 €">
+      <span class="barra-etq">Préstamo a 48 meses · banco</span>
+      <span class="barra-pista"><span class="barra" style="width:78.49176128583142%"></span><span class="barra-val">15.698 €</span></span>
+    </div><div class="barra-fila" title="Préstamo a 72 meses: 16.612 €">
+      <span class="barra-etq">Préstamo a 72 meses · banco</span>
+      <span class="barra-pista"><span class="barra" style="width:83.06210631805665%"></span><span class="barra-val">16.612 €</span></span>
+    </div></div>
+
+  <footer class="pie">
+    <div>
+      <h2>A tener en cuenta</h2>
+      <ul><li>La cuota final (21.700 €) es más de lo que vale hoy el coche (18.193 €).</li><li>Año y km aproximados: 2023, unos 45.000 km.</li><li>Valor a los 4 años: con la pérdida del 17 % al año de la tabla de Mazda.</li><li>Préstamo sin entrada: con entrada, los intereses bajan.</li></ul>
+    </div>
+    <div class="nota">
+      <p><strong>Coste neto a 4 años:</strong> lo pagado durante 48 meses, menos lo que valdría el coche al final (unos 8.600 €). No cuenta lo que habría rendido el dinero ni incluye energía, seguro, mantenimiento ni impuestos, que son iguales en todas las opciones. Con 15.000 km al año, sin exceso de km.</p>
+      <p>Fuentes: cuota final de la FlexiOpción; tabla de gastos de Mazda del concesionario de Bilbao (jul-2026); préstamo con condiciones típicas de mercado (comparadores, sep-2026). Foto: configurador de Mazda (CX-30 Makoto en Soul Red Crystal). Cálculos de pick-my-drive.</p>
+    </div>
+  </footer>
+</main>
+</body>
+</html>

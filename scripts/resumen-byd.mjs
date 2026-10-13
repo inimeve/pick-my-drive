@@ -1,36 +1,159 @@
-// Genera docs/resumenes/atto2-2026-10-13.html: las opciones del BYD Atto 2 DM-i Boost en una página A4.
-// El coste neto sale del motor de la app con la plantilla "BYD Atto 2 y Dolphin G frente a quedarme mi CX-30";
+// Genera el resumen A4 de las formas de pago de cada BYD de la plantilla "BYD Atto 2 y Dolphin G frente a quedarme
+// mi CX-30": docs/resumenes/atto2-2026-10-13.html y dolphin-g-2026-10-13.html. El coste neto sale del motor de la app;
 // el resto, de las ofertas (docs/research/ofertas-recibidas.md y financiacion-flexible.md).
-// Uso: node scripts/resumen-atto2.mjs
+// También el de quedarme mi CX-30 (cx30-2026-10-13.html), con el mismo diseño.
+// Uso: node scripts/resumen-byd.mjs [atto2|dolphin|cx30]  (sin argumento, todos)
 import { writeFileSync, mkdirSync } from "node:fs";
 import { createServer } from "vite";
 
-const SALIDA = "docs/resumenes/atto2-2026-10-13.html";
 const AYUDA = 2250;
 const MATRICULACION = 875;
-// Foto del configurador de BYD (Midnight Blue, el color de serie), enlazada: hace falta conexión para verla
-const FOTO = "https://www.byd.com/material/byd-site/configuration/byd-atto2-dm-i/pc/exterior/midnightblue/01.webp";
 
 /** Lo que la app no guarda tal cual: TIN y TAE impresos y la última cuota exacta. Las lineales son estimaciones:
  * la TAE es la calculada, con la comisión financiada y sin cancelar */
-const OFERTAS = {
-  "atto2-dmi-boost:contado": { nombre: "Contado", origen: "Concesionario", valida: "28-oct" },
-  "atto2-dmi-boost:cuota_final:concesionario-a": { nombre: "Easy Plan A", origen: "Concesionario", valida: "20-oct", tin: 5.99, tae: 7.42, ultima: 13415.83 },
-  "atto2-dmi-boost:cuota_final:concesionario-b": { nombre: "Easy Plan B", origen: "Concesionario", valida: "20-oct", tin: 8.99, tae: 10.69, ultima: 13416.29 },
-  "atto2-dmi-boost:cuota_final:concesionario-c": { nombre: "Easy Plan C", origen: "Concesionario", valida: "20-oct", tin: 5.99, tae: 7.51, ultima: 13416.05 },
-  "atto2-dmi-boost:cuota_final:web-minima": { nombre: "Easy Plan, entrada mín.", origen: "Web de BYD", valida: "31-oct", tin: 6.99, tae: 8.84, ultima: 13416.2 },
-  "atto2-dmi-boost:cuota_final:web-maxima": { nombre: "Easy Plan, entrada máx.", origen: "Web de BYD", valida: "31-oct", tin: 6.99, tae: 8.53, ultima: 13415.81 },
-  "atto2-dmi-boost:prestamo:lineal-599": { nombre: "Lineal 5,99 %", origen: "Estimación", tin: 5.99, tae: 7.54 },
-  "atto2-dmi-boost:prestamo:lineal-899": { nombre: "Lineal −2.000 € al 8,99 %", origen: "Estimación", tin: 8.99, tae: 10.84 },
-  "atto2-dmi-boost:prestamo:lineal-599-minima": { nombre: "Lineal 5,99 %, entrada mín.", origen: "Estimación", tin: 5.99, tae: 7.54 },
-  "atto2-dmi-boost:prestamo:lineal-899-minima": { nombre: "Lineal −2.000 €, entrada mín.", origen: "Estimación", tin: 8.99, tae: 10.84 },
+const lineales = (id) => ({
+  [`${id}:prestamo:lineal-599`]: { nombre: "Lineal 5,99 %", origen: "Estimación", tin: 5.99, tae: 7.54 },
+  [`${id}:prestamo:lineal-899`]: { nombre: "Lineal −2.000 € al 8,99 %", origen: "Estimación", tin: 8.99, tae: 10.84 },
+  [`${id}:prestamo:lineal-599-minima`]: { nombre: "Lineal 5,99 %, entrada mín.", origen: "Estimación", tin: 5.99, tae: 7.54 },
+  [`${id}:prestamo:lineal-899-minima`]: { nombre: "Lineal −2.000 €, entrada mín.", origen: "Estimación", tin: 8.99, tae: 10.84 },
+});
+
+const NOTA_AUTO_PLUS = "Precio con IVA, matriculación y pre-entrega (875 €, que la web no incluye), sin restar el Plan Auto+ (2.250 €, pendiente de BOE: si no se aprueba o no corresponde, el coche cuesta 2.250 € más). Los totales pagados ya restan la ayuda. En la web la adelanta CA Auto Bank y ya va descontada de lo financiado (por eso su primer día es menor); en el concesionario se tramita aparte y BYD la adelanta 6 meses sin intereses. Si no se concede, hay que devolverla o pagarla en 6 meses.";
+
+const COCHES = {
+  atto2: {
+    id: "atto2-dmi-boost",
+    salida: "docs/resumenes/atto2-2026-10-13.html",
+    titulo: "Atto 2 DM-i Boost",
+    tamTitulo: "22pt",
+    pestana: "BYD Atto 2: opciones",
+    // Foto del configurador de BYD en el color de serie, enlazada: hace falta conexión para verla
+    foto: "https://www.byd.com/material/byd-site/configuration/byd-atto2-dm-i/pc/exterior/midnightblue/01.webp",
+    encuadre: "no-repeat 50% 58% / 130%",
+    alt: "BYD Atto 2 en Midnight Blue",
+    // el azul del Midnight Blue de la foto
+    color: "#1d5f86",
+    ficha: [
+      ["Potencia", "212 CV (156 kW)"],
+      ["Batería", "18 kWh · 90 km eléctricos"],
+      ["Consumo", "1,8 l/100 km ponderado"],
+      ["Maletero", "425 / 1.335 l"],
+    ],
+    ofertas: {
+      "atto2-dmi-boost:contado": { nombre: "Contado", origen: "Concesionario", valida: "28-oct" },
+      "atto2-dmi-boost:cuota_final:concesionario-a": { nombre: "Easy Plan A", origen: "Concesionario", valida: "20-oct", tin: 5.99, tae: 7.42, ultima: 13415.83 },
+      "atto2-dmi-boost:cuota_final:concesionario-b": { nombre: "Easy Plan B", origen: "Concesionario", valida: "20-oct", tin: 8.99, tae: 10.69, ultima: 13416.29 },
+      "atto2-dmi-boost:cuota_final:concesionario-c": { nombre: "Easy Plan C", origen: "Concesionario", valida: "20-oct", tin: 5.99, tae: 7.51, ultima: 13416.05 },
+      "atto2-dmi-boost:cuota_final:web-minima": { nombre: "Easy Plan, entrada mín.", origen: "Web de BYD", valida: "31-oct", tin: 6.99, tae: 8.84, ultima: 13416.2 },
+      "atto2-dmi-boost:cuota_final:web-maxima": { nombre: "Easy Plan, entrada máx.", origen: "Web de BYD", valida: "31-oct", tin: 6.99, tae: 8.53, ultima: 13415.81 },
+      ...lineales("atto2-dmi-boost"),
+    },
+    notaPrecio: `${NOTA_AUTO_PLUS} <strong>* Cuotas del concesionario sin el seguro de vida opcional</strong> que llevan sus simulaciones (817 € en A, 726 € en B y 989 € en C, financiado): con él son de 208,31 €, 196,71 € y 303,84 €. Se quita para comparar con la web, que no lo lleva. La TAE es la impresa, con el seguro.`,
+    origenLineal: "el TIN y el descuento de las opciones A y B",
+  notaCostes: "Seguro a todo riesgo, mantenimiento y neumáticos estimados, con un 3 % de inflación al año. Sin ITV en estos 4 años (es nuevo) y con la bonificación del 75 % del impuesto de circulación de Bilbao para enchufables. Garantía de 6 años: sin averías.",
+    easyPlan: [
+      "48 cuotas y una última (Valor Mínimo Garantizado) a los 49 meses.",
+      "Al final: devolverlo, quedárselo pagando la última o cambiarlo.",
+      "15.000 km al año incluidos; 0,10 €/km de más si se devuelve.",
+      "Comisión: 3,75 % financiada o 3,99 % al firmar (web).",
+      "B: 2.000 € menos con TIN 8,99 %; tiene duración mínima.",
+      "Entrada en la web: de 277 € a 12.482 € (el 45 % del precio).",
+    ],
+    fuentes: "Fuentes: presupuesto y simulaciones de CA Auto Bank del concesionario BYD de Barakaldo y configurador de BYD España, del 13-oct-2026 (salvo la entrada mínima de la web, del 6-oct, con las mismas condiciones). Foto: configurador de BYD. Cálculos de pick-my-drive.",
+  },
+  dolphin: {
+    id: "dolphin-g-comfort",
+    salida: "docs/resumenes/dolphin-g-2026-10-13.html",
+    titulo: "Dolphin G DM-i Comfort",
+    // más largo: a 22 pt ocupa dos líneas y no cabe la ficha
+    tamTitulo: "17.5pt",
+    pestana: "BYD Dolphin G: opciones",
+    foto: "https://www.byd.com/material/byd-site/configuration/dolphin-g/pc/exterior/orangesunset/comfort/01.webp",
+    encuadre: "no-repeat 52% 62% / cover",
+    // el fondo de cielo de la foto se funde con el gris de la portada por la derecha y por abajo
+    fundido: true,
+    alt: "BYD Dolphin G en Orange Sunset",
+    // el naranja del Orange Sunset de la foto, oscurecido para que se lea como texto
+    color: "#c2501b",
+    ficha: [
+      ["Potencia", "212 CV (156 kW)"],
+      ["Batería", "18,3 kWh · 105 km eléctricos"],
+      ["Consumo", "1,4 l/100 km ponderado"],
+      ["Maletero", "425 / 1.225 l"],
+    ],
+    ofertas: {
+      "dolphin-g-comfort:contado": { nombre: "Contado", origen: "Concesionario", valida: "28-oct" },
+      // las opciones A, B y C del Atto 2 adaptadas: estimaciones, TAE calculada sin seguro de vida
+      "dolphin-g-comfort:cuota_final:concesionario-a-estimada": { nombre: "Easy Plan A", origen: "Estimación", tin: 5.99, tae: 7.39, ultima: 12176.84 },
+      "dolphin-g-comfort:cuota_final:concesionario-b-estimada": { nombre: "Easy Plan B", origen: "Estimación", tin: 8.99, tae: 10.63, ultima: 12176.84 },
+      "dolphin-g-comfort:cuota_final:concesionario-c-estimada": { nombre: "Easy Plan C", origen: "Estimación", tin: 5.99, tae: 7.49, ultima: 12176.84 },
+      "dolphin-g-comfort:cuota_final:web-minima": { nombre: "Easy Plan, entrada mín.", origen: "Web de BYD", valida: "31-oct", tin: 6.99, tae: 8.84, ultima: 12176.84 },
+      "dolphin-g-comfort:cuota_final:web-maxima": { nombre: "Easy Plan, entrada máx.", origen: "Web de BYD", valida: "31-oct", tin: 6.99, tae: 8.54, ultima: 12176.84 },
+      ...lineales("dolphin-g-comfort"),
+    },
+    notaPrecio: `${NOTA_AUTO_PLUS} <strong>Easy Plan A, B y C (estimación):</strong> el concesionario solo ha dado el precio al contado, así que son las opciones que dio para el Atto 2 adaptadas al Dolphin: la misma entrada, TIN, descuento y comisión del 3,75 % financiada, sin seguro de vida, y la última cuota de la web (el Valor Mínimo Garantizado no depende de la entrada). Sus cuotas y TAE, como las de la web con entrada mínima, están calculadas con la fórmula que reproduce al céntimo las reales.`,
+    origenLineal: "el TIN y el descuento que el concesionario dio para el Atto 2 (opciones A y B)",
+  notaCostes: "Seguro a todo riesgo, mantenimiento y neumáticos estimados, con un 3 % de inflación al año. Sin ITV en estos 4 años (es nuevo) y con la bonificación del 75 % del impuesto de circulación de Bilbao para enchufables. Garantía de 6 años: sin averías.",
+    easyPlan: [
+      "48 cuotas y una última (Valor Mínimo Garantizado) a los 49 meses.",
+      "Al final: devolverlo, quedárselo pagando la última o cambiarlo.",
+      "15.000 km al año incluidos; 0,10 €/km de más si se devuelve.",
+      "Comisión: 3,75 % financiada o 3,99 % al firmar (web).",
+      "B: 2.000 € menos con TIN 8,99 %; tiene duración mínima.",
+      "Entrada en la web: de 255 € a 11.486 € (el 45 % del precio).",
+    ],
+    fuentes: "Fuentes: presupuesto de contado del concesionario BYD de Barakaldo y configurador de BYD España, del 13-oct-2026. Foto: configurador de BYD. Cálculos de pick-my-drive.",
+  },
 };
 
+COCHES.cx30 = {
+  id: "cx30-actual",
+  salida: "docs/resumenes/cx30-2026-10-13.html",
+  marca: "Mazda",
+  titulo: "CX-30 2.0 e-Skyactiv G",
+  tamTitulo: "19pt",
+  subtitulo: "Quedármelo · 13 de octubre de 2026",
+  pestana: "Mazda CX-30: quedármelo",
+  ayuda: 0,
+  // Configurador de Mazda: un CX-30 Makoto, con llantas de 18", en Soul Red Crystal
+  foto: "https://cgi.cdn.mazda.media/compressed/cf1da74ec7730df1bc6c32b6562c9588f2da237450a7d58b7e2c063924ec7a18/MERGED/6/36.jpg",
+  encuadre: "no-repeat 46% 58% / 108%",
+  fundido: true,
+  alt: "Mazda CX-30 en Soul Red Crystal",
+  // el rojo del Soul Red Crystal, oscurecido para que se lea como texto
+  color: "#a3192b",
+  ficha: [
+    ["Motor", "2.0 microhíbrido (ECO)"],
+    ["Año y km", "2023 · unos 45.000 km"],
+    ["Consumo", "6,8 l/100 km reales"],
+    ["Maletero", "430 l"],
+  ],
+  ofertas: {
+    "cx30-actual:contado": { nombre: "Al contado", sub: "Cuota final de la FlexiOpción", etiqueta: "cuota final" },
+    "cx30-actual:prestamo:48": { nombre: "Préstamo a 48 meses", sub: "Banco · estimación", etiqueta: "banco", tin: 5.5 },
+    "cx30-actual:prestamo:72:cancelado-48": { nombre: "Préstamo a 72 meses", sub: "Banco · estimación · cancelado en el 48", etiqueta: "banco", tin: 5.5 },
+  },
+  notaPrecio: "Precio: la cuota final de la FlexiOpción que queda por pagar para quedarse el coche. Hoy vale menos: 18.193 € según la tabla de gastos de Mazda (jul-2026). Sin ayudas.",
+  notaFinanciacion: "<strong>Préstamo (estimación):</strong> préstamo personal de un banco por los 21.700 €, sin entrada, con condiciones típicas de mercado (TIN 5,5 % y comisión de apertura del 0,5 % al firmar; comparadores, sep-2026): no es una oferta. El de 72 meses se cancela en el mes 48 con un 1 % de comisión, para cubrir los mismos 4 años. La TAE es calculada.",
+  notaEnergia: (e) => `${e.km.toLocaleString("es-ES", { useGrouping: "always" })} km al año, todo con gasolina (${e.litros.toLocaleString("es-ES")} l/100 km reales, a ${e.gasolina.toLocaleString("es-ES")} €/l). A precios de hoy (Bizkaia, 1-oct-2026).`,
+  notaCostes: "Mantenimiento, neumáticos y seguro de la tabla de gastos de Mazda, con un 3 % de inflación al año; el mantenimiento sube con la edad. Seguro a todo riesgo hasta que el coche cumple 7 años, así que todo el periodo. ITV a los 4 y a los 6 años. Garantía supuesta de 6 años o 150.000 km: averías solo el último año (hay que confirmar la real).",
+  tituloPie: "A tener en cuenta",
+  easyPlan: [
+    "La cuota final (21.700 €) es más de lo que vale hoy el coche (18.193 €).",
+    "Año y km aproximados: 2023, unos 45.000 km.",
+    "Valor a los 4 años: con la pérdida del 17 % al año de la tabla de Mazda.",
+    "Préstamo sin entrada: con entrada, los intereses bajan.",
+  ],
+  fuentes: "Fuentes: cuota final de la FlexiOpción; tabla de gastos de Mazda del concesionario de Bilbao (jul-2026); préstamo con condiciones típicas de mercado (comparadores, sep-2026). Foto: configurador de Mazda (CX-30 Makoto en Soul Red Crystal). Cálculos de pick-my-drive.",
+};
+
+const elegidos = process.argv[2] ? [process.argv[2]] : Object.keys(COCHES);
+for (const k of elegidos) if (!COCHES[k]) throw new Error(`Coche desconocido: ${k} (atto2, dolphin o cx30)`);
+
 const vite = await createServer({ server: { middlewareMode: true }, appType: "custom", logLevel: "error" });
-let filas;
-let perfil;
-let valorFinal;
-let energia;
+const eur = (v, dec = 0) =>
+  v === undefined ? "—" : `${v.toLocaleString("es-ES", { minimumFractionDigits: dec, maximumFractionDigits: dec, useGrouping: "always" })} €`;
+const datos = {};
 try {
   const { comparativaDePlantilla, contexto } = await vite.ssrLoadModule("/src/estado.ts");
   const { simular } = await vite.ssrLoadModule("/src/engine/simulacion.ts");
@@ -39,17 +162,21 @@ try {
   const comp = comparativaDePlantilla("byd-cx30");
   // todas las opciones son el mismo coche: energía, seguro y mantenimiento son iguales y no cambian la comparación
   // sin coste de oportunidad: el coste neto es solo lo pagado menos lo que vale el coche al final
-  perfil = { ...comp.perfil, costesUsoActivos: false, oportunidadActiva: false };
+  const perfil = { ...comp.perfil, costesUsoActivos: false, oportunidadActiva: false };
   const ctx = contexto({ ...comp, perfil });
-  const coche = comp.coches.find((c) => c.id === "atto2-dmi-boost");
+  for (const k of elegidos) {
+  const cfg = COCHES[k];
+  let valorFinal;
+  const ayuda = cfg.ayuda ?? AYUDA;
+  const coche = comp.coches.find((c) => c.id === cfg.id);
   // energía: el 15 % de los km en eléctrico, todo cargado fuera de casa; el resto con gasolina
   const e = comp.perfil.energia;
   const porKm = energiaPorKm(
     { ...coche, consumo: { ...coche.consumo, fraccionElectrica: 0.15 } },
     { ...comp.perfil, energia: { ...e, fraccionCargaCasa: 0 } },
   );
-  energia = { porKm, km: comp.perfil.kmAnuales, litros: coche.consumo.litros100, kwh: coche.consumo.kwh100, gasolina: e.gasolina, kwhPublica: e.kwhPublica };
-  filas = Object.entries(OFERTAS).map(([id, o]) => {
+  const energia = { porKm, km: comp.perfil.kmAnuales, litros: coche.consumo.litros100, kwh: coche.consumo.kwh100, gasolina: e.gasolina, kwhPublica: e.kwhPublica };
+  const filas = Object.entries(cfg.ofertas).map(([id, o]) => {
     const e = comp.escenarios.find((x) => x.id === id);
     if (!e) throw new Error(`Falta el escenario ${id}`);
     const c = e.condiciones;
@@ -57,22 +184,31 @@ try {
     const precio = coche.pvp - c.descuento;
     if (c.modalidad === "contado") {
       valorFinal = precio - r.desglose.vehiculo;
-      return { ...o, precio, primerDia: precio, pagadoQuedar: precio - AYUDA, costeNeto: r.costeNeto[perfil.horizonteMeses] };
+      return {
+        ...o, precio, primerDia: precio,
+        pagado48: precio - ayuda, nota48: "es tuyo",
+        pagadoQuedar: precio - ayuda, costeNeto: r.costeNeto[perfil.horizonteMeses],
+      };
     }
     if (c.modalidad === "prestamo") {
-      // lineal cancelada en el mes 48: la deuda pendiente más la comisión de cancelación
+      // préstamo: si se cancela antes de tiempo, la deuda pendiente más la comisión de cancelación
       const f = r.financiacion;
-      const pendiente = saldoPendiente(f.principal, f.tin, f.cuota, c.cancelarEnMes);
-      const cancelar = pendiente * (1 + c.comisionCancelacion);
+      const meses = c.cancelarEnMes ?? c.plazoMeses;
+      const pendiente = c.cancelarEnMes ? saldoPendiente(f.principal, f.tin, f.cuota, c.cancelarEnMes) : 0;
+      const cancelar = pendiente ? pendiente * (1 + c.comisionCancelacion) : undefined;
+      const primerDia = c.entrada + (c.comisionFinanciada ? 0 : (precio - c.entrada) * c.comisionApertura);
       return {
         ...o,
+        tae: o.tae ?? f.tae * 100,
         precio,
-        primerDia: c.entrada,
-        cuota: c.cuotaOfertada,
-        plazo: c.cancelarEnMes,
-        deLas: c.plazoMeses,
+        primerDia,
+        cuota: f.cuota,
+        plazo: meses,
+        deLas: c.cancelarEnMes ? c.plazoMeses : undefined,
         cancelar,
-        pagadoQuedar: c.entrada + c.cuotaOfertada * c.cancelarEnMes + cancelar - AYUDA,
+        pagado48: primerDia + f.cuota * meses - ayuda,
+        nota48: pendiente ? `debes ${eur(pendiente)}` : "es tuyo",
+        pagadoQuedar: primerDia + f.cuota * meses + (cancelar ?? 0) - ayuda,
         costeNeto: r.costeNeto[perfil.horizonteMeses],
       };
     }
@@ -82,7 +218,7 @@ try {
     const comision = c.comisionFinanciada ? 0 : (precio - c.entrada) * c.comisionApertura;
     const primerDia = entrada + comision + (web ? MATRICULACION : 0);
     const cuotas = c.cuotaOfertada * c.plazoMeses;
-    const neto = web ? 0 : AYUDA;
+    const neto = web ? 0 : ayuda;
     return {
       ...o,
       precio,
@@ -90,37 +226,28 @@ try {
       primerDia,
       cuota: c.cuotaOfertada,
       plazo: c.plazoMeses,
-      pagadoDevolver: primerDia + cuotas - neto,
+      pagado48: primerDia + cuotas - neto,
+      nota48: "si lo devuelves",
       pagadoQuedar: primerDia + cuotas + o.ultima - neto,
       costeNeto: r.costeNeto[perfil.horizonteMeses],
     };
   });
+  // costes de tenerlo 4 años: los del contado con los costes de uso activados (iguales en todas las opciones)
+  const conUso = simular(comp.escenarios.find((x) => x.id === `${cfg.id}:contado`), coche, contexto({ ...comp, perfil: { ...perfil, costesUsoActivos: true } })).desglose;
+  const costes = ["seguro", "mantenimiento", "neumaticos", "itv_ivtm", "averias"].map((c) => conUso[c] ?? 0);
+  datos[k] = { cfg, filas, perfil, valorFinal, energia, costes };
+  }
 } finally {
   await vite.close();
 }
 
-const eur = (v, dec = 0) =>
-  v === undefined ? "—" : `${v.toLocaleString("es-ES", { minimumFractionDigits: dec, maximumFractionDigits: dec, useGrouping: "always" })} €`;
-const pct = (v) => `${v.toLocaleString("es-ES", { minimumFractionDigits: 2 })} %`;
+const pct = (v) => `${v.toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %`;
 const concesionario = (f) => f.origen === "Concesionario";
-const etiquetaOrigen = (f) => ({ Concesionario: "concesionario", "Web de BYD": "web", Estimación: "estimación" })[f.origen];
-const procedencia = (f) => (f.valida ? `${f.origen} · hasta ${f.valida}` : "Estimación");
+const etiquetaOrigen = (f) => f.etiqueta ?? { Concesionario: "concesionario", "Web de BYD": "web", Estimación: "estimación" }[f.origen];
+const procedencia = (f) => f.sub ?? (f.valida ? `${f.origen} · hasta ${f.valida}` : "Estimación");
+function pagina({ cfg, filas, perfil, valorFinal, energia, costes }) {
 const maximo = Math.ceil(Math.max(...filas.map((f) => f.costeNeto)) / 5000) * 5000;
 
-const FICHA = [
-  ["Potencia", "212 CV (156 kW)"],
-  ["Batería", "18 kWh · 90 km eléctricos"],
-  ["Consumo", "1,8 l/100 km ponderado"],
-  ["Maletero", "425 / 1.335 l"],
-];
-const EASY_PLAN = [
-  "48 cuotas y una última (Valor Mínimo Garantizado) a los 49 meses.",
-  "Al final: devolverlo, quedárselo pagando la última o cambiarlo.",
-  "15.000 km al año incluidos; 0,10 €/km de más si se devuelve.",
-  "Comisión: 3,75 % financiada o 3,99 % al firmar (web).",
-  "B: 2.000 € menos con TIN 8,99 %; tiene duración mínima.",
-  "Entrada en la web: de 277 € a 12.482 € (el 45 % del precio).",
-];
 
 const tabla = filas
   .map(
@@ -131,7 +258,7 @@ const tabla = filas
       <td>${f.cuota ? `${f.plazo} × ${eur(f.cuota, 2)}${concesionario(f) ? "*" : ""}${f.deLas ? `<span class="sub">de ${f.deLas} cuotas</span>` : ""}` : "—"}</td>
       <td>${f.ultima ? `${eur(f.ultima)}<span class="sub">mes 49</span>` : f.cancelar ? `${eur(f.cancelar)}<span class="sub">cancelar, mes 48</span>` : "—"}</td>
       <td>${f.tin ? `${pct(f.tin)}<span class="sub">TAE ${pct(f.tae)}</span>` : "—"}</td>
-      <td>${eur(f.pagadoDevolver)}</td>
+      <td>${eur(f.pagado48)}<span class="sub">${f.nota48}</span></td>
       <td>${eur(f.pagadoQuedar)}</td>
       <td class="fuerte">${eur(f.costeNeto)}</td>
     </tr>`,
@@ -147,12 +274,12 @@ const barras = filas
   )
   .join("");
 
-const html = `<!doctype html>
+return `<!doctype html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BYD Atto 2: opciones</title>
+<title>${cfg.pestana}</title>
 <style>
   @page { size: A4; margin: 0; }
   :root {
@@ -162,8 +289,7 @@ const html = `<!doctype html>
     --tinta-3: #7a7974;
     --linea: #e4e3df;
     --portada: #f3f3f3;
-    /* el azul del Midnight Blue de la foto */
-    --coche: #1d5f86;
+    --coche: ${cfg.color};
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; background: #e9e8e4; }
@@ -184,7 +310,7 @@ const html = `<!doctype html>
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: 2.6mm;
+    gap: 2.2mm;
   }
   @media print {
     html, body { background: #fff; }
@@ -201,13 +327,19 @@ const html = `<!doctype html>
     font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.07em;
     color: var(--tinta-2); font-weight: 600;
   }
-  .portada { margin: 0 -13mm; display: grid; grid-template-columns: 1.35fr 1fr; background: var(--portada); height: 50mm; }
-  .foto { background: url("${FOTO}") no-repeat 50% 58% / 130%; }
-  .titulo { padding: 4mm 13mm 4mm 0; display: flex; flex-direction: column; justify-content: center; gap: 1.5mm; }
+  .portada { margin: 0 -13mm; display: grid; grid-template-columns: 1.35fr 1fr; background: var(--portada); height: 42mm; }
+  .foto { background: url("${cfg.foto}") ${cfg.encuadre}; }
+  .foto.fundido {
+    -webkit-mask-image: linear-gradient(to right, #000 80%, transparent 100%), linear-gradient(to bottom, #000 82%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, #000 80%, transparent 100%), linear-gradient(to bottom, #000 82%, transparent 100%);
+    mask-composite: intersect;
+  }
+  .titulo { padding: 2mm 13mm 2mm 0; display: flex; flex-direction: column; justify-content: center; gap: 1mm; }
   .marca { font-size: 8pt; letter-spacing: 0.3em; color: var(--coche); font-weight: 700; }
-  .titulo h1 { font-size: 22pt; line-height: 1.05; letter-spacing: -0.02em; }
+  .titulo h1 { font-size: ${cfg.tamTitulo}; line-height: 1.05; letter-spacing: -0.02em; }
   .fecha { color: var(--tinta-2); }
-  .ficha { margin: 3mm 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.6mm 3mm; font-size: 8pt; }
+  .ficha { margin: 1.5mm 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.6mm 3mm; font-size: 8pt; }
   .ficha dt { color: var(--tinta-3); }
   .ficha dd { margin: 0; }
   table { width: 100%; border-collapse: collapse; font-size: 7.8pt; font-variant-numeric: tabular-nums; }
@@ -220,47 +352,54 @@ const html = `<!doctype html>
   tbody td { text-align: right; padding: 0.7mm 0.9mm; white-space: nowrap; }
   tbody tr { border-bottom: 0.5pt solid var(--linea); }
   .fuerte { font-weight: 650; }
-  .sub { display: block; font-weight: 400; font-size: 7pt; color: var(--tinta-3); }
+  .sub { display: block; font-weight: 400; font-size: 6.6pt; color: var(--tinta-3); }
   .nota { font-size: 6.6pt; line-height: 1.3; color: var(--tinta-2); }
   .nota p + p { margin-top: 1mm; }
-  .barras { display: grid; gap: 0.6mm; }
+  .barras { display: grid; gap: 0.2mm; font-size: 7.6pt; }
   .barra-fila { display: grid; grid-template-columns: 66mm 1fr; align-items: center; gap: 3mm; }
   .barra-etq { white-space: nowrap; }
   .barra-etq { text-align: right; color: var(--tinta-2); }
   .barra-pista { display: flex; align-items: center; gap: 2mm; }
-  .barra { height: 2.5mm; background: var(--coche); border-radius: 0 4px 4px 0; }
+  .barra { height: 2.3mm; background: var(--coche); border-radius: 0 4px 4px 0; }
   .barra-val { font-weight: 650; font-variant-numeric: tabular-nums; }
-  .energia { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 6mm; row-gap: 1mm; align-items: center; background: var(--portada); margin: -2.6mm -13mm 0; padding: 2mm 13mm 3mm; border-top: 0.5pt solid var(--linea); }
-  .energia h2 { grid-column: 1 / -1; }
-  .cifras { display: flex; gap: 6mm; }
-  .cifras b { display: block; font-size: 12pt; color: var(--coche); font-variant-numeric: tabular-nums; }
-  .cifras span { font-size: 7pt; color: var(--tinta-2); }
+  .energia { display: grid; grid-template-columns: 32mm 1fr; column-gap: 4mm; row-gap: 1.2mm; align-items: center; background: var(--portada); margin: -2.6mm -13mm 0; padding: 2mm 13mm 2.5mm; border-top: 0.5pt solid var(--linea); }
+  .energia h2 { line-height: 1.2; }
+  .energia .nota { grid-column: 1 / -1; }
+  .cifras { display: flex; gap: 5mm; align-items: baseline; }
+  .cifras b { display: block; font-size: 11pt; color: var(--coche); font-variant-numeric: tabular-nums; }
+  .cifras span { font-size: 6.8pt; color: var(--tinta-2); }
+  .cifras .total { padding-left: 5mm; border-left: 0.5pt solid var(--linea); }
   .pie { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; padding-top: 1.5mm; border-top: 0.5pt solid var(--linea); }
-  .pie ul { margin: 1mm 0 0; padding-left: 4mm; font-size: 7pt; line-height: 1.25; }
-  .pie li + li { margin-top: 0.3mm; }
+  .pie ul { margin: 1mm 0 0; padding-left: 4mm; font-size: 6.8pt; line-height: 1.2; }
+  .pie li + li { margin-top: 0.1mm; }
 </style>
 </head>
 <body>
 <main class="hoja">
   <header class="portada">
-    <div class="foto" role="img" aria-label="BYD Atto 2 en Midnight Blue"></div>
+    <div class="foto${cfg.fundido ? " fundido" : ""}" role="img" aria-label="${cfg.alt}"></div>
     <div class="titulo">
-      <p class="marca">BYD</p>
-      <h1>Atto 2 DM-i Boost</h1>
-      <p class="fecha">Formas de pago · 13 de octubre de 2026</p>
-      <dl class="ficha">${FICHA.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>
+      <p class="marca">${cfg.marca ?? "BYD"}</p>
+      <h1>${cfg.titulo}</h1>
+      <p class="fecha">${cfg.subtitulo ?? "Formas de pago · 13 de octubre de 2026"}</p>
+      <dl class="ficha">${cfg.ficha.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>
     </div>
   </header>
 
   <section class="energia">
-    <h2>Energía (igual en todas las opciones)</h2>
+    <h2>Energía</h2>
     <div class="cifras">
       <div><b>${(energia.porKm * 100).toLocaleString("es-ES", { maximumFractionDigits: 1 })}&nbsp;€</b><span>cada 100 km</span></div>
       <div><b>${eur((energia.porKm * energia.km) / 12)}</b><span>al mes</span></div>
       <div><b>${eur(energia.porKm * energia.km)}</b><span>al año</span></div>
-      <div><b>${eur(energia.porKm * energia.km * 4)}</b><span>en 4 años</span></div>
+      <div class="total"><b>${eur(energia.porKm * energia.km * 4)}</b><span>en 4 años</span></div>
     </div>
-    <p class="nota">${energia.km.toLocaleString("es-ES", { useGrouping: "always" })} km al año: el 15 % en eléctrico, con todo cargado fuera de casa (${energia.kwh} kWh/100 km a ${energia.kwhPublica.toLocaleString("es-ES")} €/kWh), y el 85 % con gasolina (${energia.litros.toLocaleString("es-ES")} l/100 km reales con la batería vacía, a ${energia.gasolina.toLocaleString("es-ES")} €/l). A precios de hoy (Bizkaia, 1-oct-2026); no está sumada al coste neto.</p>
+    <h2>Tenerlo 4 años</h2>
+    <div class="cifras">
+      ${["Seguro", "Mantenimiento", "Neumáticos", "ITV e impuesto", "Averías"].map((t, i) => `<div><b>${eur(costes[i])}</b><span>${t}</span></div>`).join("")}
+      <div class="total"><b>${eur(costes.reduce((x, y) => x + y, 0))}</b><span>en total</span></div>
+    </div>
+    <p class="nota"><strong>Energía:</strong> ${cfg.notaEnergia ? cfg.notaEnergia(energia) : `${energia.km.toLocaleString("es-ES", { useGrouping: "always" })} km al año: el 15 % en eléctrico, con todo cargado fuera de casa (${energia.kwh} kWh/100 km a ${energia.kwhPublica.toLocaleString("es-ES")} €/kWh), y el 85 % con gasolina (${energia.litros.toLocaleString("es-ES")} l/100 km reales con la batería vacía, a ${energia.gasolina.toLocaleString("es-ES")} €/l). A precios de hoy (Bizkaia, 1-oct-2026).`} <strong>Tenerlo:</strong> ${cfg.notaCostes} Ni la energía ni estos costes están sumados al coste neto: son iguales en todas las opciones.</p>
   </section>
 
   <h2>Las opciones</h2>
@@ -274,7 +413,7 @@ const html = `<!doctype html>
           <th scope="col">Cuotas</th>
           <th scope="col">Última cuota<br>o cancelación</th>
           <th scope="col">TIN</th>
-          <th scope="col">Pagado si lo<br>devuelves</th>
+          <th scope="col">Pagado hasta<br>el mes 48</th>
           <th scope="col">Pagado si te<br>lo quedas</th>
           <th scope="col" class="fuerte">Coste neto<br>a 4 años</th>
         </tr>
@@ -282,28 +421,32 @@ const html = `<!doctype html>
       <tbody>${tabla}</tbody>
     </table>
   </div>
-  <p class="nota">Precio con IVA, matriculación y pre-entrega (875 €, que la web no incluye), sin restar el Plan Auto+ (2.250 €, pendiente de BOE: si no se aprueba o no corresponde, el coche cuesta 2.250 € más). Los totales pagados ya restan la ayuda. <strong>* Cuotas del concesionario sin el seguro de vida opcional</strong> que llevan sus simulaciones (817 € en A, 726 € en B y 989 € en C, financiado): con él son de 208,31 €, 196,71 € y 303,84 €. Se quita para comparar con la web, que no lo lleva. La TAE es la impresa, con el seguro.</p>
-  <p class="nota"><strong>Lineal (estimación):</strong> financiación lineal de CA Auto Bank, que el concesionario no ha ofrecido todavía. La promoción de BYD pide financiar al menos 15.000 € a 72 meses o más, con 36 de permanencia. Se usan el TIN y el descuento de las opciones A y B, la comisión del 3,75 % financiada y una cancelación en el mes 48 con un 1 % de comisión, para cubrir los mismos 4 años. La de entrada mínima financia todo menos el 1 %. La TAE es calculada. Falta confirmar el TIN, si hay descuento en lineal y si cancelar obliga a devolverlo.</p>
+  <p class="nota">${cfg.notaPrecio}</p>
+  <p class="nota">${cfg.notaFinanciacion ?? `<strong>Lineal (estimación):</strong> financiación lineal de CA Auto Bank, que el concesionario no ha ofrecido todavía. La promoción de BYD pide financiar al menos 15.000 € a 72 meses o más, con 36 de permanencia. Se usan ${cfg.origenLineal}, la comisión del 3,75 % financiada y una cancelación en el mes 48 con un 1 % de comisión, para cubrir los mismos 4 años. La de entrada mínima financia todo menos el 1 %. La TAE es calculada. Falta confirmar el TIN, si hay descuento en lineal y si cancelar obliga a devolverlo.`}</p>
 
   <h2>Coste neto a 4 años</h2>
   <div class="barras" role="img" aria-label="Coste neto a 4 años de cada opción">${barras}</div>
 
   <footer class="pie">
     <div>
-      <h2>Cómo funciona el Easy Plan</h2>
-      <ul>${EASY_PLAN.map((t) => `<li>${t}</li>`).join("")}</ul>
+      <h2>${cfg.tituloPie ?? "Cómo funciona el Easy Plan"}</h2>
+      <ul>${cfg.easyPlan.map((t) => `<li>${t}</li>`).join("")}</ul>
     </div>
     <div class="nota">
-      <p><strong>Coste neto a 4 años:</strong> lo pagado durante 48 meses, menos lo que valdría el coche al final (unos ${eur(Math.round(valorFinal / 100) * 100)}), menos la ayuda. No cuenta lo que habría rendido el dinero ni incluye energía, seguro, mantenimiento ni impuestos, que son iguales en todas las opciones. Con ${perfil.kmAnuales.toLocaleString("es-ES", { useGrouping: "always" })} km al año, sin exceso de km.</p>
-      <p>Fuentes: presupuesto y simulaciones de CA Auto Bank del concesionario BYD de Barakaldo y configurador de BYD España, del 13-oct-2026 (salvo la entrada mínima de la web, del 6-oct, con las mismas condiciones). Foto: configurador de BYD. Cálculos de pick-my-drive.</p>
+      <p><strong>Coste neto a 4 años:</strong> lo pagado durante 48 meses, menos lo que valdría el coche al final (unos ${eur(Math.round(valorFinal / 100) * 100)})${cfg.ayuda === 0 ? "" : ", menos la ayuda"}. No cuenta lo que habría rendido el dinero ni incluye energía, seguro, mantenimiento ni impuestos, que son iguales en todas las opciones. Con ${perfil.kmAnuales.toLocaleString("es-ES", { useGrouping: "always" })} km al año, sin exceso de km.</p>
+      <p>${cfg.fuentes}</p>
     </div>
   </footer>
 </main>
 </body>
 </html>
 `;
+}
 
 mkdirSync("docs/resumenes", { recursive: true });
-writeFileSync(SALIDA, html);
-console.log(`Escrito ${SALIDA}`);
-for (const f of filas) console.log(f.nombre.padEnd(28), f.origen.padEnd(14), Math.round(f.primerDia), Math.round(f.pagadoDevolver ?? 0), Math.round(f.pagadoQuedar), Math.round(f.costeNeto));
+for (const k of elegidos) {
+  const d = datos[k];
+  writeFileSync(d.cfg.salida, pagina(d));
+  console.log(`Escrito ${d.cfg.salida}`);
+  for (const f of d.filas) console.log("  ", f.nombre.padEnd(30), (f.origen ?? f.etiqueta).padEnd(14), Math.round(f.primerDia), Math.round(f.pagado48), Math.round(f.pagadoQuedar), Math.round(f.costeNeto));
+}
