@@ -54,7 +54,8 @@ export function comparativaDePlantilla(id: PlantillaId): Comparativa {
     return {
       ...base,
       // las financiaciones de BYD son a 48 meses: con más horizonte se renovarían con otro coche igual
-      perfil: { ...base.perfil, horizonteMeses: 48 },
+      // todo riesgo hasta los 7 años: mi CX-30 (de 2023) lo mantiene así los 4 años
+      perfil: { ...base.perfil, horizonteMeses: 48, aniosTodoRiesgo: 7 },
       coches: [...structuredClone(COCHES_BYD_BARAKALDO), mio.coche],
       escenarios: [...ofertasBydBarakaldo(), ...mio.escenarios],
     };

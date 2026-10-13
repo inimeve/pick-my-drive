@@ -60,6 +60,8 @@ export const COCHES_BYD_BARAKALDO: CocheCandidato[] = [
     motorizacion: "hibrido_enchufable",
     // 29.700 − 1.925 de campañas + 875 de matriculación, sin restar el Auto+
     pvp: 28650,
+    // un descuento por financiar no cambia lo que vale el coche
+    valorMercado: 28650,
     co2: 32,
     cvFiscales: 11.2,
     edadInicialMeses: 0,
@@ -133,9 +135,32 @@ function web(coche: CocheCandidato, o: { clave: string; proveedor: string; entra
   });
 }
 
+/** Cuota del Easy Plan: 48 cuotas iguales y la última un mes después de la 48.ª, como en las simulaciones de CA Auto
+ * Bank (así se reproducen al céntimo) */
+function cuotaEasyPlan(credito: number, tin: number, ultima: number): number {
+  const i = tin / 12;
+  return Math.round(((credito - ultima / Math.pow(1 + i, 49)) * i) / (1 - Math.pow(1 + i, -48)) * 100) / 100;
+}
+
+/** Las opciones A, B y C que el concesionario dio para el Atto 2, adaptadas a otro coche: ESTIMACIÓN. Misma entrada,
+ * TIN, descuento y comisión del 3,75 % financiada, sin seguro de vida; la última cuota es el Valor Mínimo Garantizado
+ * de la web, que no depende de la entrada */
+function concesionarioEstimado(
+  coche: CocheCandidato,
+  o: { clave: string; descuento: number; entrada: number; tin: number; cuotaFinal: number; detalle: string },
+): Escenario {
+  const cuota = cuotaEasyPlan((coche.pvp - o.descuento - o.entrada) * 1.0375, o.tin, o.cuotaFinal);
+  const e = cuotaFinal(coche, {
+    descuento: o.descuento, entrada: o.entrada, tin: o.tin, plazoMeses: 48, cuotaFinal: Math.round(o.cuotaFinal),
+    comisionApertura: 0.0375, comisionFinanciada: true, cuotaOfertada: cuota, kmAnualesContrato: 15000, excesoKm: 0.1,
+    fuente: `Estimación: el concesionario solo dio el precio al contado de este coche. ${o.detalle} Comisión del 3,75 % financiada, sin seguro de vida; última cuota de ${o.cuotaFinal.toLocaleString("es-ES")} €, la de la web. Cuota calculada: ${cuota.toLocaleString("es-ES")} €. 15.000 km al año, 0,10 €/km de exceso. ${AVISO_AUTO_PLUS}`,
+  });
+  return { ...e, id: `${e.id}:concesionario-${o.clave}-estimada`, proveedor: `estimación: concesionario, ${o.clave.toUpperCase()}` };
+}
+
 /** Financiación lineal de CA Auto Bank en el concesionario: ESTIMACIÓN, no la han ofrecido. La promoción de BYD pide
  * financiar al menos 15.000 € a 72 meses o más, con 36 de permanencia; el TIN y el descuento son los de las
- * opciones A y B del Easy Plan, y la comisión del 3,75 % va financiada como en ellas. Se cancela en el mes 48
+ * opciones A y B del Easy Plan del Atto 2, y la comisión del 3,75 % va financiada como en ellas. Se cancela en el mes 48
  * (1 % de comisión, el máximo legal con más de un año pendiente) para cubrir los mismos 4 años que el Easy Plan */
 function lineal(
   coche: CocheCandidato,
@@ -210,6 +235,34 @@ export function ofertasBydBarakaldo(): Escenario[] {
       clave: "web-maxima", proveedor: "web de BYD, entrada máxima", entrada: 11486, cuota: 116.79, cuotaFinal: 12177,
       detalle: "entrada máxima (45 %) de 11.486 €, 48 cuotas de 116,79 € y una última de 12.176,84 €, TAE 8,54 %.",
     }),
+    concesionarioEstimado(dolphin, {
+      clave: "a", descuento: 0, entrada: 13000, tin: 0.0599, cuotaFinal: 12176.84,
+      detalle: "Como la opción A del Atto 2: entrada 13.000 €, TIN 5,99 %.",
+    }),
+    concesionarioEstimado(dolphin, {
+      clave: "b", descuento: 2000, entrada: 13000, tin: 0.0899, cuotaFinal: 12176.84,
+      detalle: "Como la opción B del Atto 2: 2.000 € menos por financiar, entrada 13.000 €, TIN 8,99 %.",
+    }),
+    concesionarioEstimado(dolphin, {
+      clave: "c", descuento: 0, entrada: 9250, tin: 0.0599, cuotaFinal: 12176.84,
+      detalle: "Como la opción C del Atto 2: entrada 9.250 €, TIN 5,99 %.",
+    }),
+    lineal(dolphin, {
+      clave: "599", proveedor: "estimación: lineal 5,99 %", descuento: 0, tin: 0.0599, minima: false,
+      detalle: "TIN 5,99 % (el de la opción A del Atto 2), sin descuento, financiando el mínimo de 15.000 €.",
+    }),
+    lineal(dolphin, {
+      clave: "899", proveedor: "estimación: lineal −2.000 € al 8,99 %", descuento: 2000, tin: 0.0899, minima: false,
+      detalle: "TIN 8,99 % y 2.000 € de descuento (los de la opción B del Atto 2), financiando el mínimo de 15.000 €.",
+    }),
+    lineal(dolphin, {
+      clave: "599-minima", proveedor: "estimación: lineal 5,99 %, entrada mínima", descuento: 0, tin: 0.0599, minima: true,
+      detalle: "TIN 5,99 % (el de la opción A del Atto 2), sin descuento, con la entrada mínima.",
+    }),
+    lineal(dolphin, {
+      clave: "899-minima", proveedor: "estimación: lineal −2.000 € al 8,99 %, entrada mínima", descuento: 2000, tin: 0.0899, minima: true,
+      detalle: "TIN 8,99 % y 2.000 € de descuento (los de la opción B del Atto 2), con la entrada mínima.",
+    }),
   ];
 }
 
@@ -240,19 +293,35 @@ export function cocheActualCx30(): CocheCandidato {
   };
 }
 
-/** Quedarme mi CX-30 pagando la cuota final con un préstamo del banco por todo el importe, a 48 o 60 meses */
+/** Quedarme mi CX-30 pagando la cuota final: al contado o con un préstamo del banco por todo el importe, a 48 meses
+ * o a 72 cancelándolo en el mes 48 (para cubrir los mismos 4 años) */
 export function cocheActualCx30ConPrestamo(): { coche: CocheCandidato; escenarios: Escenario[] } {
   const coche = cocheActualCx30();
-  const prestamo = (plazoMeses: number): Escenario => ({
-    id: `${coche.id}:prestamo:${plazoMeses}`,
+  const prestamo = (plazoMeses: number, cancelarEnMes?: number): Escenario => ({
+    id: `${coche.id}:prestamo:${plazoMeses}${cancelarEnMes ? `:cancelado-${cancelarEnMes}` : ""}`,
     cocheId: coche.id,
     visible: true,
     proveedor: "banco",
-    fuente: `${BANCO}. Sin entrada: se piden prestados los 21.700 € de la cuota final a ${plazoMeses} meses.`,
+    fuente: `${BANCO}. Sin entrada: se piden prestados los 21.700 € de la cuota final a ${plazoMeses} meses.${
+      cancelarEnMes ? ` En el mes ${cancelarEnMes} se devuelve toda la deuda pendiente, con un 1% de comisión de cancelación (supuesto: los bancos cobran hasta el 1% si quedan más de 12 meses).` : ""
+    }`,
     condiciones: {
       modalidad: "prestamo", descuento: 0, entrada: 0, tin: 0.055, plazoMeses,
-      comisionApertura: 0.005, comisionCancelacion: 0.01,
+      comisionApertura: 0.005, comisionCancelacion: 0.01, cancelarEnMes,
     },
   });
-  return { coche, escenarios: [prestamo(48), prestamo(60)] };
+  return {
+    coche,
+    escenarios: [
+      {
+        id: `${coche.id}:contado`,
+        cocheId: coche.id,
+        visible: true,
+        condiciones: { modalidad: "contado", descuento: 0 },
+        fuente: "Pagar la cuota final de la FlexiOpción (21.700 €) de una vez",
+      },
+      prestamo(48),
+      prestamo(72, 48),
+    ],
+  };
 }
