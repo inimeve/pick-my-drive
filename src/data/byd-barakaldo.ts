@@ -1,3 +1,4 @@
+import { cuotaMensual } from "../engine/finanzas";
 import type { CocheCandidato, Escenario, OfertaReal } from "../engine/tipos";
 import { BANCO, COCHES, contado, cuotaFinal } from "./coches";
 
@@ -28,6 +29,8 @@ export const COCHES_BYD_BARAKALDO: CocheCandidato[] = [
     motorizacion: "hibrido_enchufable",
     // 31.200 − 1.210 de campañas + 875 de matriculación, sin restar el Auto+
     pvp: 30865,
+    // el descuento por financiar de la opción B no cambia lo que vale el coche
+    valorMercado: 30865,
     co2: 41,
     // 1,5 l de 4 cilindros: se asume el tramo de otros 1,5 l (sin verificar)
     cvFiscales: 11.2,
@@ -85,19 +88,19 @@ const porId = (id: string) => COCHES_BYD_BARAKALDO.find((c) => c.id === id)!;
 /** Easy Plan de CA Auto Bank: 48 cuotas y una última, el Valor Mínimo Garantizado, a los 49 meses; 15.000 km al año */
 function easyPlan(
   coche: CocheCandidato,
-  o: { clave: string; proveedor: string; oferta: OfertaReal; descuento: number; entrada: number; tin: number; cuotaFinal: number; comisionApertura: number; cuotaOfertada?: number; fuente: string },
+  o: { clave: string; proveedor: string; oferta: OfertaReal; descuento: number; entrada: number; tin: number; cuotaFinal: number; comisionApertura: number; comisionFinanciada?: boolean; cuotaOfertada?: number; fuente: string },
 ): Escenario {
   const e = cuotaFinal(coche, {
     descuento: o.descuento, entrada: o.entrada, tin: o.tin, plazoMeses: 48, cuotaFinal: o.cuotaFinal,
-    comisionApertura: o.comisionApertura, cuotaOfertada: o.cuotaOfertada, kmAnualesContrato: 15000, excesoKm: 0.1,
+    comisionApertura: o.comisionApertura, comisionFinanciada: o.comisionFinanciada, cuotaOfertada: o.cuotaOfertada, kmAnualesContrato: 15000, excesoKm: 0.1,
     fuente: `${o.fuente} 15.000 km al año, 0,10 €/km de exceso.`,
   });
   return { ...e, id: `${e.id}:${o.clave}`, ofertaReal: o.oferta, proveedor: o.proveedor };
 }
 
 /** Las simulaciones del concesionario financian la comisión de apertura (3,75 %) y un seguro de vida opcional.
- * El seguro no se carga; la comisión va dentro de la cuota, calculada sin el seguro con las mismas fórmulas que
- * reproducen al céntimo las cuotas impresas, así que el TIN que se ve es el implícito */
+ * El seguro no se carga: la cuota está calculada sin él, con las mismas fórmulas que reproducen al céntimo las
+ * impresas (la última cuota se paga un mes después de la 48.ª, así que el TIN que se ve es algo distinto) */
 function concesionario(
   coche: CocheCandidato,
   o: { clave: string; proveedor: string; descuento: number; entrada: number; tin: number; cuotaFinal: number; cuota: number; detalle: string },
@@ -105,7 +108,8 @@ function concesionario(
   return easyPlan(coche, {
     ...o,
     oferta: CONCESIONARIO_EASY_PLAN,
-    comisionApertura: 0,
+    comisionApertura: 0.0375,
+    comisionFinanciada: true,
     cuotaOfertada: o.cuota,
     fuente: `Easy Plan de CA Auto Bank, simulación del concesionario de Barakaldo (13-oct-2026). ${o.detalle} Comisión de apertura del 3,75 % financiada. Sin el seguro de vida opcional que lleva la simulación: cuota de ${o.cuota.toLocaleString("es-ES")} € calculada sin él. ${AVISO_AUTO_PLUS}`,
   });
@@ -127,6 +131,32 @@ function web(coche: CocheCandidato, o: { clave: string; proveedor: string; entra
     cuotaOfertada: o.cuota,
     fuente: `Easy Plan de CA Auto Bank en el configurador de BYD (13-oct-2026, hasta el 31-oct): ${o.detalle} TIN 6,99 %, comisión del 3,99 % al contado. La entrada lleva sumados el adelanto del Plan Auto+ (2.250 €) y la matriculación (875 €), que la web no incluye.`,
   });
+}
+
+/** Financiación lineal de CA Auto Bank en el concesionario: ESTIMACIÓN, no la han ofrecido. La promoción de BYD pide
+ * financiar al menos 15.000 € a 72 meses o más, con 36 de permanencia; el TIN y el descuento son los de las
+ * opciones A y B del Easy Plan, y la comisión del 3,75 % va financiada como en ellas. Se cancela en el mes 48
+ * (1 % de comisión, el máximo legal con más de un año pendiente) para cubrir los mismos 4 años que el Easy Plan */
+function lineal(
+  coche: CocheCandidato,
+  o: { clave: string; proveedor: string; descuento: number; tin: number; minima: boolean; detalle: string },
+): Escenario {
+  const precio = coche.pvp - o.descuento;
+  // entrada mínima: el 1 % del precio, como la del Easy Plan de la web (supuesto)
+  const entrada = o.minima ? Math.round(precio * 0.01) : precio - 15000;
+  const cuota = Math.round(cuotaMensual((precio - entrada) * 1.0375, o.tin, 72) * 100) / 100;
+  // la cuota redondeada al céntimo, como en una oferta
+  return {
+    id: `${coche.id}:prestamo:lineal-${o.clave}`,
+    cocheId: coche.id,
+    visible: true,
+    proveedor: o.proveedor,
+    fuente: `Estimación: financiación lineal de CA Auto Bank, que el concesionario no ha ofrecido todavía. ${o.detalle} Entrada de ${entrada.toLocaleString("es-ES")} €, ${(precio - entrada).toLocaleString("es-ES")} € financiados a 72 meses con la comisión del 3,75 % financiada: cuota de ${cuota.toLocaleString("es-ES")} €. Se cancela en el mes 48 con un 1 % de comisión. Falta confirmar el TIN, si hay descuento por financiar en lineal y si cancelar obliga a devolverlo. ${AVISO_AUTO_PLUS}`,
+    condiciones: {
+      modalidad: "prestamo", descuento: o.descuento, entrada, tin: o.tin, plazoMeses: 72,
+      comisionApertura: 0.0375, comisionFinanciada: true, comisionCancelacion: 0.01, cuotaOfertada: cuota, cancelarEnMes: 48,
+    },
+  };
 }
 
 export function ofertasBydBarakaldo(): Escenario[] {
@@ -153,6 +183,22 @@ export function ofertasBydBarakaldo(): Escenario[] {
     web(atto, {
       clave: "web-maxima", proveedor: "web de BYD, entrada máxima", entrada: 12482, cuota: 123.66, cuotaFinal: 13416,
       detalle: "entrada máxima (45 %) de 12.482 €, 48 cuotas de 123,66 € y una última de 13.415,81 €, TAE 8,53 %.",
+    }),
+    lineal(atto, {
+      clave: "599", proveedor: "estimación: lineal 5,99 %", descuento: 0, tin: 0.0599, minima: false,
+      detalle: "TIN 5,99 % (el de la opción A), sin descuento, financiando el mínimo de 15.000 €.",
+    }),
+    lineal(atto, {
+      clave: "899", proveedor: "estimación: lineal −2.000 € al 8,99 %", descuento: 2000, tin: 0.0899, minima: false,
+      detalle: "TIN 8,99 % y 2.000 € de descuento (los de la opción B), financiando el mínimo de 15.000 €.",
+    }),
+    lineal(atto, {
+      clave: "599-minima", proveedor: "estimación: lineal 5,99 %, entrada mínima", descuento: 0, tin: 0.0599, minima: true,
+      detalle: "TIN 5,99 % (el de la opción A), sin descuento, con la entrada mínima.",
+    }),
+    lineal(atto, {
+      clave: "899-minima", proveedor: "estimación: lineal −2.000 € al 8,99 %, entrada mínima", descuento: 2000, tin: 0.0899, minima: true,
+      detalle: "TIN 8,99 % y 2.000 € de descuento (los de la opción B), con la entrada mínima.",
     }),
 
     { ...contado(dolphin), ofertaReal: CONCESIONARIO, proveedor: "concesionario", fuente: `Presupuesto del concesionario de Barakaldo (13-oct-2026, hasta el 28-oct). ${AVISO_AUTO_PLUS}` },
