@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tesla Model Y: opciones</title>
+<style>
+  @page { size: A4; margin: 0; }
+  :root {
+    color-scheme: light;
+    --tinta: #0b0b0b;
+    --tinta-2: #52514e;
+    --tinta-3: #7a7974;
+    --linea: #e4e3df;
+    --portada: #f3f3f3;
+    --coche: #3e6ae1;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #e9e8e4; }
+  body {
+    font: 8.5pt/1.35 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--tinta);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  h1, h2, p { margin: 0; }
+  .hoja {
+    width: 210mm;
+    height: 297mm;
+    margin: 10mm auto;
+    padding: 0 13mm 8mm;
+    background: #fff;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.12);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 2.2mm;
+  }
+  @media print {
+    html, body { background: #fff; }
+    .hoja { margin: 0; box-shadow: none; }
+  }
+  @media screen and (max-width: 220mm) {
+    .hoja { width: auto; height: auto; margin: 0; padding: 0 16px 16px; box-shadow: none; }
+    .portada { margin: 0 -16px; grid-template-columns: 1fr; height: auto; }
+    .foto { height: 50vw; }
+    .titulo { padding: 16px; }
+    .tabla-envoltorio { overflow-x: auto; }
+  }
+  h2 {
+    font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--tinta-2); font-weight: 600;
+  }
+  .portada { margin: 0 -13mm; display: grid; grid-template-columns: 1.35fr 1fr; background: var(--portada); height: 42mm; }
+  .foto { background: url("https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/Model-Y-Toggle-Standard-Desktop-EU.jpg") no-repeat 50% 66% / 290%; }
+  .foto.fundido {
+    -webkit-mask-image: linear-gradient(to right, #000 80%, transparent 100%), linear-gradient(to bottom, #000 82%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, #000 80%, transparent 100%), linear-gradient(to bottom, #000 82%, transparent 100%);
+    mask-composite: intersect;
+  }
+  .titulo { padding: 2mm 13mm 2mm 0; display: flex; flex-direction: column; justify-content: center; gap: 1mm; }
+  .marca { font-size: 8pt; letter-spacing: 0.3em; color: var(--coche); font-weight: 700; }
+  .titulo h1 { font-size: 19pt; line-height: 1.05; letter-spacing: -0.02em; }
+  .fecha { color: var(--tinta-2); }
+  .ficha { margin: 1.5mm 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.6mm 3mm; font-size: 8pt; }
+  .ficha dt { color: var(--tinta-3); }
+  .ficha dd { margin: 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 7.8pt; font-variant-numeric: tabular-nums; }
+  thead th {
+    text-align: right; font-weight: 600; color: var(--tinta-2); font-size: 7pt;
+    padding: 0 0.9mm 1.2mm; border-bottom: 0.75pt solid var(--tinta); white-space: nowrap; vertical-align: bottom;
+  }
+  thead th:first-child, tbody th { text-align: left; padding-left: 0; }
+  tbody th { font-weight: 600; padding: 0.7mm 0.9mm 0.7mm 0; white-space: nowrap; }
+  tbody td { text-align: right; padding: 0.7mm 0.9mm; white-space: nowrap; }
+  tbody tr { border-bottom: 0.5pt solid var(--linea); }
+  .fuerte { font-weight: 650; }
+  .sub { display: block; font-weight: 400; font-size: 6.6pt; color: var(--tinta-3); }
+  .nota { font-size: 6.6pt; line-height: 1.3; color: var(--tinta-2); }
+  .nota p + p { margin-top: 1mm; }
+  .barras { display: grid; gap: 0.2mm; font-size: 7.6pt; }
+  .barra-fila { display: grid; grid-template-columns: 66mm 1fr; align-items: center; gap: 3mm; }
+  .barra-etq { white-space: nowrap; }
+  .barra-etq { text-align: right; color: var(--tinta-2); }
+  .barra-pista { display: flex; align-items: center; gap: 2mm; }
+  .barra { height: 2.3mm; background: var(--coche); border-radius: 0 4px 4px 0; }
+  .barra-val { font-weight: 650; font-variant-numeric: tabular-nums; }
+  .energia { display: grid; grid-template-columns: 32mm 1fr; column-gap: 4mm; row-gap: 1.2mm; align-items: center; background: var(--portada); margin: -2.6mm -13mm 0; padding: 2mm 13mm 2.5mm; border-top: 0.5pt solid var(--linea); }
+  .energia h2 { line-height: 1.2; }
+  .energia .nota { grid-column: 1 / -1; }
+  .cifras { display: flex; gap: 5mm; align-items: baseline; }
+  .cifras b { display: block; font-size: 11pt; color: var(--coche); font-variant-numeric: tabular-nums; }
+  .cifras span { font-size: 6.8pt; color: var(--tinta-2); }
+  .cifras .total { padding-left: 5mm; border-left: 0.5pt solid var(--linea); }
+  .pie { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; padding-top: 1.5mm; border-top: 0.5pt solid var(--linea); }
+  .pie ul { margin: 1mm 0 0; padding-left: 4mm; font-size: 6.8pt; line-height: 1.2; }
+  .pie li + li { margin-top: 0.1mm; }
+</style>
+</head>
+<body>
+<main class="hoja">
+  <header class="portada">
+    <div class="foto fundido" role="img" aria-label="Tesla Model Y en Blanco Perla"></div>
+    <div class="titulo">
+      <p class="marca">Tesla</p>
+      <h1>Model Y Tracción trasera</h1>
+      <p class="fecha">Formas de pago · 14 de octubre de 2026</p>
+      <dl class="ficha"><dt>Autonomía</dt><dd>525 km WLTP</dd><dt>0-100 km/h</dt><dd>7,2 s</dd><dt>Remolque</dt><dd>1.600 kg</dd><dt>Garantía</dt><dd>4 años · batería 8 años</dd></dl>
+    </div>
+  </header>
+
+  <section class="energia">
+    <h2>Energía</h2>
+    <div class="cifras">
+      <div><b>7,9&nbsp;€</b><span>cada 100 km</span></div>
+      <div><b>98 €</b><span>al mes</span></div>
+      <div><b>1.181 €</b><span>al año</span></div>
+      <div class="total"><b>4.725 €</b><span>en 4 años</span></div>
+    </div>
+    <h2>Tenerlo 4 años</h2>
+    <div class="cifras">
+      <div><b>3.817 €</b><span>Seguro</span></div><div><b>926 €</b><span>Mantenimiento</span></div><div><b>1.527 €</b><span>Neumáticos</span></div><div><b>99 €</b><span>ITV e impuesto</span></div><div><b>0 €</b><span>Averías</span></div>
+      <div class="total"><b>6.369 €</b><span>en total</span></div>
+    </div>
+    <p class="nota"><strong>Energía:</strong> 15.000 km al año, todo cargado fuera de casa (17,5 kWh/100 km reales, a 0,45 €/kWh), como en los BYD. En los Supercargadores de Tesla sale a 0,28-0,45 €/kWh según la hora; en casa, en horas valle, a unos 0,10. A precios de hoy (Bizkaia, 1-oct-2026). <strong>Tenerlo:</strong> Seguro a todo riesgo, mantenimiento y neumáticos estimados, con un 3 % de inflación al año. Sin ITV en estos 4 años (es nuevo) y con la bonificación del 95 % del impuesto de circulación de Bilbao para eléctricos. Garantía de 4 años u 80.000 km: sin averías con 60.000 km. Ni la energía ni estos costes están sumados al coste neto: son iguales en todas las opciones.</p>
+  </section>
+
+  <h2>Las opciones</h2>
+  <div class="tabla-envoltorio">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Opción</th>
+          <th scope="col">Precio</th>
+          <th scope="col">El primer día</th>
+          <th scope="col">Cuotas</th>
+          <th scope="col">Última cuota<br>o cancelación</th>
+          <th scope="col">TIN</th>
+          <th scope="col">Pagado hasta<br>el mes 48</th>
+          <th scope="col">Pagado si te<br>lo quedas</th>
+          <th scope="col" class="fuerte">Coste neto<br>a 4 años</th>
+        </tr>
+      </thead>
+      <tbody><tr>
+      <th scope="row">Contado<span class="sub">Web de Tesla · hasta 31-oct</span></th>
+      <td>40.760 €</td>
+      <td>40.760 €</td>
+      <td>—</td>
+      <td>—</td>
+      <td>—</td>
+      <td>36.710 €<span class="sub">es tuyo</span></td>
+      <td>36.710 €</td>
+      <td class="fuerte">16.894 €</td>
+    </tr><tr>
+      <th scope="row">Lineal a 48 meses<span class="sub">Web de Tesla · hasta 31-oct</span></th>
+      <td>40.760 €</td>
+      <td>9.500 €</td>
+      <td>48 × 678,05 €</td>
+      <td>—</td>
+      <td>1,99 %<span class="sub">TAE 2,01 %</span></td>
+      <td>37.997 €<span class="sub">es tuyo</span></td>
+      <td>37.997 €</td>
+      <td class="fuerte">18.181 €</td>
+    </tr><tr>
+      <th scope="row">Lineal a 72 meses<span class="sub">Web de Tesla · hasta 31-oct</span></th>
+      <td>40.760 €</td>
+      <td>9.500 €</td>
+      <td>48 × 460,96 €<span class="sub">de 72 cuotas</span></td>
+      <td>10.945 €<span class="sub">cancelar, mes 48</span></td>
+      <td>1,99 %<span class="sub">TAE 2,01 %</span></td>
+      <td>27.576 €<span class="sub">debes 10.837 €</span></td>
+      <td>38.522 €</td>
+      <td class="fuerte">18.706 €</td>
+    </tr><tr>
+      <th scope="row">Tesla Futuro<span class="sub">Web de Tesla · hasta 31-oct</span></th>
+      <td>40.760 €</td>
+      <td>8.550 €</td>
+      <td>47 × 388 €<span class="sub">la 1.ª, de 369 €</span></td>
+      <td>15.912 €<span class="sub">mes 48</span></td>
+      <td>1,99 %<span class="sub">TAE 2,01 %</span></td>
+      <td>22.717 €<span class="sub">si lo devuelves</span></td>
+      <td>38.629 €</td>
+      <td class="fuerte">18.817 €</td>
+    </tr></tbody>
+    </table>
+  </div>
+  <p class="nota">Precio de compra de la web: 40.990 € + 980 € de destino y documentación − 1.210 € de descuento del Plan Auto+ (el que la ley obliga a hacer al vendedor); sin Tesla Bonus. Incluye IVA, transporte y matriculación. Entrega estimada: ene.-feb. 2027. La ayuda del Plan Auto+ (4.050 €, por estar montado en Alemania; sin confirmar por Tesla) no va en el precio: la paga el Estado después, por transferencia. Los totales pagados ya la restan; si no se concede, el coche cuesta 4.050 € más.</p>
+  <p class="nota"><strong>Lineal:</strong> Caixabank Payments & Consumer, sin comisión de apertura, con la entrada que propone la web (9.500 €). Las cuotas están calculadas con el TIN: la web las redondea al euro. El de 72 meses se cancela en el mes 48 con un 1 % de comisión (no publicada: supuesto), para cubrir los mismos 4 años. <strong>Tesla Futuro:</strong> Open Bank, sin comisión de apertura, 15.000 km al año. Paga la 1.ª cuota (más baja por los días hasta el primer pago) y 46 iguales; la última, en el mes 48, sustituye a la 48.ª. El exceso de km, los daños al devolverlo y la cancelación no están publicados.</p>
+
+  <h2>Coste neto a 4 años</h2>
+  <div class="barras" role="img" aria-label="Coste neto a 4 años de cada opción"><div class="barra-fila" title="Contado: 16.894 €">
+      <span class="barra-etq">Contado · web</span>
+      <span class="barra-pista"><span class="barra" style="width:84.47149494556959%"></span><span class="barra-val">16.894 €</span></span>
+    </div><div class="barra-fila" title="Lineal a 48 meses: 18.181 €">
+      <span class="barra-etq">Lineal a 48 meses · web</span>
+      <span class="barra-pista"><span class="barra" style="width:90.90424934299519%"></span><span class="barra-val">18.181 €</span></span>
+    </div><div class="barra-fila" title="Lineal a 72 meses: 18.706 €">
+      <span class="barra-etq">Lineal a 72 meses · web</span>
+      <span class="barra-pista"><span class="barra" style="width:93.52916475520904%"></span><span class="barra-val">18.706 €</span></span>
+    </div><div class="barra-fila" title="Tesla Futuro: 18.817 €">
+      <span class="barra-etq">Tesla Futuro · web</span>
+      <span class="barra-pista"><span class="barra" style="width:94.08373024292881%"></span><span class="barra-val">18.817 €</span></span>
+    </div></div>
+
+  <footer class="pie">
+    <div>
+      <h2>Cómo funciona el Tesla Futuro</h2>
+      <ul><li>1.ª cuota de 369 €, 46 de 388 € y la última a los 48 meses.</li><li>Al final: devolverlo, quedárselo pagando la última o cambiarlo.</li><li>15.000 km al año; también 10.000 (380 €, última de 16.310 €) o 20.000.</li><li>Sin comisión de apertura. Entrada propuesta: 8.550 €.</li><li>TIN 1,99 %, como el lineal: promoción no acumulable, entrega antes del 31-mar-2027.</li><li>Última cuota: el 39,0 % del precio.</li></ul>
+    </div>
+    <div class="nota">
+      <p><strong>Coste neto a 4 años:</strong> lo pagado durante 48 meses, menos lo que valdría el coche al final (unos 17.800 €, el 44 % del precio: los 15.912 € de la última cuota del Tesla Futuro más un 12 %, porque las financieras lo fijan algo por debajo de lo que esperan; el mismo criterio en todos los coches), menos la ayuda (4.050 €) y la deducción del 5 % del IRPF de Bizkaia por eléctrico nuevo (2.000 €, el máximo, en la renta del año siguiente; no está restada en lo pagado). No cuenta lo que habría rendido el dinero ni incluye energía, seguro, mantenimiento ni impuestos, que son iguales en todas las opciones. Con 15.000 km al año, sin exceso de km.</p>
+      <p>Fuentes: configurador de Tesla España, 14-oct-2026 (ofertas hasta el 31-oct); Plan Auto+ del Model Y: autonomiacocheselectricos.es. Foto: tesla.com. Cálculos de pick-my-drive.</p>
+    </div>
+  </footer>
+</main>
+</body>
+</html>

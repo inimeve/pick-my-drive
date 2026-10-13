@@ -117,3 +117,4 @@ export function ofertasUsado(coche: CocheCandidato): Escenario[] {
 
 export { COCHES_BMW };
 export { COCHES_BYD_BARAKALDO, cocheActualCx30ConPrestamo, ofertasBydBarakaldo } from "./byd-barakaldo";
+export { COCHES_TESLA, ofertasTesla } from "./tesla";

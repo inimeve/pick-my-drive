@@ -1,11 +1,12 @@
 import { cuotaMensual } from "../engine/finanzas";
 import type { CocheCandidato, Escenario, OfertaReal } from "../engine/tipos";
-import { BANCO, COCHES, contado, cuotaFinal } from "./coches";
+import { BANCO, COCHES, contado, cuotaFinal, segunValorGarantizado } from "./coches";
 
 // Plantilla "BYD Atto 2 y Dolphin G frente a mi CX-30": los presupuestos del concesionario de BYD de
 // Barakaldo y el Easy Plan de los configuradores de BYD, los dos del 13-oct-2026 (docs/research/ofertas-recibidas.md,
 // byd-hibridos.md y financiacion-flexible.md), y quedarme mi CX-30 pagando su cuota final con un préstamo.
-// Seguro, mantenimiento, averías, neumáticos y depreciación son estimaciones.
+// Seguro, mantenimiento, averías y neumáticos son estimaciones; el valor a los 4 años, el garantizado del Easy Plan
+// más un 12 % (docs/adr/0003).
 
 const CONCESIONARIO: OfertaReal = { tipo: "presupuesto", origen: "Presupuesto del concesionario de BYD de Barakaldo (13-oct-2026)", hasta: "2026-10-28" };
 // CA Auto Bank da siete días a sus simulaciones
@@ -41,8 +42,8 @@ export const COCHES_BYD_BARAKALDO: CocheCandidato[] = [
     consumo: { litros100: 5.4, kwh100: 19, fraccionElectrica: 0.65 },
     garantiaMeses: 72,
     garantiaKm: 150000,
-    depreciacionPrimerAnio: 0.28,
-    depreciacionAnual: 0.12,
+    // valor garantizado del Easy Plan (13.416 €) más el margen: conserva el 48,7 % a los 4 años
+    ...segunValorGarantizado(30865, 13416, 0.12),
     mantenimientoAnual: 300,
     averiasAnual: 300,
     seguroTodoRiesgoAnual: 720,
@@ -50,7 +51,7 @@ export const COCHES_BYD_BARAKALDO: CocheCandidato[] = [
     neumaticosJuego: 520,
     neumaticosVidaKm: 35000,
     ayudas: AUTO_PLUS,
-    fuente: `Presupuesto del concesionario de Barakaldo (13-oct-2026): 30.865 € con matriculación y pre-entrega (875 €), igual que el configurador (27.740 € con el Auto+). ${AVISO_AUTO_PLUS} Depreciación, seguro y consumo real: estimaciones.`,
+    fuente: `Presupuesto del concesionario de Barakaldo (13-oct-2026): 30.865 € con matriculación y pre-entrega (875 €), igual que el configurador (27.740 € con el Auto+). ${AVISO_AUTO_PLUS} Seguro y consumo real: estimaciones; el valor a los 4 años, el garantizado del Easy Plan más un 12 %.`,
   },
   {
     id: "dolphin-g-comfort",
@@ -71,8 +72,8 @@ export const COCHES_BYD_BARAKALDO: CocheCandidato[] = [
     consumo: { litros100: 5.0, kwh100: 19, fraccionElectrica: 0.65 },
     garantiaMeses: 72,
     garantiaKm: 150000,
-    depreciacionPrimerAnio: 0.3,
-    depreciacionAnual: 0.12,
+    // valor garantizado del Easy Plan (12.177 €) más el margen: conserva el 47,6 % a los 4 años
+    ...segunValorGarantizado(28650, 12177, 0.12),
     mantenimientoAnual: 300,
     averiasAnual: 300,
     seguroTodoRiesgoAnual: 640,
@@ -81,7 +82,7 @@ export const COCHES_BYD_BARAKALDO: CocheCandidato[] = [
     neumaticosJuego: 560,
     neumaticosVidaKm: 35000,
     ayudas: AUTO_PLUS,
-    fuente: `Presupuesto del concesionario de Barakaldo (13-oct-2026): 28.650 € con matriculación y pre-entrega (875 €), igual que el configurador (25.525 € con el Auto+). ${AVISO_AUTO_PLUS} Depreciación, seguro, neumáticos y consumo real: estimaciones.`,
+    fuente: `Presupuesto del concesionario de Barakaldo (13-oct-2026): 28.650 € con matriculación y pre-entrega (875 €), igual que el configurador (25.525 € con el Auto+). ${AVISO_AUTO_PLUS} Seguro, neumáticos y consumo real: estimaciones; el valor a los 4 años, el garantizado del Easy Plan más un 12 %.`,
   },
 ];
 

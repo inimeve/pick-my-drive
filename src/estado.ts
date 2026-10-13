@@ -1,8 +1,10 @@
 import {
   COCHES_BMW,
   COCHES_BYD_BARAKALDO,
+  COCHES_TESLA,
   cocheActualCx30ConPrestamo,
   ofertasBydBarakaldo,
+  ofertasTesla,
   MUNICIPIOS,
   cocheActualConOferta,
   ofertasUsado,
@@ -43,7 +45,7 @@ export type PlantillaId = "vacia" | "bmw" | "byd-cx30";
 export const PLANTILLAS: { id: PlantillaId; nombre: string }[] = [
   { id: "vacia", nombre: "Vacía" },
   { id: "bmw", nombre: "BMW de segunda mano y mi Focus" },
-  { id: "byd-cx30", nombre: "BYD Atto 2 y Dolphin G frente a quedarme mi CX-30" },
+  { id: "byd-cx30", nombre: "BYD Atto 2, Dolphin G y Tesla Model 3 e Y frente a quedarme mi CX-30" },
 ];
 
 export function comparativaDePlantilla(id: PlantillaId): Comparativa {
@@ -56,8 +58,8 @@ export function comparativaDePlantilla(id: PlantillaId): Comparativa {
       // las financiaciones de BYD son a 48 meses: con más horizonte se renovarían con otro coche igual
       // todo riesgo hasta los 7 años: mi CX-30 (de 2023) lo mantiene así los 4 años
       perfil: { ...base.perfil, horizonteMeses: 48, aniosTodoRiesgo: 7 },
-      coches: [...structuredClone(COCHES_BYD_BARAKALDO), mio.coche],
-      escenarios: [...ofertasBydBarakaldo(), ...mio.escenarios],
+      coches: [...structuredClone(COCHES_BYD_BARAKALDO), ...structuredClone(COCHES_TESLA), mio.coche],
+      escenarios: [...ofertasBydBarakaldo(), ...ofertasTesla(), ...mio.escenarios],
     };
   }
   const mio = cocheActualConOferta();

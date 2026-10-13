@@ -1,8 +1,9 @@
 // Genera el resumen A4 de las formas de pago de cada BYD de la plantilla "BYD Atto 2 y Dolphin G frente a quedarme
 // mi CX-30": docs/resumenes/atto2-2026-10-13.html y dolphin-g-2026-10-13.html. El coste neto sale del motor de la app;
 // el resto, de las ofertas (docs/research/ofertas-recibidas.md y financiacion-flexible.md).
-// También el de quedarme mi CX-30 (cx30-2026-10-13.html), con el mismo diseño.
-// Uso: node scripts/resumen-byd.mjs [atto2|dolphin|cx30]  (sin argumento, todos)
+// También el de quedarme mi CX-30 (cx30-2026-10-13.html) y los de los Tesla Model 3 y Model Y (model3-2026-10-14.html y
+// modely-2026-10-14.html, de docs/research/tesla.md), con el mismo diseño.
+// Uso: node scripts/resumen-byd.mjs [atto2|dolphin|cx30|model3|modely]  (sin argumento, todos)
 import { writeFileSync, mkdirSync } from "node:fs";
 import { createServer } from "vite";
 
@@ -50,6 +51,7 @@ const COCHES = {
     },
     notaPrecio: `${NOTA_AUTO_PLUS} <strong>* Cuotas del concesionario sin el seguro de vida opcional</strong> que llevan sus simulaciones (817 € en A, 726 € en B y 989 € en C, financiado): con él son de 208,31 €, 196,71 € y 303,84 €. Se quita para comparar con la web, que no lo lleva. La TAE es la impresa, con el seguro.`,
     origenLineal: "el TIN y el descuento de las opciones A y B",
+    garantizado: "los 13.416 € del Valor Mínimo Garantizado del Easy Plan",
   notaCostes: "Seguro a todo riesgo, mantenimiento y neumáticos estimados, con un 3 % de inflación al año. Sin ITV en estos 4 años (es nuevo) y con la bonificación del 75 % del impuesto de circulación de Bilbao para enchufables. Garantía de 6 años: sin averías.",
     easyPlan: [
       "48 cuotas y una última (Valor Mínimo Garantizado) a los 49 meses.",
@@ -93,6 +95,7 @@ const COCHES = {
     },
     notaPrecio: `${NOTA_AUTO_PLUS} <strong>Easy Plan A, B y C (estimación):</strong> el concesionario solo ha dado el precio al contado, así que son las opciones que dio para el Atto 2 adaptadas al Dolphin: la misma entrada, TIN, descuento y comisión del 3,75 % financiada, sin seguro de vida, y la última cuota de la web (el Valor Mínimo Garantizado no depende de la entrada). Sus cuotas y TAE, como las de la web con entrada mínima, están calculadas con la fórmula que reproduce al céntimo las reales.`,
     origenLineal: "el TIN y el descuento que el concesionario dio para el Atto 2 (opciones A y B)",
+    garantizado: "los 12.177 € del Valor Mínimo Garantizado del Easy Plan",
   notaCostes: "Seguro a todo riesgo, mantenimiento y neumáticos estimados, con un 3 % de inflación al año. Sin ITV en estos 4 años (es nuevo) y con la bonificación del 75 % del impuesto de circulación de Bilbao para enchufables. Garantía de 6 años: sin averías.",
     easyPlan: [
       "48 cuotas y una última (Valor Mínimo Garantizado) a los 49 meses.",
@@ -107,6 +110,7 @@ const COCHES = {
 };
 
 COCHES.cx30 = {
+  valor: "con la pérdida del 17 % al año de la tabla de Mazda sobre lo que vale hoy, 18.193 €; sin cuota final nueva, no hay valor garantizado con el que compararlo",
   id: "cx30-actual",
   salida: "docs/resumenes/cx30-2026-10-13.html",
   marca: "Mazda",
@@ -147,8 +151,107 @@ COCHES.cx30 = {
   fuentes: "Fuentes: cuota final de la FlexiOpción; tabla de gastos de Mazda del concesionario de Bilbao (jul-2026); préstamo con condiciones típicas de mercado (comparadores, sep-2026). Foto: configurador de Mazda (CX-30 Makoto en Soul Red Crystal). Cálculos de pick-my-drive.",
 };
 
+/** Lo común a los dos Tesla: los mismos préstamos de la web (docs/research/tesla.md) */
+function tesla(o) {
+  const origen = { origen: "Web de Tesla", valida: "31-oct" };
+  const { id, futuro, lineal, ayuda } = o;
+  return {
+    marca: "Tesla",
+    tamTitulo: "19pt",
+    subtitulo: "Formas de pago · 14 de octubre de 2026",
+    fundido: true,
+    ofertas: {
+      [`${id}:contado`]: { nombre: "Contado", ...origen },
+      [`${id}:prestamo:lineal-48`]: { nombre: "Lineal a 48 meses", ...origen, tin: lineal.tin, tae: lineal.tae },
+      [`${id}:prestamo:lineal-72:cancelado-48`]: { nombre: "Lineal a 72 meses", ...origen, tin: lineal.tin, tae: lineal.tae },
+      // la última cuota sustituye a la 48.ª: se pagan la 1.ª, 46 iguales y la última en el mes 48
+      [`${id}:cuota_final:futuro-48`]: { nombre: "Tesla Futuro", ...origen, ...futuro, mesUltima: 48 },
+    },
+    notaCostes: "Seguro a todo riesgo, mantenimiento y neumáticos estimados, con un 3 % de inflación al año. Sin ITV en estos 4 años (es nuevo) y con la bonificación del 95 % del impuesto de circulación de Bilbao para eléctricos. Garantía de 4 años u 80.000 km: sin averías con 60.000 km.",
+    notaEnergia: (e) => `${e.km.toLocaleString("es-ES", { useGrouping: "always" })} km al año, todo cargado fuera de casa (${e.kwh.toLocaleString("es-ES")} kWh/100 km reales, a ${e.kwhPublica.toLocaleString("es-ES")} €/kWh), como en los BYD. En los Supercargadores de Tesla sale a 0,28-0,45 €/kWh según la hora; en casa, en horas valle, a unos 0,10. A precios de hoy (Bizkaia, 1-oct-2026).`,
+    notaFinanciacion: `<strong>Lineal:</strong> Caixabank Payments & Consumer, sin comisión de apertura, con la entrada que propone la web (${lineal.entrada}). Las cuotas están calculadas con el TIN: la web las redondea al euro. El de 72 meses se cancela en el mes 48 con un 1 % de comisión (no publicada: supuesto), para cubrir los mismos 4 años. <strong>Tesla Futuro:</strong> Open Bank, sin comisión de apertura, 15.000 km al año. Paga la 1.ª cuota (más baja por los días hasta el primer pago) y 46 iguales; la última, en el mes 48, sustituye a la 48.ª. El exceso de km, los daños al devolverlo y la cancelación no están publicados.`,
+    // el motor resta la deducción foral del 5 % del precio (base máxima 40.000 €) por comprar un eléctrico nuevo
+    notaAyuda: `, menos la ayuda (${ayuda.toLocaleString("es-ES", { useGrouping: "always" })} €) y la deducción del 5 % del IRPF de Bizkaia por eléctrico nuevo (${o.deduccion}, en la renta del año siguiente; no está restada en lo pagado)`,
+    tituloPie: "Cómo funciona el Tesla Futuro",
+    fuentes: `Fuentes: configurador de Tesla España, 14-oct-2026 (ofertas hasta el 31-oct)${o.fuenteAyuda ?? ""}. Foto: tesla.com. Cálculos de pick-my-drive.`,
+    ayuda,
+    garantizado: `los ${futuro.ultima.toLocaleString("es-ES", { useGrouping: "always" })} € de la última cuota del Tesla Futuro`,
+    ...o.resto,
+  };
+}
+
+COCHES.model3 = tesla({
+  id: "model3-rwd",
+  ayuda: 3375,
+  deduccion: "1.668 €",
+  lineal: { tin: 5.75, tae: 5.9, entrada: "9.250 €" },
+  futuro: { tin: 7, tae: 7.25, primera: 319, ultima: 14897 },
+  resto: {
+    id: "model3-rwd",
+    salida: "docs/resumenes/model3-2026-10-14.html",
+    titulo: "Model 3 Tracción trasera",
+    pestana: "Tesla Model 3: opciones",
+    // Foto de estudio de tesla.com, enlazada: hace falta conexión para verla
+    foto: "https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/Model-3-Toggle-Standard-Desktop-APAC.jpg",
+    encuadre: "no-repeat 50% 62% / 330%",
+    alt: "Tesla Model 3 en Blanco Perla",
+    // el rojo de Tesla, oscurecido para que se lea como texto (el coche de la foto es blanco)
+    color: "#b8141c",
+    ficha: [
+      ["Autonomía", "572 km WLTP"],
+      ["0-100 km/h", "6,2 s"],
+      ["Consumo", "15,5 kWh/100 km reales (est.)"],
+      ["Garantía", "4 años · batería 8 años"],
+    ],
+    notaPrecio: "Precio de compra de la web: 36.990 € + 980 € de destino y documentación − 1.210 € de descuento del Plan Auto+ (el que la ley obliga a hacer al vendedor) − 3.395 € del Tesla Bonus, que solo vale si se entrega antes del 31-mar-2027. Incluye IVA, transporte y matriculación. La ayuda del Plan Auto+ (3.375 €) no va en el precio: la paga el Estado después, por transferencia. Los totales pagados ya la restan; si no se concede, el coche cuesta 3.375 € más.",
+    easyPlan: [
+      "1.ª cuota de 319 €, 46 de 361 € y la última a los 48 meses.",
+      "Al final: devolverlo, quedárselo pagando la última o cambiarlo.",
+      "15.000 km al año; también 10.000 (355 €, última de 15.221 €) o 20.000.",
+      "Sin comisión de apertura. Entrada propuesta: 7.300 €.",
+      "TIN 7,00 %: más caro que el lineal (5,75 %), que bajó el 12-oct.",
+      "Última cuota: el 44,6 % del precio.",
+    ],
+  },
+});
+
+COCHES.modely = tesla({
+  id: "modely-rwd",
+  ayuda: 4050,
+  deduccion: "2.000 €, el máximo",
+  fuenteAyuda: "; Plan Auto+ del Model Y: autonomiacocheselectricos.es",
+  lineal: { tin: 1.99, tae: 2.01, entrada: "9.500 €" },
+  futuro: { tin: 1.99, tae: 2.01, primera: 369, ultima: 15912 },
+  resto: {
+    id: "modely-rwd",
+    salida: "docs/resumenes/modely-2026-10-14.html",
+    titulo: "Model Y Tracción trasera",
+    pestana: "Tesla Model Y: opciones",
+    foto: "https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/Model-Y-Toggle-Standard-Desktop-EU.jpg",
+    encuadre: "no-repeat 50% 66% / 290%",
+    alt: "Tesla Model Y en Blanco Perla",
+    // el azul de los botones de Tesla (el coche de la foto es blanco)
+    color: "#3e6ae1",
+    ficha: [
+      ["Autonomía", "525 km WLTP"],
+      ["0-100 km/h", "7,2 s"],
+      ["Remolque", "1.600 kg"],
+      ["Garantía", "4 años · batería 8 años"],
+    ],
+    notaPrecio: "Precio de compra de la web: 40.990 € + 980 € de destino y documentación − 1.210 € de descuento del Plan Auto+ (el que la ley obliga a hacer al vendedor); sin Tesla Bonus. Incluye IVA, transporte y matriculación. Entrega estimada: ene.-feb. 2027. La ayuda del Plan Auto+ (4.050 €, por estar montado en Alemania; sin confirmar por Tesla) no va en el precio: la paga el Estado después, por transferencia. Los totales pagados ya la restan; si no se concede, el coche cuesta 4.050 € más.",
+    easyPlan: [
+      "1.ª cuota de 369 €, 46 de 388 € y la última a los 48 meses.",
+      "Al final: devolverlo, quedárselo pagando la última o cambiarlo.",
+      "15.000 km al año; también 10.000 (380 €, última de 16.310 €) o 20.000.",
+      "Sin comisión de apertura. Entrada propuesta: 8.550 €.",
+      "TIN 1,99 %, como el lineal: promoción no acumulable, entrega antes del 31-mar-2027.",
+      "Última cuota: el 39,0 % del precio.",
+    ],
+  },
+});
+
 const elegidos = process.argv[2] ? [process.argv[2]] : Object.keys(COCHES);
-for (const k of elegidos) if (!COCHES[k]) throw new Error(`Coche desconocido: ${k} (atto2, dolphin o cx30)`);
+for (const k of elegidos) if (!COCHES[k]) throw new Error(`Coche desconocido: ${k} (${Object.keys(COCHES).join(", ")})`);
 
 const vite = await createServer({ server: { middlewareMode: true }, appType: "custom", logLevel: "error" });
 const eur = (v, dec = 0) =>
@@ -169,10 +272,11 @@ try {
   let valorFinal;
   const ayuda = cfg.ayuda ?? AYUDA;
   const coche = comp.coches.find((c) => c.id === cfg.id);
-  // energía: el 15 % de los km en eléctrico, todo cargado fuera de casa; el resto con gasolina
+  // energía: todo cargado fuera de casa; en los enchufables, el 15 % de los km en eléctrico y el resto con gasolina
   const e = comp.perfil.energia;
+  const enchufable = coche.motorizacion === "hibrido_enchufable";
   const porKm = energiaPorKm(
-    { ...coche, consumo: { ...coche.consumo, fraccionElectrica: 0.15 } },
+    enchufable ? { ...coche, consumo: { ...coche.consumo, fraccionElectrica: 0.15 } } : coche,
     { ...comp.perfil, energia: { ...e, fraccionCargaCasa: 0 } },
   );
   const energia = { porKm, km: comp.perfil.kmAnuales, litros: coche.consumo.litros100, kwh: coche.consumo.kwh100, gasolina: e.gasolina, kwhPublica: e.kwhPublica };
@@ -212,6 +316,16 @@ try {
         costeNeto: r.costeNeto[perfil.horizonteMeses],
       };
     }
+    if (o.primera) {
+      // Tesla Futuro: sin comisión; la 1.ª cuota distinta, 46 iguales y la última en el mes 48 en lugar de la 48.ª
+      const cuota = Math.round(r.financiacion.cuota);
+      const hasta48 = c.entrada + o.primera + cuota * (c.plazoMeses - 2) - ayuda;
+      return {
+        ...o, precio, entrada: c.entrada, primerDia: c.entrada, cuota, plazo: c.plazoMeses - 1,
+        pagado48: hasta48, nota48: "si lo devuelves", pagadoQuedar: hasta48 + o.ultima,
+        costeNeto: r.costeNeto[perfil.horizonteMeses],
+      };
+    }
     const web = o.origen === "Web de BYD";
     // en la web el Auto+ ya va descontado de lo financiado: la entrada de la app lo lleva sumado, como la matriculación
     const entrada = web ? c.entrada - AYUDA - MATRICULACION : c.entrada;
@@ -243,7 +357,7 @@ try {
 
 const pct = (v) => `${v.toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %`;
 const concesionario = (f) => f.origen === "Concesionario";
-const etiquetaOrigen = (f) => f.etiqueta ?? { Concesionario: "concesionario", "Web de BYD": "web", Estimación: "estimación" }[f.origen];
+const etiquetaOrigen = (f) => f.etiqueta ?? { Concesionario: "concesionario", "Web de BYD": "web", "Web de Tesla": "web", Estimación: "estimación" }[f.origen];
 const procedencia = (f) => f.sub ?? (f.valida ? `${f.origen} · hasta ${f.valida}` : "Estimación");
 function pagina({ cfg, filas, perfil, valorFinal, energia, costes }) {
 const maximo = Math.ceil(Math.max(...filas.map((f) => f.costeNeto)) / 5000) * 5000;
@@ -255,8 +369,8 @@ const tabla = filas
       <th scope="row">${f.nombre}<span class="sub">${procedencia(f)}</span></th>
       <td>${eur(f.precio)}</td>
       <td>${eur(f.primerDia)}</td>
-      <td>${f.cuota ? `${f.plazo} × ${eur(f.cuota, 2)}${concesionario(f) ? "*" : ""}${f.deLas ? `<span class="sub">de ${f.deLas} cuotas</span>` : ""}` : "—"}</td>
-      <td>${f.ultima ? `${eur(f.ultima)}<span class="sub">mes 49</span>` : f.cancelar ? `${eur(f.cancelar)}<span class="sub">cancelar, mes 48</span>` : "—"}</td>
+      <td>${f.cuota ? `${f.plazo} × ${eur(f.cuota, f.primera ? 0 : 2)}${concesionario(f) ? "*" : ""}${f.deLas ? `<span class="sub">de ${f.deLas} cuotas</span>` : ""}${f.primera ? `<span class="sub">la 1.ª, de ${eur(f.primera)}</span>` : ""}` : "—"}</td>
+      <td>${f.ultima ? `${eur(f.ultima)}<span class="sub">mes ${f.mesUltima ?? 49}</span>` : f.cancelar ? `${eur(f.cancelar)}<span class="sub">cancelar, mes 48</span>` : "—"}</td>
       <td>${f.tin ? `${pct(f.tin)}<span class="sub">TAE ${pct(f.tae)}</span>` : "—"}</td>
       <td>${eur(f.pagado48)}<span class="sub">${f.nota48}</span></td>
       <td>${eur(f.pagadoQuedar)}</td>
@@ -433,7 +547,7 @@ return `<!doctype html>
       <ul>${cfg.easyPlan.map((t) => `<li>${t}</li>`).join("")}</ul>
     </div>
     <div class="nota">
-      <p><strong>Coste neto a 4 años:</strong> lo pagado durante 48 meses, menos lo que valdría el coche al final (unos ${eur(Math.round(valorFinal / 100) * 100)})${cfg.ayuda === 0 ? "" : ", menos la ayuda"}. No cuenta lo que habría rendido el dinero ni incluye energía, seguro, mantenimiento ni impuestos, que son iguales en todas las opciones. Con ${perfil.kmAnuales.toLocaleString("es-ES", { useGrouping: "always" })} km al año, sin exceso de km.</p>
+      <p><strong>Coste neto a 4 años:</strong> lo pagado durante 48 meses, menos lo que valdría el coche al final (unos ${eur(Math.round(valorFinal / 100) * 100)}, ${cfg.valor ?? `el ${Math.round((valorFinal / filas[0].precio) * 100)} % del precio: ${cfg.garantizado} más un 12 %, porque las financieras lo fijan algo por debajo de lo que esperan; el mismo criterio en todos los coches`})${cfg.ayuda === 0 ? "" : cfg.notaAyuda ?? ", menos la ayuda"}. No cuenta lo que habría rendido el dinero ni incluye energía, seguro, mantenimiento ni impuestos, que son iguales en todas las opciones. Con ${perfil.kmAnuales.toLocaleString("es-ES", { useGrouping: "always" })} km al año, sin exceso de km.</p>
       <p>${cfg.fuentes}</p>
     </div>
   </footer>

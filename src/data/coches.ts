@@ -15,6 +15,20 @@ function curva(a3: number, a5: number) {
   };
 }
 
+/** Lo que se supone que vale un coche nuevo por encima del valor que garantiza su financiera con cuota final:
+ * las financieras lo fijan algo por debajo de lo esperado (docs/adr/0003) */
+export const MARGEN_SOBRE_GARANTIZADO = 0.12;
+
+/** Curva de depreciación que lleva el coche al valor garantizado de su cuota final más el margen, a los 48 meses y
+ * 15.000 km al año. Se fija la pérdida de los años siguientes y se deduce la del primero */
+export function segunValorGarantizado(precio: number, garantizado: number, anual: number) {
+  const retenido = (garantizado * (1 + MARGEN_SOBRE_GARANTIZADO)) / precio;
+  return {
+    depreciacionPrimerAnio: Math.round((1 - retenido / Math.pow(1 - anual, 3)) * 1000) / 1000,
+    depreciacionAnual: anual,
+  };
+}
+
 const SIN_LIMITE_KM = 999999;
 
 export const COCHES: CocheCandidato[] = [
