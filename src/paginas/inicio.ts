@@ -295,7 +295,7 @@ $<HTMLSelectElement>("sel-guardadas").addEventListener("change", (ev) => {
 });
 
 $("btn-restablecer").addEventListener("click", () => {
-  if (!confirm("¿Volver a los coches y valores por defecto? Perderás los cambios no guardados.")) return;
+  if (!confirm("¿Empezar una comparativa vacía con los valores por defecto? Perderás los cambios no guardados.")) return;
   reemplazar(comparativaPorDefecto());
   todo();
 });

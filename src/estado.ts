@@ -1,12 +1,7 @@
 import {
   COCHES_BMW,
-  COCHES_OPCION_INTELIGENTE,
-  COCHES_POR_DEFECTO,
-  ESCENARIOS_POR_DEFECTO,
   MUNICIPIOS,
   cocheActualConOferta,
-  cocheActualCx30ConOferta,
-  ofertasOpcionInteligente,
   ofertasUsado,
   PERFIL_POR_DEFECTO,
   TERRITORIOS,
@@ -29,38 +24,27 @@ export interface Comparativa {
   vista: Vista;
 }
 
+/** La comparativa con la que se empieza: el perfil por defecto y ningún coche */
 export function comparativaPorDefecto(): Comparativa {
   return structuredClone({
     version: 1,
     perfil: PERFIL_POR_DEFECTO,
-    coches: COCHES_POR_DEFECTO,
-    escenarios: ESCENARIOS_POR_DEFECTO,
+    coches: [],
+    escenarios: [],
     vista: { tipo: "mejores" },
   });
 }
 
-export type PlantillaId = "actual" | "vacia" | "bmw" | "opcion-inteligente";
+export type PlantillaId = "vacia" | "bmw";
 
 export const PLANTILLAS: { id: PlantillaId; nombre: string }[] = [
-  { id: "actual", nombre: "Actual (coches por defecto)" },
   { id: "vacia", nombre: "Vacía" },
   { id: "bmw", nombre: "BMW de segunda mano y mi Focus" },
-  { id: "opcion-inteligente", nombre: "Opción inteligente" },
 ];
 
 export function comparativaDePlantilla(id: PlantillaId): Comparativa {
   const base = comparativaPorDefecto();
-  if (id === "actual") return base;
-  if (id === "vacia") return { ...base, coches: [], escenarios: [] };
-  if (id === "opcion-inteligente") {
-    const mio = cocheActualCx30ConOferta();
-    const nuevos = structuredClone(COCHES_OPCION_INTELIGENTE);
-    return {
-      ...base,
-      coches: [...nuevos, mio.coche],
-      escenarios: [...ofertasOpcionInteligente(), ...mio.escenarios],
-    };
-  }
+  if (id === "vacia") return base;
   const mio = cocheActualConOferta();
   const coches = [...structuredClone(COCHES_BMW), mio.coche];
   return {

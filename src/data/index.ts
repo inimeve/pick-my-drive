@@ -1,7 +1,6 @@
 import type { CocheCandidato, Escenario, ModalidadId, PerfilUso } from "../engine/tipos";
-import { COCHES, OFERTAS } from "./coches";
+import { OFERTAS } from "./coches";
 import { COCHES_BMW, COCHE_ACTUAL } from "./bmw";
-import { COCHES_OPCION_INTELIGENTE, cocheActualCx30ConOferta, ofertasOpcionInteligente } from "./opcion-inteligente";
 import { ofertasGenericas, type ParametrosMercado } from "./ofertas";
 
 export { MUNICIPIOS, TERRITORIOS } from "./territorios";
@@ -33,9 +32,6 @@ export const PERFIL_POR_DEFECTO: PerfilUso = {
   tarifaItv: 60,
   ajusteValorResidual: 1,
 };
-
-export const COCHES_POR_DEFECTO: CocheCandidato[] = COCHES;
-export const ESCENARIOS_POR_DEFECTO: Escenario[] = OFERTAS;
 
 const MERCADO: ParametrosMercado = {
   tinPrestamo: 0.055,
@@ -118,4 +114,4 @@ export function ofertasUsado(coche: CocheCandidato): Escenario[] {
   return ofertasPorDefecto(coche).filter((e) => posibles.includes(e.condiciones.modalidad));
 }
 
-export { COCHES_BMW, COCHES_OPCION_INTELIGENTE, cocheActualCx30ConOferta, ofertasOpcionInteligente };
+export { COCHES_BMW };
