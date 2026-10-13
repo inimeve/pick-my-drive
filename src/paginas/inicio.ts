@@ -75,6 +75,16 @@ function pintarPerfil() {
     cambio();
   };
   $("perfil-avanzado").replaceChildren(
+    el(
+      "div",
+      { class: "campo" },
+      campoCheck("Contar los costes de uso", p.costesUsoActivos, set("costesUsoActivos")),
+      el(
+        "p",
+        { class: "ayuda" },
+        "Energía, seguro, mantenimiento, averías, neumáticos, impuestos e ITV, con su inflación. Sin ellos solo se compara lo que cuesta hacerse con el coche; el renting y la suscripción siguen cobrando lo que incluyen en la cuota.",
+      ),
+    ),
     campoNumero("Gasolina", p.energia.gasolina, e("gasolina"), { paso: 0.01, sufijo: "€/l" }),
     campoNumero("Diésel", p.energia.diesel, e("diesel"), { paso: 0.01, sufijo: "€/l" }),
     campoNumero("Electricidad en casa", p.energia.kwhCasa, e("kwhCasa"), { paso: 0.01, sufijo: "€/kWh" }),

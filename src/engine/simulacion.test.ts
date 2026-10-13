@@ -40,6 +40,7 @@ const ctx: Contexto = {
     oportunidadActiva: false,
     tipoOportunidad: 0.03,
     inflacion: 0,
+    costesUsoActivos: true,
     energia: { gasolina: 1.5, diesel: 1.4, kwhCasa: 0.1, kwhPublica: 0.5, fraccionCargaCasa: 1 },
     aniosTodoRiesgo: 5,
     tarifaItv: 0,
@@ -87,6 +88,15 @@ describe("contado", () => {
     const r = simular(contado, { ...coche, valorMercado: 25000 }, ctx);
     const valor = valorResidual({ ...coche, pvp: 25000 }, 60, ctx.perfil);
     expect(r.costeNeto[60]).toBeCloseTo(30000 - valor, 6);
+  });
+
+  it("sin costes de uso, un coche que gasta cuesta lo mismo que uno que no", () => {
+    const gastador = { ...coche, consumo: { litros100: 7 }, seguroTodoRiesgoAnual: 600, mantenimientoAnual: 400, neumaticosJuego: 600 };
+    const sinUso = { ...ctx, perfil: { ...ctx.perfil, costesUsoActivos: false } };
+    const a = simular(contado, coche, ctx);
+    const b = simular(contado, gastador, sinUso);
+    b.costeNeto.forEach((v, m) => expect(v).toBeCloseTo(a.costeNeto[m]!, 6));
+    expect(simular(contado, gastador, ctx).costeNeto[60]!).toBeGreaterThan(a.costeNeto[60]!);
   });
 
   it("el Desembolso acumulado es plano en el precio si no hay costes de uso", () => {

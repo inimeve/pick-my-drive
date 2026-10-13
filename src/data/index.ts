@@ -17,6 +17,7 @@ export const PERFIL_POR_DEFECTO: PerfilUso = {
   tipoOportunidad: 0.028,
   // IPC de septiembre 4,9%; proyecciones 2026-2028 de 3,6% a 2,1%
   inflacion: 0.03,
+  costesUsoActivos: true,
   energia: {
     // Bizkaia, 1-10-2026 (ya con la rebaja fiscal temporal de octubre)
     gasolina: 1.85,

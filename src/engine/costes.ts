@@ -69,6 +69,7 @@ export function costesUsoMes(
   mesEnPropiedad: number,
   incluye: Inclusiones = SIN_INCLUSIONES,
 ): Apunte[] {
+  if (!perfil.costesUsoActivos) return [];
   const inflacion = Math.pow(1 + perfil.inflacion, (mes - 1) / 12);
   const edadMeses = coche.edadInicialMeses + mesEnPropiedad;
   const edadAnios = (edadMeses - 1) / 12;

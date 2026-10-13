@@ -83,6 +83,8 @@ export interface PerfilUso {
   oportunidadActiva: boolean;
   /** Rentabilidad anual alternativa del dinero (0.025 = 2,5%) */
   tipoOportunidad: number;
+  /** Si cuentan los costes de uso (energía, seguro, mantenimiento, averías, neumáticos, impuestos e ITV) */
+  costesUsoActivos: boolean;
   /** Subida anual de costes de uso y energía */
   inflacion: number;
   energia: PreciosEnergia;
