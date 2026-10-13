@@ -278,10 +278,17 @@ function cicloCompra(
   };
 }
 
+/** Lo que se pide prestado para pagar `importe` del coche: la comisión de apertura va dentro si se financia */
+function credito(importe: number, c: CondicionesPrestamo | CondicionesCuotaFinal) {
+  const comision = importe * c.comisionApertura;
+  return { comision, principal: importe + (c.comisionFinanciada ? comision : 0) };
+}
+
 function resolverFinanciacion(
   principal: number,
   c: CondicionesPrestamo | CondicionesCuotaFinal,
   cuotaFinal: number,
+  comision: number,
 ): Financiacion {
   const cuota =
     c.cuotaOfertada ?? cuotaMensual(principal, c.tin, c.plazoMeses, cuotaFinal);
@@ -293,7 +300,7 @@ function resolverFinanciacion(
     principal,
     cuota,
     tin,
-    tae: tae(principal, principal * c.comisionApertura, cuota, c.plazoMeses, cuotaFinal),
+    tae: tae(principal, comision, cuota, c.plazoMeses, cuotaFinal),
     plazoMeses: c.plazoMeses,
     cuotaFinal,
   };
@@ -323,11 +330,11 @@ function cicloPrestamo(
   c: CondicionesPrestamo,
 ): { ciclo: Ciclo; financiacion: Financiacion } {
   const compra = cicloCompra(coche, ctx, 0, c.descuento);
-  const principal = coche.pvp - c.descuento - c.entrada;
-  const f = resolverFinanciacion(principal, c, 0);
+  const { principal, comision } = credito(coche.pvp - c.descuento - c.entrada, c);
+  const f = resolverFinanciacion(principal, c, 0, comision);
   const cancela = c.cancelarEnMes !== undefined && c.cancelarEnMes < f.plazoMeses ? Math.max(0, c.cancelarEnMes) : undefined;
   compra.apuntes.push(
-    { mes: 0, categoria: "comisiones", importe: principal * c.comisionApertura },
+    { mes: 0, categoria: "comisiones", importe: comision },
     ...apuntesCuotas(f, 0, cancela),
   );
   if (cancela !== undefined)
@@ -376,11 +383,11 @@ function cicloCuotaFinal(
   inicio: number,
 ): { ciclo: Ciclo; financiacion: Financiacion } {
   const compra = cicloCompra(coche, ctx, inicio, c.descuento);
-  const principal = coche.pvp - c.descuento - c.entrada;
-  const f = resolverFinanciacion(principal, c, c.cuotaFinal);
+  const { principal, comision } = credito(coche.pvp - c.descuento - c.entrada, c);
+  const f = resolverFinanciacion(principal, c, c.cuotaFinal, comision);
   const fin = inicio + c.plazoMeses;
   compra.apuntes.push(
-    { mes: inicio, categoria: "comisiones", importe: principal * c.comisionApertura },
+    { mes: inicio, categoria: "comisiones", importe: comision },
     ...apuntesCuotas(f, inicio),
   );
   const referencia = cocheAlPrecio(coche, c.descuento);

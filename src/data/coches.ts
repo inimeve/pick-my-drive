@@ -254,6 +254,7 @@ interface CuotaFinal {
   plazoMeses: number;
   cuotaFinal: number;
   comisionApertura: number;
+  comisionFinanciada?: boolean;
   kmAnualesContrato: number;
   excesoKm: number;
   /** Cuota mensual de la oferta, si se conoce: el TIN se deduce de ella */

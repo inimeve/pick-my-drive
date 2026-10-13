@@ -168,6 +168,8 @@ export interface CondicionesPrestamo {
   tin: number;
   plazoMeses: number;
   comisionApertura: number;
+  /** La comisión de apertura se suma a lo financiado en lugar de pagarse al firmar */
+  comisionFinanciada?: boolean;
   comisionCancelacion: number;
   /** Si la oferta fija la cuota, se usa en lugar de calcularla y el TIN se deduce */
   cuotaOfertada?: number;
@@ -184,6 +186,8 @@ export interface CondicionesCuotaFinal {
   /** Cuota final garantizada que se paga (o se compensa con el coche) al final del plazo */
   cuotaFinal: number;
   comisionApertura: number;
+  /** La comisión de apertura se suma a lo financiado en lugar de pagarse al firmar */
+  comisionFinanciada?: boolean;
   comisionCancelacion: number;
   kmAnualesContrato: number;
   excesoKm: number;

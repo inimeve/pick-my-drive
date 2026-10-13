@@ -167,6 +167,7 @@ function editorOferta(e: Escenario): HTMLElement {
       n("Plazo", "plazoMeses", { sufijo: "meses" });
       if (c.modalidad === "cuota_final") n("Cuota final", "cuotaFinal", { paso: 100, sufijo: "€" });
       n("Comisión de apertura", "comisionApertura", { porcentaje: true, sufijo: "%" });
+      campos.push(campoCheck("Comisión financiada (se suma al préstamo)", c.comisionFinanciada ?? false, (v) => set("comisionFinanciada")(v || undefined)));
       n("Comisión de cancelación", "comisionCancelacion", { porcentaje: true, sufijo: "%" });
       campos.push(
         campoNumero("Cuota ofertada (opcional)", c.cuotaOfertada ?? 0, (v) => set("cuotaOfertada")(v > 0 ? v : undefined), {

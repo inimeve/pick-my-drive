@@ -142,6 +142,26 @@ describe("préstamo", () => {
     expect(simular(prestamo(0.08), coche, ctx).caja[0]).toBeCloseTo(5000, 6);
   });
 
+  describe("con la comisión de apertura financiada", () => {
+    const conComision = (tin: number, financiada: boolean) => {
+      const e = prestamo(tin);
+      return { ...e, condiciones: { ...e.condiciones, comisionApertura: 0.04, comisionFinanciada: financiada } } as Escenario;
+    };
+
+    it("no se paga el primer día, pero cuenta como comisión", () => {
+      const r = simular(conComision(0.08, true), coche, ctx);
+      expect(r.caja[0]).toBeCloseTo(5000, 6);
+      expect(r.desglose.comisiones).toBeCloseTo(25000 * 0.04, 6);
+      expect(r.financiacion!.principal).toBeCloseTo(25000 * 1.04, 6);
+    });
+
+    it("al 0% cuesta lo mismo que pagarla al firmar", () => {
+      const a = simular(conComision(0, false), coche, ctx);
+      const b = simular(conComision(0, true), coche, ctx);
+      expect(b.costeNeto[60]!).toBeCloseTo(a.costeNeto[60]!, 6);
+    });
+  });
+
   describe("cancelado antes de tiempo", () => {
     const cancelado = (mes: number) => {
       const e = prestamo(0.08, 0.01);
