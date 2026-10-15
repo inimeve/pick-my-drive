@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ford Focus ST: quedármelo</title>
+<style>
+  @page { size: A4; margin: 0; }
+  :root {
+    color-scheme: light;
+    --tinta: #0b0b0b;
+    --tinta-2: #52514e;
+    --tinta-3: #7a7974;
+    --linea: #e4e3df;
+    --portada: #f3f3f3;
+    --coche: #133a7c;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #e9e8e4; }
+  body {
+    font: 8.5pt/1.35 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--tinta);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  h1, h2, p { margin: 0; }
+  .hoja {
+    width: 210mm;
+    height: 297mm;
+    margin: 10mm auto;
+    padding: 0 13mm 8mm;
+    background: #fff;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.12);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 2.2mm;
+  }
+  @media print {
+    html, body { background: #fff; }
+    .hoja { margin: 0; box-shadow: none; }
+  }
+  @media screen and (max-width: 220mm) {
+    .hoja { width: auto; height: auto; margin: 0; padding: 0 16px 16px; box-shadow: none; }
+    .portada { margin: 0 -16px; grid-template-columns: 1fr; height: auto; }
+    .foto { height: 50vw; }
+    .titulo { padding: 16px; }
+    .tabla-envoltorio { overflow-x: auto; }
+  }
+  h2 {
+    font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--tinta-2); font-weight: 600;
+  }
+  .portada { margin: 0 -13mm; display: grid; grid-template-columns: 1.35fr 1fr; background: var(--portada); height: 42mm; }
+  .foto { background: url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Ford_Focus_Turnier_ST_Mk_IV_IMG_5412.jpg/1280px-Ford_Focus_Turnier_ST_Mk_IV_IMG_5412.jpg") no-repeat 50% 60% / cover; }
+  .foto.fundido {
+    -webkit-mask-image: linear-gradient(to right, #000 80%, transparent 100%), linear-gradient(to bottom, #000 82%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, #000 80%, transparent 100%), linear-gradient(to bottom, #000 82%, transparent 100%);
+    mask-composite: intersect;
+  }
+  .titulo { padding: 2mm 13mm 2mm 0; display: flex; flex-direction: column; justify-content: center; gap: 1mm; }
+  .marca { font-size: 8pt; letter-spacing: 0.3em; color: var(--coche); font-weight: 700; }
+  .titulo h1 { font-size: 19pt; line-height: 1.05; letter-spacing: -0.02em; }
+  .fecha { color: var(--tinta-2); }
+  .ficha { margin: 1.5mm 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.6mm 3mm; font-size: 8pt; }
+  .ficha dt { color: var(--tinta-3); }
+  .ficha dd { margin: 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 7.8pt; font-variant-numeric: tabular-nums; }
+  thead th {
+    text-align: right; font-weight: 600; color: var(--tinta-2); font-size: 7pt;
+    padding: 0 0.9mm 1.2mm; border-bottom: 0.75pt solid var(--tinta); white-space: nowrap; vertical-align: bottom;
+  }
+  thead th:first-child, tbody th { text-align: left; padding-left: 0; }
+  tbody th { font-weight: 600; padding: 0.7mm 0.9mm 0.7mm 0; white-space: nowrap; }
+  tbody td { text-align: right; padding: 0.7mm 0.9mm; white-space: nowrap; }
+  tbody tr { border-bottom: 0.5pt solid var(--linea); }
+  .fuerte { font-weight: 650; }
+  .sub { display: block; font-weight: 400; font-size: 6.6pt; color: var(--tinta-3); }
+  .nota { font-size: 6.6pt; line-height: 1.3; color: var(--tinta-2); }
+  .nota p + p { margin-top: 1mm; }
+  .barras { display: grid; gap: 0.2mm; font-size: 7.6pt; }
+  .barra-fila { display: grid; grid-template-columns: 66mm 1fr; align-items: center; gap: 3mm; }
+  .barra-etq { white-space: nowrap; }
+  .barra-etq { text-align: right; color: var(--tinta-2); }
+  .barra-pista { display: flex; align-items: center; gap: 2mm; }
+  .barra { height: 2.3mm; background: var(--coche); border-radius: 0 4px 4px 0; }
+  .barra-val { font-weight: 650; font-variant-numeric: tabular-nums; }
+  .pila { display: flex; height: 2.3mm; border-radius: 0 4px 4px 0; overflow: hidden; }
+  .trozo.t0 { background: var(--color); }
+  .trozo.t1 { background: color-mix(in srgb, var(--color) 55%, #fff); }
+  .trozo.t2 { background: color-mix(in srgb, var(--color) 25%, #fff); }
+  .barra-fila:not(.propia) .barra-etq { color: var(--tinta-3); }
+  .barra-fila.propia .barra-etq { color: var(--tinta); font-weight: 600; }
+  .leyenda { display: flex; gap: 4mm; font-size: 6.8pt; color: var(--tinta-2); }
+  table.cambio { width: auto; min-width: 120mm; }
+  table.cambio thead th { text-align: right; }
+  table.cambio tbody th { font-weight: 400; }
+  table.cambio td { min-width: 34mm; }
+  table.cambio tr.fuerte th, table.cambio tr.fuerte td { font-weight: 650; color: var(--coche); }
+  .leyenda i { display: inline-block; width: 3mm; height: 2.3mm; margin-right: 1mm; vertical-align: -0.3mm; background: var(--coche); }
+  .energia { display: grid; grid-template-columns: 32mm 1fr; column-gap: 4mm; row-gap: 1.2mm; align-items: center; background: var(--portada); margin: -2.6mm -13mm 0; padding: 2mm 13mm 2.5mm; border-top: 0.5pt solid var(--linea); }
+  .energia h2 { line-height: 1.2; }
+  .energia .nota { grid-column: 1 / -1; }
+  .cifras { display: flex; gap: 5mm; align-items: baseline; }
+  .cifras b { display: block; font-size: 11pt; color: var(--coche); font-variant-numeric: tabular-nums; }
+  .cifras span { font-size: 6.8pt; color: var(--tinta-2); }
+  .cifras .total { padding-left: 5mm; border-left: 0.5pt solid var(--linea); }
+  .pie { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; padding-top: 1.5mm; border-top: 0.5pt solid var(--linea); }
+  .pie ul { margin: 1mm 0 0; padding-left: 4mm; font-size: 6.8pt; line-height: 1.2; }
+  .pie li + li { margin-top: 0.1mm; }
+</style>
+</head>
+<body>
+<main class="hoja">
+  <header class="portada">
+    <div class="foto fundido" role="img" aria-label="Ford Focus ST Sportbreak negro"></div>
+    <div class="titulo">
+      <p class="marca">Ford</p>
+      <h1>Focus ST Sportbreak</h1>
+      <p class="fecha">Quedármelo · 14 de octubre de 2026</p>
+      <dl class="ficha"><dt>Motor</dt><dd>2.3 EcoBoost · 280 CV</dd><dt>Año y km</dt><dd>ene-2025 · unos 17.000 km</dd><dt>Consumo</dt><dd>8,5 l/100 km reales</dd><dt>Mantenimiento</dt><dd>incluido hasta ene-2029</dd></dl>
+    </div>
+  </header>
+
+  <section class="energia">
+    <h2>Energía</h2>
+    <div class="cifras">
+      <div><b>15,7&nbsp;€</b><span>cada 100 km</span></div>
+      <div><b>197 €</b><span>al mes</span></div>
+      <div><b>2.359 €</b><span>al año</span></div>
+      <div class="total"><b>9.435 €</b><span>en 4 años</span></div>
+    </div>
+    <h2>Tenerlo 4 años</h2>
+    <div class="cifras">
+      <div><b>3.605 €</b><span>Seguro</span></div><div><b>1.040 €</b><span>Mantenimiento</span></div><div><b>1.545 €</b><span>Neumáticos</span></div><div><b>972 €</b><span>ITV e impuesto</span></div><div><b>781 €</b><span>Averías</span></div>
+      <div class="total"><b>7.943 €</b><span>en total</span></div>
+    </div>
+    <p class="nota"><strong>Energía:</strong> 15.000 km al año, todo con gasolina (8,5 l/100 km reales, a 1,85 €/l). A precios de hoy (Bizkaia, 1-oct-2026). <strong>Tenerlo:</strong> Seguro a todo riesgo los 4 años, neumáticos (Pilot Sport 4S de 19") y averías estimados, con un 3 % de inflación al año. Mantenimiento incluido hasta enero de 2029: solo cuentan los últimos 21 meses del periodo. ITV a los 4 años e impuesto de circulación de Bilbao. Garantía hasta los 4 años del coche (enero de 2029): averías solo desde entonces, los últimos 21 meses. Ni la energía ni estos costes están sumados al coste neto: son iguales en todas las opciones.</p>
+  </section>
+
+  <h2>Las opciones</h2>
+  <div class="tabla-envoltorio">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Opción</th>
+          <th scope="col">Precio</th>
+          <th scope="col">El primer día</th>
+          <th scope="col">Cuotas</th>
+          <th scope="col">Última cuota<br>o cancelación</th>
+          <th scope="col">TIN</th>
+          <th scope="col">Pagado hasta<br>el mes 48</th>
+          <th scope="col">Pagado si te<br>lo quedas</th>
+          <th scope="col" class="fuerte">Coste neto<br>a 4 años</th>
+        </tr>
+      </thead>
+      <tbody><tr>
+      <th scope="row">Quedármelo<span class="sub">Ya es mío · sin pagar nada</span></th>
+      <td>28.000 €</td>
+      <td>0 €</td>
+      <td>—</td>
+      <td>—</td>
+      <td>—</td>
+      <td>0 €<span class="sub">ya es tuyo</span></td>
+      <td>0 €</td>
+      <td class="fuerte">9.629 €</td>
+    </tr></tbody>
+    </table>
+  </div>
+  <p class="nota">Precio: lo que sacaría vendiéndolo hoy, unos 28.000 € (el 75 % de los 37.000 € que costó, a los 20 meses; estimación: hay que tasarlo). Lo ya pagado no cuenta: quedármelo es renunciar a esos 28.000 €. No hay nada que financiar.</p>
+  <p class="nota"><strong>Sin cuotas:</strong> el coche ya es mío. Su coste a 4 años es lo que pierde de valor, más la energía y lo de tenerlo, que van arriba.</p>
+
+  <h2>Coste neto a 4 años</h2>
+  <div class="barras" role="img" aria-label="Coste neto a 4 años de cada opción"><div class="barra-fila" title="Quedármelo: 9.629 €">
+      <span class="barra-etq">Quedármelo · ya es mío</span>
+      <span class="barra-pista"><span class="barra" style="width:96.29200000000004%"></span><span class="barra-val">9.629 €</span></span>
+    </div></div>
+
+  <h2>Todo sumado a 4 años: el Focus frente a los dos BMW</h2>
+  <div class="barras" role="img" aria-label="Coste neto, energía y tenerlo, sumados a 4 años, de cada opción de cada coche"><div class="barra-fila propia" title="Focus ST · quedármelo: 27.007 €">
+      <span class="barra-etq">Focus ST · quedármelo</span>
+      <span class="barra-pista"><span class="pila" style="width:54.0139645482314%; --color:#133a7c"><span class="trozo t0" style="flex:9629.200000000004"></span><span class="trozo t1" style="flex:9435.000000000002"></span><span class="trozo t2" style="flex:7942.782274115695"></span></span><span class="barra-val">27.007 €</span></span>
+    </div><div class="barra-fila" title="330i G21 · al contado: 31.452 €">
+      <span class="barra-etq">330i G21 · al contado</span>
+      <span class="barra-pista"><span class="pila" style="width:62.90396896975741%; --color:#1c69d4"><span class="trozo t0" style="flex:10213.137674999998"></span><span class="trozo t1" style="flex:8103"></span><span class="trozo t2" style="flex:13135.846809878707"></span></span><span class="barra-val">31.452 €</span></span>
+    </div><div class="barra-fila" title="330i G21 · préstamo a 72 meses: 36.764 €">
+      <span class="barra-etq">330i G21 · préstamo a 72 meses</span>
+      <span class="barra-pista"><span class="pila" style="width:73.5271663985217%; --color:#1c69d4"><span class="trozo t0" style="flex:15524.736389382146"></span><span class="trozo t1" style="flex:8103"></span><span class="trozo t2" style="flex:13135.846809878707"></span></span><span class="barra-val">36.764 €</span></span>
+    </div><div class="barra-fila" title="540i G31 · al contado: 41.220 €">
+      <span class="barra-etq">540i G31 · al contado</span>
+      <span class="barra-pista"><span class="pila" style="width:82.44068567580544%; --color:#4f5a66"><span class="trozo t0" style="flex:11520.649999999994"></span><span class="trozo t1" style="flex:11544.000000000002"></span><span class="trozo t2" style="flex:18155.69283790273"></span></span><span class="barra-val">41.220 €</span></span>
+    </div><div class="barra-fila" title="540i G31 · préstamo a 72 meses: 46.695 €">
+      <span class="barra-etq">540i G31 · préstamo a 72 meses</span>
+      <span class="barra-pista"><span class="pila" style="width:93.3907507177624%; --color:#4f5a66"><span class="trozo t0" style="flex:16995.682520978473"></span><span class="trozo t1" style="flex:11544.000000000002"></span><span class="trozo t2" style="flex:18155.69283790273"></span></span><span class="barra-val">46.695 €</span></span>
+    </div></div>
+  <p class="leyenda"><span><i></i>Coste neto</span><span><i style="opacity:.6"></i>Energía</span><span><i style="opacity:.3"></i>Tenerlo (seguro, mantenimiento, neumáticos, ITV e impuesto, averías)</span></p>
+  <p class="nota">Aquí sí se suman la energía y lo de tenerlo, porque cambian de un coche a otro. Cada coche con su color; en negrita, las opciones de esta hoja. Quedarse el Focus no cuesta dinero el primer día, pero sí lo que deja de valer: renunciar a venderlo hoy.</p>
+
+  <footer class="pie">
+    <div>
+      <h2>A tener en cuenta</h2>
+      <ul><li>Valor de venta estimado: una tasación real puede moverlo mucho.</li><li>Garantía y mantenimiento incluidos hasta enero de 2029; después, 21 meses a mi cargo.</li><li>Valor a los 4 años: con una pérdida del 10 % al año (supuesto).</li><li>Es el más nuevo de los tres: el que menos averías debería dar.</li></ul>
+    </div>
+    <div class="nota">
+      <p><strong>Coste neto a 4 años:</strong> lo pagado durante 48 meses, menos lo que valdría el coche al final (unos 18.400 €, con la pérdida del 10 % al año supuesta sobre lo que vale hoy, 28.000 €). No cuenta lo que habría rendido el dinero ni incluye energía, seguro, mantenimiento ni impuestos, que son iguales en todas las opciones. Con 15.000 km al año, sin exceso de km.</p>
+      <p>Fuentes: ficha de km77 (CO2 y neumáticos), Spritmonitor y auto motor und sport (consumo); valor de venta y costes estimados. Foto: Wikimedia Commons (CC BY-SA 4.0). Cálculos de pick-my-drive.</p>
+    </div>
+  </footer>
+</main>
+</body>
+</html>

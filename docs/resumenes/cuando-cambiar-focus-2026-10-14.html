@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cuándo cambiar el Focus por un BMW</title>
+<style>
+  @page { size: A4; margin: 0; }
+  :root {
+    color-scheme: light;
+    --tinta: #0b0b0b;
+    --tinta-2: #52514e;
+    --tinta-3: #7a7974;
+    --linea: #e4e3df;
+    --portada: #f3f3f3;
+    --coche: #133a7c;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #e9e8e4; }
+  body {
+    font: 8.5pt/1.35 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--tinta);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  h1, h2, p { margin: 0; }
+  .hoja {
+    width: 210mm;
+    height: 297mm;
+    margin: 10mm auto;
+    padding: 0 13mm 8mm;
+    background: #fff;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.12);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 2.2mm;
+  }
+  @media print {
+    html, body { background: #fff; }
+    .hoja { margin: 0; box-shadow: none; }
+  }
+  @media screen and (max-width: 220mm) {
+    .hoja { width: auto; height: auto; margin: 0; padding: 0 16px 16px; box-shadow: none; }
+    .portada { margin: 0 -16px; grid-template-columns: 1fr; height: auto; }
+    .foto { height: 50vw; }
+    .titulo { padding: 16px; }
+    .tabla-envoltorio { overflow-x: auto; }
+  }
+  h2 {
+    font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--tinta-2); font-weight: 600;
+  }
+  .portada { margin: 0 -13mm; display: grid; grid-template-columns: 1.35fr 1fr; background: var(--portada); height: 42mm; }
+  .foto {
+    background: url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Ford_Focus_Turnier_ST_Mk_IV_IMG_5412.jpg/1280px-Ford_Focus_Turnier_ST_Mk_IV_IMG_5412.jpg") no-repeat 50% 60% / cover;
+    -webkit-mask-image: linear-gradient(to right, #000 80%, transparent 100%), linear-gradient(to bottom, #000 82%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, #000 80%, transparent 100%), linear-gradient(to bottom, #000 82%, transparent 100%);
+    mask-composite: intersect;
+  }
+  .titulo { padding: 2mm 13mm 2mm 0; display: flex; flex-direction: column; justify-content: center; gap: 1mm; }
+  .marca { font-size: 8pt; letter-spacing: 0.3em; color: var(--coche); font-weight: 700; }
+  .titulo h1 { font-size: 17.5pt; line-height: 1.05; letter-spacing: -0.02em; }
+  .fecha { color: var(--tinta-2); }
+  .ficha { margin: 1.5mm 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.6mm 3mm; font-size: 8pt; }
+  .ficha dt { color: var(--tinta-3); }
+  .ficha dd { margin: 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 7.8pt; font-variant-numeric: tabular-nums; }
+  thead th {
+    text-align: right; font-weight: 600; color: var(--tinta-2); font-size: 7pt;
+    padding: 0 0.9mm 1.2mm; border-bottom: 0.75pt solid var(--tinta); white-space: nowrap; vertical-align: bottom;
+  }
+  thead th:first-child, tbody th { text-align: left; padding-left: 0; }
+  thead th.grupo { text-align: center; border-bottom: 0.5pt solid var(--linea); padding-bottom: 0.6mm; }
+  tbody th { font-weight: 600; padding: 0.6mm 0.9mm 0.6mm 0; white-space: nowrap; }
+  tbody td { text-align: right; padding: 0.6mm 0.9mm; white-space: nowrap; }
+  tbody tr { border-bottom: 0.5pt solid var(--linea); }
+  tbody tr.dulce { background: #f3f7ee; }
+  .fuerte { font-weight: 650; }
+  .sub { font-weight: 400; font-size: 6.6pt; color: var(--tinta-3); }
+  .nota { font-size: 6.6pt; line-height: 1.3; color: var(--tinta-2); }
+  .nota p + p { margin-top: 1mm; }
+  .conclusion { background: var(--portada); margin: 0 -13mm; padding: 2.2mm 13mm; border-bottom: 0.5pt solid var(--linea); }
+  .conclusion ul { margin: 1mm 0 0; padding-left: 4mm; font-size: 8pt; line-height: 1.3; }
+  .conclusion li + li { margin-top: 0.8mm; }
+  svg { display: block; font: 3.1px system-ui, sans-serif; fill: var(--tinta-3); }
+  svg .marca-g { font-size: 3px; }
+  .leyenda { display: flex; flex-wrap: wrap; gap: 1mm 4mm; font-size: 6.8pt; color: var(--tinta-2); }
+  .leyenda i { display: inline-block; width: 4mm; height: 0; margin-right: 1mm; vertical-align: 0.6mm; border-top: 0.8mm solid; }
+  .leyenda i.fina { border-top: 0.45mm dashed; }
+  .pie { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; padding-top: 1.5mm; border-top: 0.5pt solid var(--linea); }
+  .pie ul { margin: 1mm 0 0; padding-left: 4mm; font-size: 6.8pt; line-height: 1.2; }
+  .pie li + li { margin-top: 0.1mm; }
+</style>
+</head>
+<body>
+<main class="hoja">
+  <header class="portada">
+    <div class="foto" role="img" aria-label="Ford Focus ST Sportbreak negro"></div>
+    <div class="titulo">
+      <p class="marca">FORD → BMW</p>
+      <h1>¿Cuándo cambiar el Focus?</h1>
+      <p class="fecha">Próximos 4 años · 14 de octubre de 2026</p>
+      <dl class="ficha">
+        <dt>El Focus vale</dt><dd>hoy, unos 28.000 €</dd>
+        <dt>Su garantía</dt><dd>hasta ene-2029 (mes 28)</dd>
+        <dt>Se compara</dt><dd>24 meses con cada coche</dd>
+        <dt>Pagado</dt><dd>al contado (la diferencia)</dd>
+      </dl>
+    </div>
+  </header>
+
+  <section class="conclusion">
+    <h2>Lo que sale</h2>
+    <ul><li><strong>330i G21:</strong> si cambias hoy, cada mes con el BMW cuesta <strong>96 € más</strong> que con el Focus. Esperando a <strong>nov-2028</strong> baja a <strong>30 €</strong>; esperar más ya solo lo bajaría, como mucho, a 18 €.</li><li><strong>540i G31:</strong> si cambias hoy, cada mes con el BMW cuesta <strong>288 € más</strong> que con el Focus. Esperando a <strong>feb-2029</strong> baja a <strong>217 €</strong>; esperar más ya solo lo bajaría, como mucho, a 204 €.</li><li><strong>En los dos, lo mejor es cambiar entre nov-2028 y feb-2029</strong>, justo antes de que el Focus empiece a dar gastos: antes cuesta más al mes y después ya no se ahorra más. Si te compra el Focus un concesionario (8 % menos), el BMW sale unos 73 € al mes más caro en esos meses.</li></ul>
+  </section>
+
+  <h2>Euros de más al mes con el BMW que con el Focus, según cuándo cambies</h2>
+  <div class="grafica"><svg viewBox="0 0 184 44" width="100%" role="img" aria-label="330i G21, vendiendo el Focus a un particular, 330i G21, vendiéndolo a un concesionario, 540i G31, vendiendo el Focus a un particular, 540i G31, vendiéndolo a un concesionario"><line x1="10" x2="176" y1="37" y2="37" stroke="#e4e3df" stroke-width="0.25"/><text x="8.5" y="37.9" text-anchor="end">0</text><line x1="10" x2="176" y1="28.5" y2="28.5" stroke="#e4e3df" stroke-width="0.25"/><text x="8.5" y="29.4" text-anchor="end">100</text><line x1="10" x2="176" y1="20" y2="20" stroke="#e4e3df" stroke-width="0.25"/><text x="8.5" y="20.9" text-anchor="end">200</text><line x1="10" x2="176" y1="11.5" y2="11.5" stroke="#e4e3df" stroke-width="0.25"/><text x="8.5" y="12.4" text-anchor="end">300</text><line x1="10" x2="176" y1="3" y2="3" stroke="#e4e3df" stroke-width="0.25"/><text x="8.5" y="3.9" text-anchor="end">400</text><text x="10" y="42.5" text-anchor="middle">oct-2026</text><text x="33.71428571428571" y="42.5" text-anchor="middle">abr-2027</text><text x="57.42857142857142" y="42.5" text-anchor="middle">oct-2027</text><text x="81.14285714285714" y="42.5" text-anchor="middle">abr-2028</text><text x="104.85714285714285" y="42.5" text-anchor="middle">oct-2028</text><text x="128.57142857142856" y="42.5" text-anchor="middle">abr-2029</text><text x="152.28571428571428" y="42.5" text-anchor="middle">oct-2029</text><text x="176" y="42.5" text-anchor="middle">abr-2030</text><line x1="120.66666666666666" x2="120.66666666666666" y1="3" y2="37" stroke="#a3192b" stroke-width="0.35" stroke-dasharray="1 0.8"/><text x="121.66666666666666" y="6" fill="#a3192b" class="marca-g">acaba la garantía del Focus</text><polyline fill="none" stroke="#1c69d4" stroke-width="0.8" points="10.00,28.88 13.95,28.86 17.90,28.80 21.86,28.74 25.81,28.90 29.76,29.14 33.71,29.38 37.67,29.63 41.62,29.87 45.57,30.11 49.52,30.36 53.48,30.61 57.43,30.85 61.38,31.15 65.33,31.40 69.29,31.64 73.24,31.91 77.19,32.19 81.14,32.47 85.10,32.75 89.05,33.03 93.00,33.31 96.95,33.60 100.90,33.88 104.86,34.15 108.81,34.48 112.76,34.77 116.71,35.05 120.67,35.38 124.62,35.39 128.57,35.40 132.52,35.42 136.48,35.43 140.43,35.45 144.38,35.46 148.33,35.48 152.29,35.25 156.24,35.31 160.19,35.33 164.14,35.34 168.10,35.36 172.05,35.38 176.00,35.39"/><polyline fill="none" stroke="#1c69d4" stroke-width="0.45" stroke-dasharray="1.4 1" points="10.00,20.94 13.95,21.00 17.90,21.00 21.86,21.01 25.81,21.24 29.76,21.55 33.71,21.86 37.67,22.17 41.62,22.48 45.57,22.78 49.52,23.09 53.48,23.40 57.43,23.71 61.38,24.07 65.33,24.38 69.29,24.69 73.24,25.02 77.19,25.36 81.14,25.70 85.10,26.04 89.05,26.37 93.00,26.71 96.95,27.06 100.90,27.40 104.86,27.72 108.81,28.11 112.76,28.45 116.71,28.80 120.67,29.17 124.62,29.24 128.57,29.31 132.52,29.38 136.48,29.44 140.43,29.51 144.38,29.58 148.33,29.64 152.29,29.47 156.24,29.58 160.19,29.65 164.14,29.71 168.10,29.78 172.05,29.84 176.00,29.91"/><polyline fill="none" stroke="#4f5a66" stroke-width="0.8" points="10.00,12.54 13.95,12.52 17.90,12.46 21.86,12.40 25.81,12.56 29.76,12.80 33.71,13.04 37.67,13.27 41.62,13.51 45.57,13.75 49.52,13.99 53.48,14.23 57.43,14.46 61.38,14.74 65.33,14.98 69.29,15.22 73.24,15.48 77.19,15.75 81.14,16.02 85.10,16.29 89.05,16.56 93.00,16.83 96.95,17.10 100.90,17.37 104.86,17.40 108.81,17.72 112.76,17.99 116.71,18.26 120.67,18.56 124.62,18.56 128.57,18.56 132.52,18.55 136.48,18.55 140.43,18.55 144.38,18.54 148.33,18.54 152.29,18.52 156.24,18.75 160.19,18.94 164.14,19.12 168.10,19.30 172.05,19.49 176.00,19.67"/><polyline fill="none" stroke="#4f5a66" stroke-width="0.45" stroke-dasharray="1.4 1" points="10.00,4.61 13.95,4.66 17.90,4.67 21.86,4.67 25.81,4.90 29.76,5.20 33.71,5.51 37.67,5.81 41.62,6.12 45.57,6.42 49.52,6.72 53.48,7.03 57.43,7.32 61.38,7.67 65.33,7.97 69.29,8.27 73.24,8.59 77.19,8.92 81.14,9.24 85.10,9.57 89.05,9.90 93.00,10.23 96.95,10.56 100.90,10.88 104.86,10.97 108.81,11.35 112.76,11.67 116.71,12.00 120.67,12.36 124.62,12.41 128.57,12.46 132.52,12.51 136.48,12.56 140.43,12.61 144.38,12.66 148.33,12.70 152.29,12.74 156.24,13.02 160.19,13.25 164.14,13.49 168.10,13.72 172.05,13.95 176.00,14.19"/></svg></div>
+  <p class="leyenda"><span><i style="border-color:#1c69d4"></i>330i G21</span><span><i style="border-color:#4f5a66"></i>540i G31</span><span><i class="fina" style="border-color:#7a7974"></i>vendiendo el Focus a un concesionario (8 % menos)</span></p>
+
+  <h2>Cuánto cuesta cada coche al mes durante los 24 meses siguientes</h2>
+  <div class="grafica"><svg viewBox="0 0 184 34" width="100%" role="img" aria-label="Focus, 330i G21, 540i G31"><line x1="10" x2="176" y1="27" y2="27" stroke="#e4e3df" stroke-width="0.25"/><text x="8.5" y="27.9" text-anchor="end">0</text><line x1="10" x2="176" y1="22.200000000000003" y2="22.200000000000003" stroke="#e4e3df" stroke-width="0.25"/><text x="8.5" y="23.1" text-anchor="end">200</text><line x1="10" x2="176" y1="17.4" y2="17.4" stroke="#e4e3df" stroke-width="0.25"/><text x="8.5" y="18.299999999999997" text-anchor="end">400</text><line x1="10" x2="176" y1="12.600000000000001" y2="12.600000000000001" stroke="#e4e3df" stroke-width="0.25"/><text x="8.5" y="13.500000000000002" text-anchor="end">600</text><line x1="10" x2="176" y1="7.799999999999999" y2="7.799999999999999" stroke="#e4e3df" stroke-width="0.25"/><text x="8.5" y="8.7" text-anchor="end">800</text><line x1="10" x2="176" y1="3" y2="3" stroke="#e4e3df" stroke-width="0.25"/><text x="8.5" y="3.9" text-anchor="end">1000</text><text x="10" y="32.5" text-anchor="middle">oct-2026</text><text x="33.71428571428571" y="32.5" text-anchor="middle">abr-2027</text><text x="57.42857142857142" y="32.5" text-anchor="middle">oct-2027</text><text x="81.14285714285714" y="32.5" text-anchor="middle">abr-2028</text><text x="104.85714285714285" y="32.5" text-anchor="middle">oct-2028</text><text x="128.57142857142856" y="32.5" text-anchor="middle">abr-2029</text><text x="152.28571428571428" y="32.5" text-anchor="middle">oct-2029</text><text x="176" y="32.5" text-anchor="middle">abr-2030</text><polyline fill="none" stroke="#133a7c" stroke-width="0.8" points="10.00,13.89 13.95,13.90 17.90,13.93 21.86,13.96 25.81,13.92 29.76,13.86 33.71,13.80 37.67,13.74 41.62,13.68 45.57,13.62 49.52,13.56 53.48,13.49 57.43,13.43 61.38,13.35 65.33,13.29 69.29,13.22 73.24,13.15 77.19,13.08 81.14,13.00 85.10,12.93 89.05,12.85 93.00,12.77 96.95,12.70 100.90,12.62 104.86,12.54 108.81,12.44 112.76,12.36 116.71,12.28 120.67,12.19 124.62,12.19 128.57,12.18 132.52,12.18 136.48,12.17 140.43,12.16 144.38,12.16 148.33,12.15 152.29,12.14 156.24,12.12 160.19,12.11 164.14,12.10 168.10,12.09 172.05,12.08 176.00,12.07"/><polyline fill="none" stroke="#1c69d4" stroke-width="0.8" points="10.00,11.59 13.95,11.60 17.90,11.61 21.86,11.62 25.81,11.63 29.76,11.64 33.71,11.65 37.67,11.66 41.62,11.67 45.57,11.68 49.52,11.68 53.48,11.69 57.43,11.70 61.38,11.70 65.33,11.71 69.29,11.71 73.24,11.72 77.19,11.72 81.14,11.72 85.10,11.73 89.05,11.73 93.00,11.73 96.95,11.73 100.90,11.74 104.86,11.73 108.81,11.73 112.76,11.73 116.71,11.73 120.67,11.73 124.62,11.73 128.57,11.73 132.52,11.73 136.48,11.73 140.43,11.73 144.38,11.72 148.33,11.72 152.29,11.65 156.24,11.64 160.19,11.64 164.14,11.64 168.10,11.63 172.05,11.63 176.00,11.62"/><polyline fill="none" stroke="#4f5a66" stroke-width="0.8" points="10.00,6.98 13.95,6.99 17.90,7.00 21.86,7.01 25.81,7.02 29.76,7.03 33.71,7.04 37.67,7.04 41.62,7.05 45.57,7.06 49.52,7.06 53.48,7.07 57.43,7.07 61.38,7.07 65.33,7.07 69.29,7.07 73.24,7.08 77.19,7.08 81.14,7.08 85.10,7.08 89.05,7.08 93.00,7.08 96.95,7.07 100.90,7.07 104.86,7.00 108.81,7.00 112.76,7.00 116.71,6.99 120.67,6.99 124.62,6.98 128.57,6.97 132.52,6.97 136.48,6.96 140.43,6.95 144.38,6.95 148.33,6.94 152.29,6.92 156.24,6.97 160.19,7.01 164.14,7.05 168.10,7.10 172.05,7.14 176.00,7.18"/></svg></div>
+  <p class="leyenda"><span><i style="border-color:#133a7c"></i>Focus ST</span><span><i style="border-color:#1c69d4"></i>330i G21</span><span><i style="border-color:#4f5a66"></i>540i G31</span><span>Euros al mes: lo que pierde de valor más energía y tenerlo</span></p>
+
+  <h2>Mes a mes</h2>
+  <div class="tabla-envoltorio">
+    <table>
+      <thead>
+        <tr><th></th><th></th><th scope="colgroup" colspan="3" class="grupo">330i G21</th><th scope="colgroup" colspan="3" class="grupo">540i G31</th></tr>
+        <tr>
+          <th scope="col">Si cambias en</th>
+          <th scope="col">El Focus vale</th>
+          <th scope="col">Precio</th><th scope="col">Pones tú</th><th scope="col" class="fuerte">Más al mes</th><th scope="col">Precio</th><th scope="col">Pones tú</th><th scope="col" class="fuerte">Más al mes</th>
+        </tr>
+      </thead>
+      <tbody><tr><th scope="row">oct-2026 <span class="sub">mes 0 · hoy</span></th><td>28.000 €</td><td>32.500 €</td><td>4.500 €</td><td class="fuerte">+96 €</td><td>33.500 €</td><td>5.500 €</td><td class="fuerte">+288 €</td></tr><tr><th scope="row">oct-2027 <span class="sub">mes 12</span></th><td>25.200 €</td><td>29.575 €</td><td>4.375 €</td><td class="fuerte">+72 €</td><td>30.150 €</td><td>4.950 €</td><td class="fuerte">+265 €</td></tr><tr><th scope="row">abr-2028 <span class="sub">mes 18</span></th><td>23.907 €</td><td>28.213 €</td><td>4.306 €</td><td class="fuerte">+53 €</td><td>28.603 €</td><td>4.696 €</td><td class="fuerte">+247 €</td></tr><tr><th scope="row">oct-2028 <span class="sub">mes 24</span></th><td>22.680 €</td><td>26.913 €</td><td>4.233 €</td><td class="fuerte">+34 €</td><td>27.135 €</td><td>4.455 €</td><td class="fuerte">+231 €</td></tr><tr class="dulce"><th scope="row">nov-2028 <span class="sub">mes 25</span></th><td>22.482 €</td><td>26.703 €</td><td>4.221 €</td><td class="fuerte">+30 €</td><td>26.898 €</td><td>4.416 €</td><td class="fuerte">+227 €</td></tr><tr class="dulce"><th scope="row">feb-2029 <span class="sub">mes 28 · acaba la garantía del Focus</span></th><td>21.897 €</td><td>26.080 €</td><td>4.183 €</td><td class="fuerte">+19 €</td><td>26.199 €</td><td>4.301 €</td><td class="fuerte">+217 €</td></tr><tr><th scope="row">oct-2029 <span class="sub">mes 36</span></th><td>20.412 €</td><td>24.491 €</td><td>4.079 €</td><td class="fuerte">+21 €</td><td>24.422 €</td><td>4.010 €</td><td class="fuerte">+217 €</td></tr><tr><th scope="row">abr-2030 <span class="sub">mes 42</span></th><td>19.365 €</td><td>23.363 €</td><td>3.998 €</td><td class="fuerte">+19 €</td><td>23.168 €</td><td>3.804 €</td><td class="fuerte">+204 €</td></tr></tbody>
+    </table>
+  </div>
+  <p class="nota">En verde, el mes desde el que esperar más ya no baja el coste de más al mes en más de 15 € (cada coche tiene el suyo). «Pones tú» es el precio del BMW menos lo que da el Focus. «Más al mes» es el coste de usar el BMW 24 meses menos el de usar el Focus esos mismos meses, dividido entre 24.</p>
+
+  <footer class="pie">
+    <div>
+      <h2>Por qué baja y se queda plano</h2>
+      <ul>
+        <li>El Focus cuesta 546 € al mes hoy y 617 € al mes si lo mantienes hasta el mes 28: cuando acaba la garantía, hay averías y el mantenimiento deja de estar incluido.</li>
+        <li>El BMW entra siempre con 12 meses de garantía del vendedor; el Focus, desde el mes 28, sin ella.</li>
+        <li>Lo que pierde de valor cada año, en euros, baja con la edad en los tres coches.</li>
+        <li>El 540i nunca sale barato: gasta 10,4 l/100 km (el Focus, 8,5) y su mantenimiento estimado es el mayor.</li>
+      </ul>
+    </div>
+    <div class="nota">
+      <p><strong>Cómo se calcula:</strong> el BMW que compras en el mes m es el mismo de la plantilla (G21: 2020, 80.000 km; G31: 2019, 85.000 km), m meses más viejo, con 1.250 km más por cada mes, a lo que valdría entonces con la curva de depreciación del coche. El Focus se vende a lo que valdría ese mes (la de la plantilla, un 10 % al año; hay que tasarlo). Costes de uso con seguro a todo riesgo y la inflación del 3 % al año; ITV e impuesto de Bilbao. Un cambio, sin gastos de gestoría ni de transferencia. Con 15.000 km al año.</p>
+      <p>Fuentes: docs/research/bmw-usados.md (anuncios de oct-2026, consumos de Spritmonitor, CV fiscales del BOE); datos del Focus de la plantilla. Foto: Wikimedia Commons (CC BY-SA 4.0). Cálculos de pick-my-drive.</p>
+    </div>
+  </footer>
+</main>
+</body>
+</html>

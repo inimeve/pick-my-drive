@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BMW 540i Touring G31: opciones</title>
+<style>
+  @page { size: A4; margin: 0; }
+  :root {
+    color-scheme: light;
+    --tinta: #0b0b0b;
+    --tinta-2: #52514e;
+    --tinta-3: #7a7974;
+    --linea: #e4e3df;
+    --portada: #f3f3f3;
+    --coche: #4f5a66;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #e9e8e4; }
+  body {
+    font: 8.5pt/1.35 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--tinta);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  h1, h2, p { margin: 0; }
+  .hoja {
+    width: 210mm;
+    height: 297mm;
+    margin: 10mm auto;
+    padding: 0 13mm 8mm;
+    background: #fff;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.12);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 2.2mm;
+  }
+  @media print {
+    html, body { background: #fff; }
+    .hoja { margin: 0; box-shadow: none; }
+  }
+  @media screen and (max-width: 220mm) {
+    .hoja { width: auto; height: auto; margin: 0; padding: 0 16px 16px; box-shadow: none; }
+    .portada { margin: 0 -16px; grid-template-columns: 1fr; height: auto; }
+    .foto { height: 50vw; }
+    .titulo { padding: 16px; }
+    .tabla-envoltorio { overflow-x: auto; }
+  }
+  h2 {
+    font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--tinta-2); font-weight: 600;
+  }
+  .portada { margin: 0 -13mm; display: grid; grid-template-columns: 1.35fr 1fr; background: var(--portada); height: 42mm; }
+  .foto { background: url("https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/BMW_540i_xDrive_Touring_%28G31%2C_2017%29_%2854832938640%29.jpg/1280px-BMW_540i_xDrive_Touring_%28G31%2C_2017%29_%2854832938640%29.jpg") no-repeat 50% 65% / cover; }
+  .foto.fundido {
+    -webkit-mask-image: linear-gradient(to right, #000 80%, transparent 100%), linear-gradient(to bottom, #000 82%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, #000 80%, transparent 100%), linear-gradient(to bottom, #000 82%, transparent 100%);
+    mask-composite: intersect;
+  }
+  .titulo { padding: 2mm 13mm 2mm 0; display: flex; flex-direction: column; justify-content: center; gap: 1mm; }
+  .marca { font-size: 8pt; letter-spacing: 0.3em; color: var(--coche); font-weight: 700; }
+  .titulo h1 { font-size: 19pt; line-height: 1.05; letter-spacing: -0.02em; }
+  .fecha { color: var(--tinta-2); }
+  .ficha { margin: 1.5mm 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.6mm 3mm; font-size: 8pt; }
+  .ficha dt { color: var(--tinta-3); }
+  .ficha dd { margin: 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 7.8pt; font-variant-numeric: tabular-nums; }
+  thead th {
+    text-align: right; font-weight: 600; color: var(--tinta-2); font-size: 7pt;
+    padding: 0 0.9mm 1.2mm; border-bottom: 0.75pt solid var(--tinta); white-space: nowrap; vertical-align: bottom;
+  }
+  thead th:first-child, tbody th { text-align: left; padding-left: 0; }
+  tbody th { font-weight: 600; padding: 0.7mm 0.9mm 0.7mm 0; white-space: nowrap; }
+  tbody td { text-align: right; padding: 0.7mm 0.9mm; white-space: nowrap; }
+  tbody tr { border-bottom: 0.5pt solid var(--linea); }
+  .fuerte { font-weight: 650; }
+  .sub { display: block; font-weight: 400; font-size: 6.6pt; color: var(--tinta-3); }
+  .nota { font-size: 6.6pt; line-height: 1.3; color: var(--tinta-2); }
+  .nota p + p { margin-top: 1mm; }
+  .barras { display: grid; gap: 0.2mm; font-size: 7.6pt; }
+  .barra-fila { display: grid; grid-template-columns: 66mm 1fr; align-items: center; gap: 3mm; }
+  .barra-etq { white-space: nowrap; }
+  .barra-etq { text-align: right; color: var(--tinta-2); }
+  .barra-pista { display: flex; align-items: center; gap: 2mm; }
+  .barra { height: 2.3mm; background: var(--coche); border-radius: 0 4px 4px 0; }
+  .barra-val { font-weight: 650; font-variant-numeric: tabular-nums; }
+  .pila { display: flex; height: 2.3mm; border-radius: 0 4px 4px 0; overflow: hidden; }
+  .trozo.t0 { background: var(--color); }
+  .trozo.t1 { background: color-mix(in srgb, var(--color) 55%, #fff); }
+  .trozo.t2 { background: color-mix(in srgb, var(--color) 25%, #fff); }
+  .barra-fila:not(.propia) .barra-etq { color: var(--tinta-3); }
+  .barra-fila.propia .barra-etq { color: var(--tinta); font-weight: 600; }
+  .leyenda { display: flex; gap: 4mm; font-size: 6.8pt; color: var(--tinta-2); }
+  table.cambio { width: auto; min-width: 120mm; }
+  table.cambio thead th { text-align: right; }
+  table.cambio tbody th { font-weight: 400; }
+  table.cambio td { min-width: 34mm; }
+  table.cambio tr.fuerte th, table.cambio tr.fuerte td { font-weight: 650; color: var(--coche); }
+  .leyenda i { display: inline-block; width: 3mm; height: 2.3mm; margin-right: 1mm; vertical-align: -0.3mm; background: var(--coche); }
+  .energia { display: grid; grid-template-columns: 32mm 1fr; column-gap: 4mm; row-gap: 1.2mm; align-items: center; background: var(--portada); margin: -2.6mm -13mm 0; padding: 2mm 13mm 2.5mm; border-top: 0.5pt solid var(--linea); }
+  .energia h2 { line-height: 1.2; }
+  .energia .nota { grid-column: 1 / -1; }
+  .cifras { display: flex; gap: 5mm; align-items: baseline; }
+  .cifras b { display: block; font-size: 11pt; color: var(--coche); font-variant-numeric: tabular-nums; }
+  .cifras span { font-size: 6.8pt; color: var(--tinta-2); }
+  .cifras .total { padding-left: 5mm; border-left: 0.5pt solid var(--linea); }
+  .pie { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; padding-top: 1.5mm; border-top: 0.5pt solid var(--linea); }
+  .pie ul { margin: 1mm 0 0; padding-left: 4mm; font-size: 6.8pt; line-height: 1.2; }
+  .pie li + li { margin-top: 0.1mm; }
+</style>
+</head>
+<body>
+<main class="hoja">
+  <header class="portada">
+    <div class="foto fundido" role="img" aria-label="BMW 540i xDrive Touring G31 gris"></div>
+    <div class="titulo">
+      <p class="marca">BMW</p>
+      <h1>540i Touring G31</h1>
+      <p class="fecha">Formas de pago · 14 de octubre de 2026</p>
+      <dl class="ficha"><dt>Motor</dt><dd>3.0 B58 · 340 CV</dd><dt>Año y km</dt><dd>2019 · unos 85.000 km</dd><dt>Consumo</dt><dd>10,4 l/100 km reales</dd><dt>Maletero</dt><dd>570 / 1.700 l</dd></dl>
+    </div>
+  </header>
+
+  <section class="energia">
+    <h2>Energía</h2>
+    <div class="cifras">
+      <div><b>19,2&nbsp;€</b><span>cada 100 km</span></div>
+      <div><b>241 €</b><span>al mes</span></div>
+      <div><b>2.886 €</b><span>al año</span></div>
+      <div class="total"><b>11.544 €</b><span>en 4 años</span></div>
+    </div>
+    <h2>Tenerlo 4 años</h2>
+    <div class="cifras">
+      <div><b>3.393 €</b><span>Seguro</span></div><div><b>7.054 €</b><span>Mantenimiento</span></div><div><b>1.818 €</b><span>Neumáticos</span></div><div><b>1.377 €</b><span>ITV e impuesto</span></div><div><b>4.514 €</b><span>Averías</span></div>
+      <div class="total"><b>18.156 €</b><span>en total</span></div>
+    </div>
+    <p class="nota"><strong>Energía:</strong> 15.000 km al año, todo con gasolina (10,4 l/100 km reales, a 1,85 €/l). A precios de hoy (Bizkaia, 1-oct-2026). <strong>Tenerlo:</strong> Seguro a todo riesgo los 4 años, mantenimiento, neumáticos y averías estimados, con un 3 % de inflación al año; el mantenimiento y las averías suben con la edad. ITV e impuesto de circulación de Bilbao (19,97 CV fiscales). Garantía de 12 meses del vendedor: averías desde el 2.º año. Ni la energía ni estos costes están sumados al coste neto: son iguales en todas las opciones.</p>
+  </section>
+
+  <h2>Las opciones</h2>
+  <div class="tabla-envoltorio">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Opción</th>
+          <th scope="col">Precio</th>
+          <th scope="col">El primer día</th>
+          <th scope="col">Cuotas</th>
+          <th scope="col">Última cuota<br>o cancelación</th>
+          <th scope="col">TIN</th>
+          <th scope="col">Pagado hasta<br>el mes 48</th>
+          <th scope="col">Pagado si te<br>lo quedas</th>
+          <th scope="col" class="fuerte">Coste neto<br>a 4 años</th>
+        </tr>
+      </thead>
+      <tbody><tr>
+      <th scope="row">Al contado<span class="sub">Usado de profesional · estimación</span></th>
+      <td>33.500 €</td>
+      <td>33.500 €</td>
+      <td>—</td>
+      <td>—</td>
+      <td>—</td>
+      <td>33.500 €<span class="sub">es tuyo</span></td>
+      <td>33.500 €</td>
+      <td class="fuerte">11.521 €</td>
+    </tr><tr>
+      <th scope="row">Préstamo a 72 meses<span class="sub">Banco · estimación · cancelado en el 48</span></th>
+      <td>33.500 €</td>
+      <td>168 €</td>
+      <td>48 × 547,32 €<span class="sub">de 72 cuotas</span></td>
+      <td>12.536 €<span class="sub">cancelar, mes 48</span></td>
+      <td>5,50 %<span class="sub">TAE 5,83 %</span></td>
+      <td>26.439 €<span class="sub">debes 12.412 €</span></td>
+      <td>38.975 €</td>
+      <td class="fuerte">16.996 €</td>
+    </tr></tbody>
+    </table>
+  </div>
+  <p class="nota">Precio: lo que proponen los anuncios de 540i Touring G31 pre-LCI en España (de 28.900 a 39.500 € según los km), comprado a un profesional con 12 meses de garantía, sin ITP. Sin ayudas.</p>
+  <p class="nota"><strong>Préstamo (estimación):</strong> préstamo personal de un banco por todo el precio, sin entrada, con condiciones típicas de mercado (TIN 5,5 % y comisión de apertura del 0,5 % al firmar; comparadores, sep-2026): no es una oferta. Se cancela en el mes 48 con un 1 % de comisión, para cubrir los mismos 4 años que el Focus. La TAE es calculada. Vendiendo el Focus, el préstamo es solo por la diferencia: abajo.</p>
+
+  <h2>Coste neto a 4 años</h2>
+  <div class="barras" role="img" aria-label="Coste neto a 4 años de cada opción"><div class="barra-fila" title="Al contado: 11.521 €">
+      <span class="barra-etq">Al contado · estimación</span>
+      <span class="barra-pista"><span class="barra" style="width:57.603249999999974%"></span><span class="barra-val">11.521 €</span></span>
+    </div><div class="barra-fila" title="Préstamo a 72 meses: 16.996 €">
+      <span class="barra-etq">Préstamo a 72 meses · banco</span>
+      <span class="barra-pista"><span class="barra" style="width:84.97841260489236%"></span><span class="barra-val">16.996 €</span></span>
+    </div></div>
+
+  <h2>Todo sumado a 4 años: el Focus frente a los dos BMW</h2>
+  <div class="barras" role="img" aria-label="Coste neto, energía y tenerlo, sumados a 4 años, de cada opción de cada coche"><div class="barra-fila" title="Focus ST · quedármelo: 27.007 €">
+      <span class="barra-etq">Focus ST · quedármelo</span>
+      <span class="barra-pista"><span class="pila" style="width:54.0139645482314%; --color:#133a7c"><span class="trozo t0" style="flex:9629.200000000004"></span><span class="trozo t1" style="flex:9435.000000000002"></span><span class="trozo t2" style="flex:7942.782274115695"></span></span><span class="barra-val">27.007 €</span></span>
+    </div><div class="barra-fila" title="330i G21 · al contado: 31.452 €">
+      <span class="barra-etq">330i G21 · al contado</span>
+      <span class="barra-pista"><span class="pila" style="width:62.90396896975741%; --color:#1c69d4"><span class="trozo t0" style="flex:10213.137674999998"></span><span class="trozo t1" style="flex:8103"></span><span class="trozo t2" style="flex:13135.846809878707"></span></span><span class="barra-val">31.452 €</span></span>
+    </div><div class="barra-fila" title="330i G21 · préstamo a 72 meses: 36.764 €">
+      <span class="barra-etq">330i G21 · préstamo a 72 meses</span>
+      <span class="barra-pista"><span class="pila" style="width:73.5271663985217%; --color:#1c69d4"><span class="trozo t0" style="flex:15524.736389382146"></span><span class="trozo t1" style="flex:8103"></span><span class="trozo t2" style="flex:13135.846809878707"></span></span><span class="barra-val">36.764 €</span></span>
+    </div><div class="barra-fila propia" title="540i G31 · al contado: 41.220 €">
+      <span class="barra-etq">540i G31 · al contado</span>
+      <span class="barra-pista"><span class="pila" style="width:82.44068567580544%; --color:#4f5a66"><span class="trozo t0" style="flex:11520.649999999994"></span><span class="trozo t1" style="flex:11544.000000000002"></span><span class="trozo t2" style="flex:18155.69283790273"></span></span><span class="barra-val">41.220 €</span></span>
+    </div><div class="barra-fila propia" title="540i G31 · préstamo a 72 meses: 46.695 €">
+      <span class="barra-etq">540i G31 · préstamo a 72 meses</span>
+      <span class="barra-pista"><span class="pila" style="width:93.3907507177624%; --color:#4f5a66"><span class="trozo t0" style="flex:16995.682520978473"></span><span class="trozo t1" style="flex:11544.000000000002"></span><span class="trozo t2" style="flex:18155.69283790273"></span></span><span class="barra-val">46.695 €</span></span>
+    </div></div>
+  <p class="leyenda"><span><i></i>Coste neto</span><span><i style="opacity:.6"></i>Energía</span><span><i style="opacity:.3"></i>Tenerlo (seguro, mantenimiento, neumáticos, ITV e impuesto, averías)</span></p>
+  <p class="nota">Aquí sí se suman la energía y lo de tenerlo, porque cambian de un coche a otro. Cada coche con su color; en negrita, las opciones de esta hoja. Quedarse el Focus no cuesta dinero el primer día, pero sí lo que deja de valer: renunciar a venderlo hoy.</p>
+  <h2>Si vendo el Focus y compro este BMW</h2>
+  <table class="cambio">
+    <thead><tr><th scope="col"></th><th scope="col">Pagando la diferencia</th><th scope="col">Préstamo por la diferencia</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Vendo el Focus por</th><td>28.000 €</td><td>28.000 €</td></tr>
+      <tr><th scope="row">Pongo de mi bolsillo el primer día<span class="sub">el 540i cuesta 33.500 €</span></th><td>5.500 €</td><td>28 €<span class="sub">comisión de apertura</span></td></tr>
+      <tr><th scope="row">Cuotas</th><td>—</td><td>48 × 89,86 €<span class="sub">de 72 cuotas · TIN 5,50 %</span></td></tr>
+      <tr><th scope="row">Cancelar en el mes 48</th><td>—</td><td>2.058 €</td></tr>
+      <tr><th scope="row">Pongo en total en 4 años</th><td>5.500 €</td><td>6.399 €</td></tr>
+      <tr><th scope="row">Energía y tenerlo, de más que con el Focus</th><td>+12.322 €</td><td>+12.322 €</td></tr>
+      <tr class="fuerte"><th scope="row">Más que quedarme el Focus, a 4 años</th><td>+14.213 €</td><td>+15.112 €</td></tr>
+      <tr class="fuerte"><th scope="row">Al mes, de media</th><td>+296 €</td><td>+315 €</td></tr>
+    </tbody>
+  </table>
+  <p class="nota">Se vende el Focus por lo que se estima que vale hoy (28.000 €): a un concesionario o como parte del pago suelen dar menos; cada 1.000 € menos son 1.000 € más en las dos columnas. «Más que quedarme el Focus» suma lo que pierde de valor el 540i frente a lo que perdería el Focus, los intereses y la diferencia de energía y de tenerlo. Pagando la diferencia cuesta lo mismo que «Al contado» de la tabla: el dinero del Focus es dinero igual que el de los ahorros.</p>
+
+  <footer class="pie">
+    <div>
+      <h2>A tener en cuenta</h2>
+      <ul><li>Año y km de un anuncio típico: el coche concreto puede variar mucho.</li><li>B58: motor fiable; el G31 tiene el doble de defectos graves que la media en la ITV alemana.</li><li>Valor a los 4 años: con una pérdida del 10 % al año (supuesto).</li><li>El que más gasta: 10,4 l/100 km reales, casi 2 más que el Focus.</li></ul>
+    </div>
+    <div class="nota">
+      <p><strong>Coste neto a 4 años:</strong> lo pagado durante 48 meses, menos lo que valdría el coche al final (unos 22.000 €, con la pérdida del 10 % al año supuesta para este coche). No cuenta lo que habría rendido el dinero ni incluye energía, seguro, mantenimiento ni impuestos, que son iguales en todas las opciones. Con 15.000 km al año, sin exceso de km.</p>
+      <p>Fuentes: docs/research/bmw-usados.md (medianas de anuncios en España, oct-2026; consumos de Spritmonitor; CV fiscales del BOE); préstamo con condiciones típicas de mercado (comparadores, sep-2026). Foto: Wikimedia Commons. Cálculos de pick-my-drive.</p>
+    </div>
+  </footer>
+</main>
+</body>
+</html>

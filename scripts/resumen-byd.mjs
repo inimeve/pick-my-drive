@@ -3,7 +3,9 @@
 // el resto, de las ofertas (docs/research/ofertas-recibidas.md y financiacion-flexible.md).
 // También el de quedarme mi CX-30 (cx30-2026-10-13.html) y los de los Tesla Model 3 y Model Y (model3-2026-10-14.html y
 // modely-2026-10-14.html, de docs/research/tesla.md), con el mismo diseño.
-// Uso: node scripts/resumen-byd.mjs [atto2|dolphin|cx30|model3|modely]  (sin argumento, todos)
+// Y, de la plantilla "BMW de segunda mano y mi Focus", los de quedarme mi Focus ST (focus-st-2026-10-14.html) y de pasar
+// a un 330i Touring G21 o a un 540i Touring G31 (bmw-330i-g21-2026-10-14.html y bmw-540i-g31-2026-10-14.html).
+// Uso: node scripts/resumen-byd.mjs [atto2|dolphin|cx30|model3|modely|focus|g21|g31]  (sin argumento, todos)
 import { writeFileSync, mkdirSync } from "node:fs";
 import { createServer } from "vite";
 
@@ -109,6 +111,9 @@ const COCHES = {
   },
 };
 
+const notaGasolina = (e) =>
+  `${e.km.toLocaleString("es-ES", { useGrouping: "always" })} km al año, todo con gasolina (${e.litros.toLocaleString("es-ES")} l/100 km reales, a ${e.gasolina.toLocaleString("es-ES")} €/l). A precios de hoy (Bizkaia, 1-oct-2026).`;
+
 COCHES.cx30 = {
   valor: "con la pérdida del 17 % al año de la tabla de Mazda sobre lo que vale hoy, 18.193 €; sin cuota final nueva, no hay valor garantizado con el que compararlo",
   id: "cx30-actual",
@@ -139,7 +144,7 @@ COCHES.cx30 = {
   },
   notaPrecio: "Precio: la cuota final de la FlexiOpción que queda por pagar para quedarse el coche. Hoy vale menos: 18.193 € según la tabla de gastos de Mazda (jul-2026). Sin ayudas.",
   notaFinanciacion: "<strong>Préstamo (estimación):</strong> préstamo personal de un banco por los 21.700 €, sin entrada, con condiciones típicas de mercado (TIN 5,5 % y comisión de apertura del 0,5 % al firmar; comparadores, sep-2026): no es una oferta. El de 72 meses se cancela en el mes 48 con un 1 % de comisión, para cubrir los mismos 4 años. La TAE es calculada.",
-  notaEnergia: (e) => `${e.km.toLocaleString("es-ES", { useGrouping: "always" })} km al año, todo con gasolina (${e.litros.toLocaleString("es-ES")} l/100 km reales, a ${e.gasolina.toLocaleString("es-ES")} €/l). A precios de hoy (Bizkaia, 1-oct-2026).`,
+  notaEnergia: notaGasolina,
   notaCostes: "Mantenimiento, neumáticos y seguro de la tabla de gastos de Mazda, con un 3 % de inflación al año; el mantenimiento sube con la edad. Seguro a todo riesgo hasta que el coche cumple 7 años, así que todo el periodo. ITV a los 4 y a los 6 años. Garantía supuesta de 6 años o 150.000 km: averías solo el último año (hay que confirmar la real).",
   tituloPie: "A tener en cuenta",
   easyPlan: [
@@ -250,6 +255,163 @@ COCHES.modely = tesla({
   },
 });
 
+/** Las hojas de la plantilla de BMW llevan, además, todo lo de los tres coches sumado */
+const COMPARAR_BMW = { focus: "Focus ST", g21: "330i G21", g31: "540i G31" };
+
+COCHES.focus = {
+  plantilla: "bmw",
+  comparar: COMPARAR_BMW,
+  tituloComparar: "el Focus frente a los dos BMW",
+  valor: "con la pérdida del 10 % al año supuesta sobre lo que vale hoy, 28.000 €",
+  id: "focus-actual",
+  salida: "docs/resumenes/focus-st-2026-10-14.html",
+  marca: "Ford",
+  titulo: "Focus ST Sportbreak",
+  tamTitulo: "19pt",
+  subtitulo: "Quedármelo · 14 de octubre de 2026",
+  pestana: "Ford Focus ST: quedármelo",
+  ayuda: 0,
+  // Wikimedia Commons, «Ford Focus Turnier ST Mk IV IMG 5412» (CC BY-SA 4.0), enlazada: hace falta conexión para verla
+  foto: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Ford_Focus_Turnier_ST_Mk_IV_IMG_5412.jpg/1280px-Ford_Focus_Turnier_ST_Mk_IV_IMG_5412.jpg",
+  encuadre: "no-repeat 50% 60% / cover",
+  fundido: true,
+  alt: "Ford Focus ST Sportbreak negro",
+  // el azul del óvalo de Ford (el coche de la foto es negro)
+  color: "#133a7c",
+  ficha: [
+    ["Motor", "2.3 EcoBoost · 280 CV"],
+    ["Año y km", "ene-2025 · unos 17.000 km"],
+    ["Consumo", "8,5 l/100 km reales"],
+    ["Mantenimiento", "incluido hasta ene-2029"],
+  ],
+  ofertas: {
+    "focus-actual:contado": { nombre: "Quedármelo", sub: "Ya es mío · sin pagar nada", etiqueta: "ya es mío", sinPago: true },
+  },
+  notaPrecio: "Precio: lo que sacaría vendiéndolo hoy, unos 28.000 € (el 75 % de los 37.000 € que costó, a los 20 meses; estimación: hay que tasarlo). Lo ya pagado no cuenta: quedármelo es renunciar a esos 28.000 €. No hay nada que financiar.",
+  notaFinanciacion: "<strong>Sin cuotas:</strong> el coche ya es mío. Su coste a 4 años es lo que pierde de valor, más la energía y lo de tenerlo, que van arriba.",
+  notaEnergia: notaGasolina,
+  notaCostes: "Seguro a todo riesgo los 4 años, neumáticos (Pilot Sport 4S de 19\") y averías estimados, con un 3 % de inflación al año. Mantenimiento incluido hasta enero de 2029: solo cuentan los últimos 21 meses del periodo. ITV a los 4 años e impuesto de circulación de Bilbao. Garantía hasta los 4 años del coche (enero de 2029): averías solo desde entonces, los últimos 21 meses.",
+  tituloPie: "A tener en cuenta",
+  easyPlan: [
+    "Valor de venta estimado: una tasación real puede moverlo mucho.",
+    "Garantía y mantenimiento incluidos hasta enero de 2029; después, 21 meses a mi cargo.",
+    "Valor a los 4 años: con una pérdida del 10 % al año (supuesto).",
+    "Es el más nuevo de los tres: el que menos averías debería dar.",
+  ],
+  fuentes: "Fuentes: ficha de km77 (CO2 y neumáticos), Spritmonitor y auto motor und sport (consumo); valor de venta y costes estimados. Foto: Wikimedia Commons (CC BY-SA 4.0). Cálculos de pick-my-drive.",
+};
+
+/** Lo común a los dos BMW: usados de profesional, al contado o con un préstamo de banco a 72 meses cancelado en el 48 */
+function bmw(o) {
+  return {
+    plantilla: "bmw",
+    comparar: COMPARAR_BMW,
+    tituloComparar: "el Focus frente a los dos BMW",
+    marca: "BMW",
+    tamTitulo: "19pt",
+    subtitulo: "Formas de pago · 14 de octubre de 2026",
+    ayuda: 0,
+    fundido: true,
+    ofertas: {
+      [`${o.id}:contado`]: { nombre: "Al contado", sub: "Usado de profesional · estimación", etiqueta: "estimación" },
+      [`${o.id}:prestamo:72:cancelado-48`]: { nombre: "Préstamo a 72 meses", sub: "Banco · estimación · cancelado en el 48", etiqueta: "banco", tin: 5.5 },
+      // no va en la tabla: el Focus vendido como entrada y el préstamo solo por la diferencia
+      [`${o.id}:prestamo:72:cancelado-48:con-focus`]: { nombre: "Préstamo por la diferencia", etiqueta: "con el Focus", cambio: true, tin: 5.5 },
+    },
+    notaFinanciacion: `<strong>Préstamo (estimación):</strong> préstamo personal de un banco por todo el precio, sin entrada, con condiciones típicas de mercado (TIN 5,5 % y comisión de apertura del 0,5 % al firmar; comparadores, sep-2026): no es una oferta. Se cancela en el mes 48 con un 1 % de comisión, para cubrir los mismos 4 años que el Focus. La TAE es calculada. Vendiendo el Focus, el préstamo es solo por la diferencia: abajo.`,
+    notaEnergia: notaGasolina,
+    tituloPie: "A tener en cuenta",
+    fuentes: "Fuentes: docs/research/bmw-usados.md (medianas de anuncios en España, oct-2026; consumos de Spritmonitor; CV fiscales del BOE); préstamo con condiciones típicas de mercado (comparadores, sep-2026). Foto: Wikimedia Commons. Cálculos de pick-my-drive.",
+    ...o,
+  };
+}
+
+COCHES.g21 = bmw({
+  id: "bmw-330i-g21",
+  valor: "con la pérdida del 9 % al año supuesta para este coche",
+  salida: "docs/resumenes/bmw-330i-g21-2026-10-14.html",
+  titulo: "330i Touring G21",
+  pestana: "BMW 330i Touring G21: opciones",
+  // Wikimedia Commons, «BMW 330i Touring M Sport (G21) – f 04082025» (CC BY-SA 3.0 de)
+  foto: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/BMW_330i_Touring_M_Sport_%28G21%29_%E2%80%93_f_04082025.jpg/1280px-BMW_330i_Touring_M_Sport_%28G21%29_%E2%80%93_f_04082025.jpg",
+  encuadre: "no-repeat 50% 60% / cover",
+  alt: "BMW 330i Touring G21 M Sport blanco",
+  // el azul de BMW (el coche de la foto es blanco)
+  color: "#1c69d4",
+  ficha: [
+    ["Motor", "2.0 B48 · 258 CV"],
+    ["Año y km", "2020 · unos 80.000 km"],
+    ["Consumo", "7,3 l/100 km reales"],
+    ["Maletero", "500 / 1.510 l"],
+  ],
+  notaPrecio: "Precio: la mediana de los anuncios de 330i Touring G21 pre-LCI en España (de 30.900 a 33.990 € con 51.000-145.000 km), comprado a un profesional con 12 meses de garantía, sin ITP. Sin ayudas.",
+  notaCostes: "Seguro a todo riesgo los 4 años, mantenimiento, neumáticos y averías estimados, con un 3 % de inflación al año; el mantenimiento y las averías suben con la edad. ITV e impuesto de circulación de Bilbao (13,31 CV fiscales). Garantía de 12 meses del vendedor: averías desde el 2.º año.",
+  easyPlan: [
+    "Año y km de un anuncio típico: el coche concreto puede variar mucho.",
+    "B48: motor fiable; el G21 tiene más defectos de ejes que la media en la ITV alemana.",
+    "Valor a los 4 años: con una pérdida del 9 % al año (supuesto).",
+    "Garantía del vendedor de 12 meses: se puede ampliar pagando.",
+  ],
+});
+
+COCHES.g31 = bmw({
+  id: "bmw-540i-g31",
+  valor: "con la pérdida del 10 % al año supuesta para este coche",
+  salida: "docs/resumenes/bmw-540i-g31-2026-10-14.html",
+  titulo: "540i Touring G31",
+  pestana: "BMW 540i Touring G31: opciones",
+  // Wikimedia Commons, «BMW 540i xDrive Touring (G31, 2017) (54832938640)» (CC0)
+  foto: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/BMW_540i_xDrive_Touring_%28G31%2C_2017%29_%2854832938640%29.jpg/1280px-BMW_540i_xDrive_Touring_%28G31%2C_2017%29_%2854832938640%29.jpg",
+  encuadre: "no-repeat 50% 65% / cover",
+  alt: "BMW 540i xDrive Touring G31 gris",
+  // el gris del coche de la foto, oscurecido para que se lea como texto y no se confunda con los azules del Focus y el G21
+  color: "#4f5a66",
+  ficha: [
+    ["Motor", "3.0 B58 · 340 CV"],
+    ["Año y km", "2019 · unos 85.000 km"],
+    ["Consumo", "10,4 l/100 km reales"],
+    ["Maletero", "570 / 1.700 l"],
+  ],
+  notaPrecio: "Precio: lo que proponen los anuncios de 540i Touring G31 pre-LCI en España (de 28.900 a 39.500 € según los km), comprado a un profesional con 12 meses de garantía, sin ITP. Sin ayudas.",
+  notaCostes: "Seguro a todo riesgo los 4 años, mantenimiento, neumáticos y averías estimados, con un 3 % de inflación al año; el mantenimiento y las averías suben con la edad. ITV e impuesto de circulación de Bilbao (19,97 CV fiscales). Garantía de 12 meses del vendedor: averías desde el 2.º año.",
+  easyPlan: [
+    "Año y km de un anuncio típico: el coche concreto puede variar mucho.",
+    "B58: motor fiable; el G31 tiene el doble de defectos graves que la media en la ITV alemana.",
+    "Valor a los 4 años: con una pérdida del 10 % al año (supuesto).",
+    "El que más gasta: 10,4 l/100 km reales, casi 2 más que el Focus.",
+  ],
+});
+
+/** Cómo se adapta cada plantilla a los resúmenes de 4 años */
+const PLANTILLA = {
+  "byd-cx30": (comp) => comp,
+  // a 4 años como los demás resúmenes y con todo riesgo los 4 años en los tres coches; los dos BMW, al contado o con
+  // el préstamo de banco del CX-30 a 72 meses cancelado en el 48, sin entrada o con el Focus vendido como entrada
+  bmw: (comp) => {
+    const venta = comp.coches.find((c) => c.id === "focus-actual").pvp;
+    const prestamo = (cocheId, entrada) => ({
+      id: `${cocheId}:prestamo:72:cancelado-48${entrada ? ":con-focus" : ""}`, cocheId, visible: true, proveedor: "banco",
+      fuente: `Préstamo de banco ${entrada ? "por lo que falta tras vender el Focus" : "sin entrada"} a 72 meses, cancelado en el 48 con un 1 % de comisión (condiciones típicas de mercado)`,
+      condiciones: {
+        modalidad: "prestamo", descuento: 0, entrada, tin: 0.055, plazoMeses: 72,
+        comisionApertura: 0.005, comisionCancelacion: 0.01, cancelarEnMes: 48,
+      },
+    });
+    return {
+      ...comp,
+      perfil: { ...comp.perfil, horizonteMeses: 48, aniosTodoRiesgo: 12 },
+      escenarios: [
+        ...comp.escenarios,
+        ...["bmw-330i-g21", "bmw-540i-g31"].flatMap((cocheId) => [
+          { id: `${cocheId}:contado`, cocheId, visible: true, condiciones: { modalidad: "contado", descuento: 0 }, fuente: "Al contado" },
+          prestamo(cocheId, 0),
+          prestamo(cocheId, venta),
+        ]),
+      ],
+    };
+  },
+};
+
 const elegidos = process.argv[2] ? [process.argv[2]] : Object.keys(COCHES);
 for (const k of elegidos) if (!COCHES[k]) throw new Error(`Coche desconocido: ${k} (${Object.keys(COCHES).join(", ")})`);
 
@@ -262,13 +424,15 @@ try {
   const { simular } = await vite.ssrLoadModule("/src/engine/simulacion.ts");
   const { saldoPendiente } = await vite.ssrLoadModule("/src/engine/finanzas.ts");
   const { energiaPorKm } = await vite.ssrLoadModule("/src/engine/costes.ts");
-  const comp = comparativaDePlantilla("byd-cx30");
+  // también los coches con los que se compara cada hoja
+  const calcular = [...new Set(elegidos.flatMap((k) => [k, ...Object.keys(COCHES[k].comparar ?? {})]))];
+  for (const k of calcular) {
+  const cfg = COCHES[k];
+  const comp = PLANTILLA[cfg.plantilla ?? "byd-cx30"](comparativaDePlantilla(cfg.plantilla ?? "byd-cx30"));
   // todas las opciones son el mismo coche: energía, seguro y mantenimiento son iguales y no cambian la comparación
   // sin coste de oportunidad: el coste neto es solo lo pagado menos lo que vale el coche al final
   const perfil = { ...comp.perfil, costesUsoActivos: false, oportunidadActiva: false };
   const ctx = contexto({ ...comp, perfil });
-  for (const k of elegidos) {
-  const cfg = COCHES[k];
   let valorFinal;
   const ayuda = cfg.ayuda ?? AYUDA;
   const coche = comp.coches.find((c) => c.id === cfg.id);
@@ -288,6 +452,9 @@ try {
     const precio = coche.pvp - c.descuento;
     if (c.modalidad === "contado") {
       valorFinal = precio - r.desglose.vehiculo;
+      // el coche que ya tengo: no se paga nada, se renuncia a venderlo
+      if (o.sinPago)
+        return { ...o, precio, primerDia: 0, pagado48: 0, nota48: "ya es tuyo", pagadoQuedar: 0, costeNeto: r.costeNeto[perfil.horizonteMeses] };
       return {
         ...o, precio, primerDia: precio,
         pagado48: precio - ayuda, nota48: "es tuyo",
@@ -305,6 +472,7 @@ try {
         ...o,
         tae: o.tae ?? f.tae * 100,
         precio,
+        entrada: c.entrada,
         primerDia,
         cuota: f.cuota,
         plazo: meses,
@@ -349,7 +517,8 @@ try {
   // costes de tenerlo 4 años: los del contado con los costes de uso activados (iguales en todas las opciones)
   const conUso = simular(comp.escenarios.find((x) => x.id === `${cfg.id}:contado`), coche, contexto({ ...comp, perfil: { ...perfil, costesUsoActivos: true } })).desglose;
   const costes = ["seguro", "mantenimiento", "neumaticos", "itv_ivtm", "averias"].map((c) => conUso[c] ?? 0);
-  datos[k] = { cfg, filas, perfil, valorFinal, energia, costes };
+  // el cambio del Focus por este coche va en su propio bloque, no en la tabla
+  datos[k] = { cfg, filas: filas.filter((f) => !f.cambio), cambio: filas.find((f) => f.cambio), perfil, valorFinal, energia, costes };
   }
 } finally {
   await vite.close();
@@ -359,8 +528,67 @@ const pct = (v) => `${v.toLocaleString("es-ES", { minimumFractionDigits: 2, maxi
 const concesionario = (f) => f.origen === "Concesionario";
 const etiquetaOrigen = (f) => f.etiqueta ?? { Concesionario: "concesionario", "Web de BYD": "web", "Web de Tesla": "web", Estimación: "estimación" }[f.origen];
 const procedencia = (f) => f.sub ?? (f.valida ? `${f.origen} · hasta ${f.valida}` : "Estimación");
-function pagina({ cfg, filas, perfil, valorFinal, energia, costes }) {
+/** Todo lo de una opción a 4 años: coste neto, energía y tenerlo */
+const sumado = (d, f) => f.costeNeto + d.energia.porKm * d.energia.km * 4 + d.costes.reduce((x, y) => x + y, 0);
+
+/** Si vendo el Focus y compro este coche: al contado pagando la diferencia o con un préstamo solo por ella */
+function bloqueCambio({ cfg, filas, cambio, energia, costes }) {
+  const focus = datos.focus;
+  const venta = cambio.entrada;
+  const contado = filas.find((f) => !f.cuota);
+  const yo = { energia, costes };
+  const usoDeMas = sumado(yo, { costeNeto: 0 }) - sumado(focus, { costeNeto: 0 });
+  const cols = [
+    { nombre: "Pagando la diferencia", bolsillo: contado.precio - venta, total: contado.precio - venta, deMas: sumado(yo, contado) - sumado(focus, focus.filas[0]) },
+    {
+      nombre: "Préstamo por la diferencia",
+      bolsillo: cambio.primerDia - venta,
+      cuotas: `${cambio.plazo} × ${eur(cambio.cuota, 2)}<span class="sub">de ${cambio.deLas} cuotas · TIN ${pct(cambio.tin)}</span>`,
+      cancelar: cambio.cancelar,
+      total: cambio.pagadoQuedar - venta,
+      deMas: sumado(yo, cambio) - sumado(focus, focus.filas[0]),
+    },
+  ];
+  const fila = (titulo, celda, clase = "") => `<tr${clase ? ` class="${clase}"` : ""}><th scope="row">${titulo}</th>${cols.map((c) => `<td>${celda(c)}</td>`).join("")}</tr>`;
+  const signo = (v) => `${v >= 0 ? "+" : "−"}${eur(Math.abs(v))}`;
+  return `
+  <h2>Si vendo el Focus y compro este ${cfg.marca}</h2>
+  <table class="cambio">
+    <thead><tr><th scope="col"></th>${cols.map((c) => `<th scope="col">${c.nombre}</th>`).join("")}</tr></thead>
+    <tbody>
+      ${fila("Vendo el Focus por", () => eur(venta))}
+      ${fila(`Pongo de mi bolsillo el primer día<span class="sub">el ${cfg.titulo.split(" ")[0]} cuesta ${eur(contado.precio)}</span>`, (c) => `${eur(c.bolsillo)}${c.cuotas ? '<span class="sub">comisión de apertura</span>' : ""}`)}
+      ${fila("Cuotas", (c) => c.cuotas ?? "—")}
+      ${fila("Cancelar en el mes 48", (c) => eur(c.cancelar))}
+      ${fila("Pongo en total en 4 años", (c) => eur(c.total))}
+      ${fila("Energía y tenerlo, de más que con el Focus", () => signo(usoDeMas))}
+      ${fila("Más que quedarme el Focus, a 4 años", (c) => signo(c.deMas), "fuerte")}
+      ${fila("Al mes, de media", (c) => signo(c.deMas / 48), "fuerte")}
+    </tbody>
+  </table>
+  <p class="nota">Se vende el Focus por lo que se estima que vale hoy (${eur(venta)}): a un concesionario o como parte del pago suelen dar menos; cada 1.000 € menos son 1.000 € más en las dos columnas. «Más que quedarme el Focus» suma lo que pierde de valor el ${cfg.titulo.split(" ")[0]} frente a lo que perdería el Focus, los intereses y la diferencia de energía y de tenerlo. Pagando la diferencia cuesta lo mismo que «Al contado» de la tabla: el dinero del Focus es dinero igual que el de los ahorros.</p>`;
+}
+
+function pagina({ cfg, filas, cambio, perfil, valorFinal, energia, costes }) {
 const maximo = Math.ceil(Math.max(...filas.map((f) => f.costeNeto)) / 5000) * 5000;
+
+// todo sumado a 4 años: coste neto, energía y tenerlo, de cada opción de los coches que se comparan
+const sumadas = Object.entries(cfg.comparar ?? {}).flatMap(([k, corto]) => {
+  const d = datos[k];
+  const energia4 = d.energia.porKm * d.energia.km * 4;
+  const tenerlo = d.costes.reduce((x, y) => x + y, 0);
+  return d.filas.map((f) => ({ etq: `${corto} · ${f.nombre.toLowerCase()}`, propia: d.cfg === cfg, color: d.cfg.color, partes: [f.costeNeto, energia4, tenerlo] }));
+});
+const maximoSumado = Math.ceil(Math.max(0, ...sumadas.map((f) => f.partes.reduce((x, y) => x + y, 0))) / 5000) * 5000;
+const barrasSumadas = sumadas
+  .map((f) => {
+    const total = f.partes.reduce((x, y) => x + y, 0);
+    return `<div class="barra-fila${f.propia ? " propia" : ""}" title="${f.etq}: ${eur(total)}">
+      <span class="barra-etq">${f.etq}</span>
+      <span class="barra-pista"><span class="pila" style="width:${(total / maximoSumado) * 100}%; --color:${f.color}">${f.partes.map((v, i) => `<span class="trozo t${i}" style="flex:${v}"></span>`).join("")}</span><span class="barra-val">${eur(total)}</span></span>
+    </div>`;
+  })
+  .join("");
 
 
 const tabla = filas
@@ -475,7 +703,20 @@ return `<!doctype html>
   .barra-etq { text-align: right; color: var(--tinta-2); }
   .barra-pista { display: flex; align-items: center; gap: 2mm; }
   .barra { height: 2.3mm; background: var(--coche); border-radius: 0 4px 4px 0; }
-  .barra-val { font-weight: 650; font-variant-numeric: tabular-nums; }
+  .barra-val { font-weight: 650; font-variant-numeric: tabular-nums; }${sumadas.length ? `
+  .pila { display: flex; height: 2.3mm; border-radius: 0 4px 4px 0; overflow: hidden; }
+  .trozo.t0 { background: var(--color); }
+  .trozo.t1 { background: color-mix(in srgb, var(--color) 55%, #fff); }
+  .trozo.t2 { background: color-mix(in srgb, var(--color) 25%, #fff); }
+  .barra-fila:not(.propia) .barra-etq { color: var(--tinta-3); }
+  .barra-fila.propia .barra-etq { color: var(--tinta); font-weight: 600; }
+  .leyenda { display: flex; gap: 4mm; font-size: 6.8pt; color: var(--tinta-2); }
+  table.cambio { width: auto; min-width: 120mm; }
+  table.cambio thead th { text-align: right; }
+  table.cambio tbody th { font-weight: 400; }
+  table.cambio td { min-width: 34mm; }
+  table.cambio tr.fuerte th, table.cambio tr.fuerte td { font-weight: 650; color: var(--coche); }
+  .leyenda i { display: inline-block; width: 3mm; height: 2.3mm; margin-right: 1mm; vertical-align: -0.3mm; background: var(--coche); }` : ""}
   .energia { display: grid; grid-template-columns: 32mm 1fr; column-gap: 4mm; row-gap: 1.2mm; align-items: center; background: var(--portada); margin: -2.6mm -13mm 0; padding: 2mm 13mm 2.5mm; border-top: 0.5pt solid var(--linea); }
   .energia h2 { line-height: 1.2; }
   .energia .nota { grid-column: 1 / -1; }
@@ -539,7 +780,12 @@ return `<!doctype html>
   <p class="nota">${cfg.notaFinanciacion ?? `<strong>Lineal (estimación):</strong> financiación lineal de CA Auto Bank, que el concesionario no ha ofrecido todavía. La promoción de BYD pide financiar al menos 15.000 € a 72 meses o más, con 36 de permanencia. Se usan ${cfg.origenLineal}, la comisión del 3,75 % financiada y una cancelación en el mes 48 con un 1 % de comisión, para cubrir los mismos 4 años. La de entrada mínima financia todo menos el 1 %. La TAE es calculada. Falta confirmar el TIN, si hay descuento en lineal y si cancelar obliga a devolverlo.`}</p>
 
   <h2>Coste neto a 4 años</h2>
-  <div class="barras" role="img" aria-label="Coste neto a 4 años de cada opción">${barras}</div>
+  <div class="barras" role="img" aria-label="Coste neto a 4 años de cada opción">${barras}</div>${sumadas.length ? `
+
+  <h2>Todo sumado a 4 años: ${cfg.tituloComparar}</h2>
+  <div class="barras" role="img" aria-label="Coste neto, energía y tenerlo, sumados a 4 años, de cada opción de cada coche">${barrasSumadas}</div>
+  <p class="leyenda"><span><i></i>Coste neto</span><span><i style="opacity:.6"></i>Energía</span><span><i style="opacity:.3"></i>Tenerlo (seguro, mantenimiento, neumáticos, ITV e impuesto, averías)</span></p>
+  <p class="nota">Aquí sí se suman la energía y lo de tenerlo, porque cambian de un coche a otro. Cada coche con su color; en negrita, las opciones de esta hoja. Quedarse el Focus no cuesta dinero el primer día, pero sí lo que deja de valer: renunciar a venderlo hoy.</p>` : ""}${cambio ? bloqueCambio({ cfg, filas, cambio, energia, costes }) : ""}
 
   <footer class="pie">
     <div>
@@ -562,5 +808,5 @@ for (const k of elegidos) {
   const d = datos[k];
   writeFileSync(d.cfg.salida, pagina(d));
   console.log(`Escrito ${d.cfg.salida}`);
-  for (const f of d.filas) console.log("  ", f.nombre.padEnd(30), (f.origen ?? f.etiqueta).padEnd(14), Math.round(f.primerDia), Math.round(f.pagado48), Math.round(f.pagadoQuedar), Math.round(f.costeNeto));
+  for (const f of [...d.filas, ...(d.cambio ? [d.cambio] : [])]) console.log("  ", f.nombre.padEnd(30), (f.origen ?? f.etiqueta).padEnd(14), Math.round(f.primerDia), Math.round(f.pagado48), Math.round(f.pagadoQuedar), Math.round(f.costeNeto));
 }

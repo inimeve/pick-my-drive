@@ -230,8 +230,8 @@ export const COCHE_ACTUAL: CocheCandidato = {
   vendedorParticular: false,
   // WLTP 8,0; en Spritmonitor los Focus ST Sportbreak rondan 8,2-8,4 y auto motor und sport midió 9,0
   consumo: { litros100: 8.5 },
-  // Garantía legal de 2 años desde la matriculación: le quedan 4 meses
-  garantiaMeses: 24,
+  // Garantía hasta que el coche cumple 4 años (enero de 2029), según el propietario
+  garantiaMeses: 48,
   garantiaKm: 999999,
   depreciacionPrimerAnio: 0.17,
   depreciacionAnual: 0.1,
